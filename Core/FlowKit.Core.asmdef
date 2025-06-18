@@ -1,0 +1,16 @@
+{
+    "name": "FlowKit.Core",
+    "references": [
+        "FlowKit.UI",
+		"FlowKit.Common",
+		"Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+	"excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+	"defineConstraints": [],
+    "versionDefines": []
+}

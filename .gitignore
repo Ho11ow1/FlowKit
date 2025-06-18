@@ -1,0 +1,8 @@
+# Visual Studio directories
+.vs/
+
+# Backup files
+**.bak
+
+# Ensure .meta files are tracked
+!*.meta
