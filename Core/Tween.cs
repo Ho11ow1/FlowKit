@@ -17,7 +17,7 @@
 * 
 * Provides a unified place for all tweening operations.
 * 
-* Version: 2.4.0
+* Version: 1.0.0
 * GitHub: https://github.com/Hollow1/FlowKit
 * License: Apache License 2.0
 * -------------------------------------------------------- */

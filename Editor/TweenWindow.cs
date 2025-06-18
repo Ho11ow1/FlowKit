@@ -17,7 +17,7 @@
 * 
 * A window aimed to help users with code for their Animations
 * 
-* Version: 2.4.0
+* Version: 1.0.0
 * GitHub: https://github.com/Hollow1/FlowKit
 * License: Apache License 2.0
 * -------------------------------------------------------- */
