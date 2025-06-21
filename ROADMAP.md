@@ -9,8 +9,8 @@ A list of planned features and improvements for future FlowKit versions.
 - Apache 2.0 licensing and structured documentation
 
 ## 🔜 In Progress
-- Editor tooling improvements (live preview)
 - Custom shaders for both 2D and 3D projects
+- Animation queue system
 
 ## 🧠 Planned
-_This section will be expanded based on development._
+- Editor tooling improvements (live preview)
