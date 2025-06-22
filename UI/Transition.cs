@@ -257,6 +257,53 @@ namespace FlowKit.UI
             }
         }
 
+        public void Reset(AnimationTarget target, int occurrence, GameObject gameObject)
+        {
+            switch (target)
+            {
+                case AnimationTarget.Panel:
+                    #if UNITY_EDITOR
+                    if (!storedPosition[FlowKitConstants.PanelIndex][0])
+                    {
+                        Debug.LogError($"No saved scale found for Panel: [{gameObject.name}]");
+                    }
+                    #endif
+
+                    _panelTransform.anchoredPosition = originalPosition[FlowKitConstants.PanelIndex][0];
+                    break;
+                case AnimationTarget.Text:
+                    #if UNITY_EDITOR
+                    if (!storedPosition[FlowKitConstants.TextIndex][occurrence])
+                    {
+                        Debug.LogError($"No saved scale found for Text component child. Panel: [{gameObject.name}]");
+                    }
+                    #endif
+
+                    _textComponent[occurrence].rectTransform.anchoredPosition = originalPosition[FlowKitConstants.TextIndex][occurrence];
+                    break;
+                case AnimationTarget.Image:
+                    #if UNITY_EDITOR
+                    if (!storedPosition[FlowKitConstants.ImageIndex][occurrence])
+                    {
+                        Debug.LogError($"No saved scale found for Image component child. Panel: [{gameObject.name}]");
+                    }
+                    #endif
+
+                    _imageComponent[occurrence].rectTransform.anchoredPosition = originalPosition[FlowKitConstants.ImageIndex][occurrence];
+                    break;
+                case AnimationTarget.Button:
+                    #if UNITY_EDITOR
+                    if (!storedPosition[FlowKitConstants.ButtonIndex][occurrence])
+                    {
+                        Debug.LogError($"No saved scale found for Button component child. Panel: [{gameObject.name}]");
+                    }
+                    #endif
+
+                    ((RectTransform)_buttonComponent[occurrence].transform).anchoredPosition = originalPosition[FlowKitConstants.ButtonIndex][occurrence];
+                    break;
+            }
+        }
+
         // ----------------------------------------------------- FROM TRANSITION -----------------------------------------------------
 
         private IEnumerator TransitionFrom(RectTransform component, Vector2 offset, float duration, float delay, EasingType easing)
@@ -293,61 +340,8 @@ namespace FlowKit.UI
         {
             if (component == null) { yield break; }
 
-            Vector2 startPos = Vector2.zero;
+            GetStartPos(component, occurrence, out Vector2 startPos);
             Vector2 targetPos;
-
-            if (component == _panelTransform)
-            {
-                if (!storedPosition[FlowKitConstants.PanelIndex][0])
-                {
-                    startPos = _panelTransform.anchoredPosition;
-                    originalPosition[FlowKitConstants.PanelIndex][0] = startPos;
-                    storedPosition[FlowKitConstants.PanelIndex][0] = true;
-                }
-                else
-                {
-                    startPos = originalPosition[FlowKitConstants.PanelIndex][0];
-                }
-            }
-            else if (component == _textComponent[occurrence].rectTransform)
-            {
-                if (!storedPosition[FlowKitConstants.TextIndex][occurrence]) 
-                {
-                    startPos = _textComponent[occurrence].rectTransform.anchoredPosition;
-                    originalPosition[FlowKitConstants.TextIndex][occurrence] = startPos;
-                    storedPosition[FlowKitConstants.TextIndex][occurrence] = true; 
-                }
-                else 
-                {
-                    startPos = originalPosition[FlowKitConstants.TextIndex][occurrence];
-                }
-            }
-            else if (component == _imageComponent[occurrence].rectTransform)
-            {
-                if (!storedPosition[FlowKitConstants.ImageIndex][occurrence]) 
-                {
-                    startPos = _imageComponent[occurrence].rectTransform.anchoredPosition;
-                    originalPosition[FlowKitConstants.ImageIndex][occurrence] = startPos;
-                    storedPosition[FlowKitConstants.ImageIndex][occurrence] = true;
-                }
-                else 
-                {
-                    startPos = originalPosition[FlowKitConstants.ImageIndex][occurrence];
-                }
-            }
-            else if (component == (RectTransform)_buttonComponent[occurrence].transform)
-            {
-                if (!storedPosition[FlowKitConstants.ButtonIndex][occurrence])
-                {
-                    startPos = ((RectTransform)_buttonComponent[occurrence].transform).anchoredPosition;
-                    originalPosition[FlowKitConstants.ButtonIndex][occurrence] = startPos;
-                    storedPosition[FlowKitConstants.ButtonIndex][occurrence] = true;
-                }
-                else
-                {
-                    startPos = originalPosition[FlowKitConstants.ButtonIndex][occurrence];
-                }
-            }
 
             if (delay > 0) { yield return new WaitForSeconds(delay); }
             targetPos = startPos + offset;
@@ -367,6 +361,66 @@ namespace FlowKit.UI
 
             component.anchoredPosition = targetPos;
             FlowKitEvents.InvokeTransitionEnd();
+        }
+
+        // ----------------------------------------------------- PRIVATE UTILITIES -----------------------------------------------------
+
+        private void GetStartPos(RectTransform component, int occurrence, out Vector2 startPos)
+        {
+            startPos = Vector2.zero;
+
+            if (component == _panelTransform)
+            {
+                if (!storedPosition[FlowKitConstants.PanelIndex][0])
+                {
+                    startPos = _panelTransform.anchoredPosition;
+                    originalPosition[FlowKitConstants.PanelIndex][0] = startPos;
+                    storedPosition[FlowKitConstants.PanelIndex][0] = true;
+                }
+                else
+                {
+                    startPos = _panelTransform.anchoredPosition;
+                }
+            }
+            else if (component == _textComponent[occurrence].rectTransform)
+            {
+                if (!storedPosition[FlowKitConstants.TextIndex][occurrence])
+                {
+                    startPos = _textComponent[occurrence].rectTransform.anchoredPosition;
+                    originalPosition[FlowKitConstants.TextIndex][occurrence] = startPos;
+                    storedPosition[FlowKitConstants.TextIndex][occurrence] = true;
+                }
+                else
+                {
+                    startPos = _textComponent[occurrence].rectTransform.anchoredPosition;
+                }
+            }
+            else if (component == _imageComponent[occurrence].rectTransform)
+            {
+                if (!storedPosition[FlowKitConstants.ImageIndex][occurrence])
+                {
+                    startPos = _imageComponent[occurrence].rectTransform.anchoredPosition;
+                    originalPosition[FlowKitConstants.ImageIndex][occurrence] = startPos;
+                    storedPosition[FlowKitConstants.ImageIndex][occurrence] = true;
+                }
+                else
+                {
+                    startPos = _imageComponent[occurrence].rectTransform.anchoredPosition;
+                }
+            }
+            else if (component == (RectTransform)_buttonComponent[occurrence].transform)
+            {
+                if (!storedPosition[FlowKitConstants.ButtonIndex][occurrence])
+                {
+                    startPos = ((RectTransform)_buttonComponent[occurrence].transform).anchoredPosition;
+                    originalPosition[FlowKitConstants.ButtonIndex][occurrence] = startPos;
+                    storedPosition[FlowKitConstants.ButtonIndex][occurrence] = true;
+                }
+                else
+                {
+                    startPos = ((RectTransform)_buttonComponent[occurrence].transform).anchoredPosition;
+                }
+            }
         }
     }
 }
