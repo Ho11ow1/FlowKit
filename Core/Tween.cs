@@ -135,7 +135,7 @@ namespace FlowKit.Core
         /// Transitions the UI element from a position offset upward back to its starting position
         /// <list type="bullet">
         ///     <item>
-        ///         <description><b>Note</b>: Animation always starts from the element's original position</description>
+        ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
         ///     </item>
         ///     <item>
         ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
@@ -158,7 +158,7 @@ namespace FlowKit.Core
         /// Transitions the UI element from a position offset downward back to its starting position
         /// <list type="bullet">
         ///     <item>
-        ///         <description><b>Note</b>: Animation always starts from the element's original position</description>
+        ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
         ///     </item>
         ///     <item>
         ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
@@ -181,7 +181,7 @@ namespace FlowKit.Core
         /// Transitions the UI element from a position offset to the left back to its starting position
         /// <list type="bullet">
         ///     <item>
-        ///         <description><b>Note</b>: Animation always starts from the element's original position</description>
+        ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
         ///     </item>
         ///     <item>
         ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
@@ -204,7 +204,7 @@ namespace FlowKit.Core
         /// Transitions the UI element from a position offset to the right back to its starting position
         /// <list type="bullet">
         ///     <item>
-        ///         <description><b>Note</b>: Animation always starts from the element's original position</description>
+        ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
         ///     </item>
         ///     <item>
         ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
@@ -227,7 +227,7 @@ namespace FlowKit.Core
         /// Transitions the UI element from an offset position on both axes back to its starting position
         /// <list type="bullet">
         ///     <item>
-        ///         <description><b>Note</b>: Animation always starts from the element's original position</description>
+        ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
         ///     </item>
         ///     <item>
         ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
