@@ -101,7 +101,7 @@ namespace FlowKit.Core
         ///     </item>
         /// </list>
         /// </summary>
-        /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
+        /// <param name="target">Target component to fade (Panel, Text, Image, Button)</param>
         /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
         /// <param name="duration">Time in seconds for the fading duration</param>
         /// <param name="delay">Time in seconds to wait before starting the fade</param>
@@ -119,7 +119,7 @@ namespace FlowKit.Core
         ///     </item>
         /// </list>
         /// </summary>
-        /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
+        /// <param name="target">Target component to fade (Panel, Text, Image, Button)</param>
         /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
         /// <param name="duration">Time in seconds for the fading duration</param>
         /// <param name="delay">Time in seconds to wait before starting the fade</param>
@@ -135,7 +135,7 @@ namespace FlowKit.Core
         /// Transitions the UI element from a position offset upward back to its starting position
         /// <list type="bullet">
         ///     <item>
-        ///         <description><b>Note</b>: Animation always starts from the element's original position</description>
+        ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
         ///     </item>
         ///     <item>
         ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
@@ -148,17 +148,17 @@ namespace FlowKit.Core
         /// <param name="easing">Specifies the easing method the transition should use</param>
         /// <param name="duration">Time in seconds for the transition duration</param>
         /// <param name="delay">Time in seconds to wait before starting the transition</param>
-        public void TransitionFromUp(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+        public void TransitionFromTop(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
         {
             occurrence -= 1;
-            transitionComponent.TransitionFromUp(target, occurrence, offset, easing, duration, delay);
+            transitionComponent.TransitionFromTop(target, occurrence, offset, easing, duration, delay);
         }
 
         /// <summary>
         /// Transitions the UI element from a position offset downward back to its starting position
         /// <list type="bullet">
         ///     <item>
-        ///         <description><b>Note</b>: Animation always starts from the element's original position</description>
+        ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
         ///     </item>
         ///     <item>
         ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
@@ -171,17 +171,17 @@ namespace FlowKit.Core
         /// <param name="easing">Specifies the easing method the transition should use</param>
         /// <param name="duration">Time in seconds for the transition duration</param>
         /// <param name="delay">Time in seconds to wait before starting the transition</param>
-        public void TransitionFromDown(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+        public void TransitionFromBottom(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
         {
             occurrence -= 1;
-            transitionComponent.TransitionFromDown(target, occurrence, offset, easing, duration, delay);
+            transitionComponent.TransitionFromBottom(target, occurrence, offset, easing, duration, delay);
         }
 
         /// <summary>
         /// Transitions the UI element from a position offset to the left back to its starting position
         /// <list type="bullet">
         ///     <item>
-        ///         <description><b>Note</b>: Animation always starts from the element's original position</description>
+        ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
         ///     </item>
         ///     <item>
         ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
@@ -204,7 +204,7 @@ namespace FlowKit.Core
         /// Transitions the UI element from a position offset to the right back to its starting position
         /// <list type="bullet">
         ///     <item>
-        ///         <description><b>Note</b>: Animation always starts from the element's original position</description>
+        ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
         ///     </item>
         ///     <item>
         ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
@@ -227,7 +227,7 @@ namespace FlowKit.Core
         /// Transitions the UI element from an offset position on both axes back to its starting position
         /// <list type="bullet">
         ///     <item>
-        ///         <description><b>Note</b>: Animation always starts from the element's original position</description>
+        ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
         ///     </item>
         ///     <item>
         ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
@@ -250,7 +250,7 @@ namespace FlowKit.Core
         /// Transitions the UI element from its starting position to a position offset upward
         /// <list type="bullet">
         ///     <item>
-        ///         <description><b>Note</b>: Animation always starts from the element's original position</description>
+        ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
         ///     </item>
         ///     <item>
         ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
@@ -263,17 +263,17 @@ namespace FlowKit.Core
         /// <param name="easing">Specifies the easing method the transition should use</param>
         /// <param name="duration">Time in seconds for the transition duration</param>
         /// <param name="delay">Time in seconds to wait before starting the transition</param>
-        public void TransitionToUp(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+        public void TransitionToTop(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
         {
             occurrence -= 1;
-            transitionComponent.TransitionToUp(target, occurrence, offset, easing, duration, delay);
+            transitionComponent.TransitionToTop(target, occurrence, offset, easing, duration, delay);
         }
 
         /// <summary>
         /// Transitions the UI element from its starting position to a position offset downward
         /// <list type="bullet">
         ///     <item>
-        ///         <description><b>Note</b>: Animation always starts from the element's original position</description>
+        ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
         ///     </item>
         ///     <item>
         ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
@@ -286,17 +286,17 @@ namespace FlowKit.Core
         /// <param name="easing">Specifies the easing method the transition should use</param>
         /// <param name="duration">Time in seconds for the transition duration</param>
         /// <param name="delay">Time in seconds to wait before starting the transition</param>
-        public void TransitionToDown(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+        public void TransitionToBottom(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
         {
             occurrence -= 1;
-            transitionComponent.TransitionToDown(target, occurrence, offset, easing, duration, delay);
+            transitionComponent.TransitionToBottom(target, occurrence, offset, easing, duration, delay);
         }
 
         /// <summary>
         /// Transitions the UI element from its starting position to a position offset to the left
         /// <list type="bullet">
         ///     <item>
-        ///         <description><b>Note</b>: Animation always starts from the element's original position</description>
+        ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
         ///     </item>
         ///     <item>
         ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
@@ -319,7 +319,7 @@ namespace FlowKit.Core
         /// Transitions the UI element from its starting position to a position offset to the right
         /// <list type="bullet">
         ///     <item>
-        ///         <description><b>Note</b>: Animation always starts from the element's original position</description>
+        ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
         ///     </item>
         ///     <item>
         ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
@@ -342,7 +342,7 @@ namespace FlowKit.Core
         /// Transitions the UI element from its starting position to an offset position
         /// <list type="bullet">
         ///     <item>
-        ///         <description><b>Note</b>: Animation always starts from the element's original position</description>
+        ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
         ///     </item>
         ///     <item>
         ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
@@ -361,6 +361,22 @@ namespace FlowKit.Core
             transitionComponent.TransitionToPosition(target, occurrence, offset, easing, duration, delay);
         }
 
+        /// <summary>
+        /// Reverts the target UI elements' position back to it's original position | <b>[NOT Animated]</b>
+        ///  <list type="bullet">
+        ///     <item>
+        ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+        ///     </item>
+        /// </list>
+        /// </summary>
+        /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
+        /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
+        public void ResetPosition(AnimationTarget target, int occurrence)
+        {
+            occurrence -= 1;
+            transitionComponent.Reset(target, occurrence, gameObject);
+        }
+
         // ----------------------------------------------------- Rotation API -----------------------------------------------------
 
         /// <summary>
@@ -374,7 +390,7 @@ namespace FlowKit.Core
         ///     </item>
         /// </list>
         /// </summary>
-        /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
+        /// <param name="target">Target component to rotate (Panel, Text, Image, Button)</param>
         /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
         /// <param name="degrees">Degrees the rotation should rotate, positive values go counter-clockwise, negative clockwise</param>
         /// <param name="easing">Specifies the easing method the transition should use</param>
@@ -386,13 +402,29 @@ namespace FlowKit.Core
             rotationComponent.Rotation(target, occurrence, degrees, easing, duration, delay);
         }
 
+        /// <summary>
+        /// Reverts the target UI elements' rotation back to it's original rotation | <b>[NOT Animated]</b>
+        ///  <list type="bullet">
+        ///     <item>
+        ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+        ///     </item>
+        /// </list>
+        /// </summary>
+        /// <param name="target">Target component to rotate (Panel, Text, Image, Button)</param>
+        /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
+        public void ResetRotation(AnimationTarget target, int occurrence)
+        {
+            occurrence -= 1;
+            rotationComponent.Reset(target, occurrence, gameObject);
+        }
+
         // ----------------------------------------------------- Scaling API -----------------------------------------------------
 
         /// <summary>
-        /// Scales up the target UI element relative to it's parent's scale.
+        /// Scales up the target UI element.
         /// <list type="bullet">
         ///     <item>
-        ///         <description><b>Note</b>: Animation always starts from the element’s original scale, calculated relative to its parent.</description>
+        ///         <description><b>Note</b>: Subsequant calls will start animating from current scale</description>
         ///     </item>
         ///     <item>
         ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
@@ -412,10 +444,10 @@ namespace FlowKit.Core
         }
 
         /// <summary>
-        /// Scales down the target UI element relative to it's parent's scale.
+        /// Scales down the target UI element.
         /// <list type="bullet">
         ///     <item>
-        ///         <description><b>Note</b>: Animation always starts from the element’s original scale, calculated relative to its parent.</description>
+        ///         <description><b>Note</b>: Subsequant calls will start animating from current scale</description>
         ///     </item>
         ///     <item>
         ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
@@ -432,6 +464,22 @@ namespace FlowKit.Core
         {
             occurrence -= 1;
             scalingComponent.ScaleDown(target, occurrence, multiplier, easing, duration, delay);
+        }
+
+        /// <summary>
+        /// Reverts the target UI elements' scale back to it's original scale | <b>[NOT Animated]</b>
+        ///  <list type="bullet">
+        ///     <item>
+        ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+        ///     </item>
+        /// </list>
+        /// </summary>
+        /// <param name="target">Target component to scale (Panel, Text, Image, Button)</param>
+        /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
+        public void ResetScale(AnimationTarget target, int occurrence)
+        {
+            occurrence -= 1;
+            scalingComponent.Reset(target, occurrence, gameObject);
         }
 
         // ----------------------------------------------------- TypeWriter API -----------------------------------------------------
