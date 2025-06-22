@@ -28,12 +28,14 @@ using TMPro;
 
 using FlowKit.UI;
 using FlowKit.Common;
+using static FlowKit.Core.TweenQueue;
 
 namespace FlowKit.Core
 {
     public class Tween : MonoBehaviour
     {
         // Class variables
+        private TweenQueue queueComponent;
         private Fade fadeComponent;
         private Transition transitionComponent;
         private Rotate rotationComponent;
@@ -75,11 +77,61 @@ namespace FlowKit.Core
             if (_panel == null) { Debug.LogWarning($"[{gameObject.name}] No RectTransform component found."); }
             #endif
 
+            queueComponent = new TweenQueue(this);
             fadeComponent = new Fade(_texts, _images, _buttons, _cg, this);
             transitionComponent = new Transition(_texts, _images, _buttons, _panel, this);
             rotationComponent = new Rotate(_texts, _images, _buttons, _panel, this);
             scalingComponent = new Scale(_texts, _images, _buttons, _panel, this);
             typeWriterComponent = new TypeWrite(_texts, this);
+        }
+
+        // ----------------------------------------------------- Queue API -----------------------------------------------------
+
+        /// <summary>
+        /// Queues a set of animation steps.
+        /// </summary>
+        /// <param name="steps">Array of <b>AnimationStep</b> methods to be called</param>
+        /// <param name="name">Specifies the name of the queue</param>
+        /// <param name="autoStart">Specifies if the queue should start on being created</param>
+        public void Queue(AnimationStep[] steps, string name, bool autoStart = false)
+        {
+            queueComponent.Queue(steps, name, autoStart);
+        }
+
+        /// <summary>
+        /// Starts a designated queue identified by it's name.
+        /// </summary>
+        /// <param name="name">Specifies the name of the target queue</param>
+        public void StartQueue(string name)
+        {
+            queueComponent.Start(name);
+        }
+
+        /// <summary>
+        /// Stops a designated queue identified by it's name.
+        /// </summary>
+        /// <param name="name">Specifies the name of the target queue</param>
+        public void StopQueue(string name)
+        {
+            queueComponent.Stop(name);
+        }
+
+        /// <summary>
+        /// Pauses a designated queue identified by it's name.
+        /// </summary>
+        /// <param name="name">Specifies the name of the target queue</param>
+        public void PauseQueue(string name)
+        {
+            queueComponent.Pause(name);
+        }
+
+        /// <summary>
+        /// Resumes a designated queue identified by it's name.
+        /// </summary>
+        /// <param name="name">Specifies the name of the target queue</param>
+        public void ResumeQueue(string name)
+        {
+            queueComponent.Resume(name);
         }
 
         // ----------------------------------------------------- Fade API -----------------------------------------------------
@@ -392,7 +444,7 @@ namespace FlowKit.Core
         /// Scales up the target UI element relative to it's parent's scale.
         /// <list type="bullet">
         ///     <item>
-        ///         <description><b>Note</b>: Animation always starts from the element’s original scale, calculated relative to its parent.</description>
+        ///         <description><b>Note</b>: Animation always starts from the elementï¿½s original scale, calculated relative to its parent.</description>
         ///     </item>
         ///     <item>
         ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
@@ -415,7 +467,7 @@ namespace FlowKit.Core
         /// Scales down the target UI element relative to it's parent's scale.
         /// <list type="bullet">
         ///     <item>
-        ///         <description><b>Note</b>: Animation always starts from the element’s original scale, calculated relative to its parent.</description>
+        ///         <description><b>Note</b>: Animation always starts from the elementï¿½s original scale, calculated relative to its parent.</description>
         ///     </item>
         ///     <item>
         ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>

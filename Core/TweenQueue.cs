@@ -7,14 +7,20 @@ using UnityEngine.Events;
 
 namespace FlowKit.Core
 {
-    public class TweenQueue : MonoBehaviour
+    internal class TweenQueue
     {
         private readonly Dictionary<string, Queue<AnimationStep>> _namedQueues = new Dictionary<string, Queue<AnimationStep>>();
         private readonly Dictionary<string, Coroutine> _runningQueues = new Dictionary<string, Coroutine>();
         private readonly Dictionary<string, bool> _pausedQueues = new Dictionary<string, bool>();
 
-        [System.Obsolete("This is an experimental feature and may not work just yet")] 
-        public void Queue(GameObject gameObject, AnimationStep[] steps, string name, bool autoStart = false)
+        private readonly MonoBehaviour _monoBehaviour;
+
+        public TweenQueue(MonoBehaviour monoBehaviour)
+        {
+            _monoBehaviour = monoBehaviour;
+        }
+
+        public void Queue(AnimationStep[] steps, string name, bool autoStart = false)
         {
             Queue<AnimationStep> queue = new Queue<AnimationStep>();
             foreach (var step in steps)
@@ -23,54 +29,61 @@ namespace FlowKit.Core
             }
             _namedQueues[name] = queue;
 
-            if (autoStart) { StartQueue(name); }
+            if (autoStart) { Start(name); }
         }
 
-        [System.Obsolete("This is an experimental feature and may not work just yet")] 
-        public void StartQueue(string name)
+        public void Start(string name)
         {
-            if (!_runningQueues.ContainsKey(name))
+            if (_namedQueues.ContainsKey(name) && !_runningQueues.ContainsKey(name))
             {
-                var coroutine = StartCoroutine(RunQueue(name));
+                var coroutine = _monoBehaviour.StartCoroutine(RunQueue(name));
                 _runningQueues[name] = coroutine;
+            }
+        }
+
+        public void Stop(string name)
+        {
+            if (_namedQueues.ContainsKey(name) && _runningQueues.ContainsKey(name))
+            {
+                _runningQueues.TryGetValue(name, out Coroutine coroutine);
+                _monoBehaviour.StopCoroutine(coroutine);
+
+                _namedQueues.Remove(name);
+                _runningQueues.Remove(name);
+                _pausedQueues.Remove(name);
+            }
+        }
+
+        public void Pause(string name)
+        {
+            if (_namedQueues.ContainsKey(name) && _runningQueues.ContainsKey(name))
+            {
+                _pausedQueues[name] = true;
+            }
+        }
+
+        public void Resume(string name)
+        {
+            if (_namedQueues.ContainsKey(name) && _runningQueues.ContainsKey(name))
+            {
                 _pausedQueues[name] = false;
             }
         }
 
-        [System.Obsolete("This is an experimental feature and may not work just yet")] 
-        public void StopQueue(string name)
-        {
-            if (_runningQueues.TryGetValue(name, out var coroutine))
-            {
-                StopCoroutine(coroutine);
-                _runningQueues.Remove(name);
-                _pausedQueues.Remove(name);
-                _namedQueues.Remove(name);
-            }
-        }
-
-        [System.Obsolete("This is an experimental feature and may not work just yet")] 
-        public void PauseQueue(string name)
-        {
-            if (_runningQueues.ContainsKey(name)) { _pausedQueues[name] = true; }
-        }
-
-        [System.Obsolete("This is an experimental feature and may not work just yet")] 
-        public void ResumeQueue(string name)
-        {
-            if (_runningQueues.ContainsKey(name)) { _pausedQueues[name] = false; }
-        }
-
         private IEnumerator RunQueue(string name)
         {
-            if (!_namedQueues.TryGetValue(name, out var queue)) { yield break; }
+            var queue = _namedQueues[name];
+
             while (queue.Count > 0)
             {
-                yield return new WaitUntil(() => !_pausedQueues.GetValueOrDefault(name, false));
+                yield return _monoBehaviour.StartCoroutine(WaitPaused(name)); // Pause check 
+                if (!_namedQueues.ContainsKey(name)) { break; }
 
                 var step = queue.Dequeue();
-
-                if (step.delay > 0f) { yield return new WaitForSeconds(step.delay); }
+                if (step.delay > 0f) 
+                { 
+                    yield return new WaitForSeconds(step.delay); 
+                }
 
                 step.action?.Invoke();
             }
@@ -79,8 +92,15 @@ namespace FlowKit.Core
             _pausedQueues.Remove(name);
             _namedQueues.Remove(name);
         }
-    }
 
+        private IEnumerator WaitPaused(string name)
+        {
+            while (_pausedQueues.ContainsKey(name) && _pausedQueues[name])
+            {
+                yield return null;
+            }
+        }
+    }
     public class AnimationStep
     {
         public UnityAction action { get; }
@@ -92,7 +112,16 @@ namespace FlowKit.Core
             this.delay = delay;
         }
 
+        /// <summary>
+        /// Creates a new AnimationStep that calls the specified method.
+        /// </summary>
+        /// <param name="action">Method to be called through a delegate lambda | () =></param>
         public static AnimationStep Call(UnityAction action) => new AnimationStep(action);
-        public static AnimationStep Wait(float duration) => new AnimationStep(() => {}, duration);
+
+        /// <summary>
+        /// Creates a new AnimationStep that waits for a specified duration.
+        /// </summary>
+        /// <param name="duration">Time in seconds to wait</param>
+        public static AnimationStep Wait(float duration) => new AnimationStep(null, duration);
     }
 }
