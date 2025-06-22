@@ -105,70 +105,65 @@ namespace FlowKit.UI
             }
         }
 
+        public void Reset(AnimationTarget target, int occurrence, GameObject gameObject)
+        {
+            switch (target)
+            {
+                case AnimationTarget.Panel:
+                    #if UNITY_EDITOR
+                    if (!storedScale[FlowKitConstants.PanelIndex][0])
+                    {
+                        Debug.LogError($"No saved scale found for Panel: [{gameObject.name}]");
+                    }
+                    #endif
+
+                    _panelTransform.localScale = originalScale[FlowKitConstants.PanelIndex][0];
+                    break;
+                case AnimationTarget.Text:
+                    #if UNITY_EDITOR
+                    if (!storedScale[FlowKitConstants.TextIndex][occurrence])
+                    {
+                        Debug.LogError($"No saved scale found for Text component child. Panel: [{gameObject.name}]");
+                    }
+                    #endif
+
+                    _textComponent[occurrence].rectTransform.localScale = originalScale[FlowKitConstants.TextIndex][occurrence];
+                    break;
+                case AnimationTarget.Image:
+                    #if UNITY_EDITOR
+                    if (!storedScale[FlowKitConstants.ImageIndex][occurrence])
+                    {
+                        Debug.LogError($"No saved scale found for Image component child. Panel: [{gameObject.name}]");
+                    }
+                    #endif
+
+                    _imageComponent[occurrence].rectTransform.localScale = originalScale[FlowKitConstants.ImageIndex][occurrence];
+                    break;
+                case AnimationTarget.Button:
+                    #if UNITY_EDITOR
+                    if (!storedScale[FlowKitConstants.ButtonIndex][occurrence])
+                    {
+                        Debug.LogError($"No saved scale found for Button component child. Panel: [{gameObject.name}]");
+                    }
+                    #endif
+
+                    ((RectTransform)_buttonComponent[occurrence].transform).localScale = originalScale[FlowKitConstants.ButtonIndex][occurrence];
+                    break;
+            }
+        }
+
         // ----------------------------------------------------- SCALE ANIMATION -----------------------------------------------------
 
         private IEnumerator ScaleUi(RectTransform component, int occurrence, float scaleAmount, float duration, float delay, EasingType easing)
         {
-            if (component == null) { yield break; }
+            if (component == null)
+            { yield break; }
 
-            Vector2 startScale = Vector2.zero;
+            GetStartScale(component, occurrence, out Vector2 startScale);
             Vector2 targetScale;
 
-
-            if (component == _panelTransform)
-            {
-                if (!storedScale[FlowKitConstants.PanelIndex][0])
-                {
-                    startScale = _panelTransform.localScale;
-                    originalScale[FlowKitConstants.PanelIndex][0] = startScale;
-                    storedScale[FlowKitConstants.PanelIndex][0] = true;
-                }
-                else
-                {
-                    startScale = originalScale[FlowKitConstants.PanelIndex][0];
-                }
-            }
-            else if (component == _textComponent[occurrence].rectTransform)
-            {
-                if (!storedScale[FlowKitConstants.TextIndex][occurrence])
-                {
-                    startScale = _textComponent[occurrence].rectTransform.localScale;
-                    originalScale[FlowKitConstants.TextIndex][occurrence] = startScale;
-                    storedScale[FlowKitConstants.TextIndex][occurrence] = true;
-                }
-                else
-                {
-                    startScale = originalScale[FlowKitConstants.TextIndex][occurrence];
-                }
-            }
-            else if (component == _imageComponent[occurrence].rectTransform)
-            {
-                if (!storedScale[FlowKitConstants.ImageIndex][occurrence])
-                {
-                    startScale = _imageComponent[occurrence].rectTransform.localScale;
-                    originalScale[FlowKitConstants.ImageIndex][occurrence] = startScale;
-                    storedScale[FlowKitConstants.ImageIndex][occurrence] = true;
-                }
-                else
-                {
-                    startScale = originalScale[FlowKitConstants.ImageIndex][occurrence];
-                }
-            }
-            else if (component == (RectTransform)_buttonComponent[occurrence].transform)
-            {
-                if (!storedScale[FlowKitConstants.ButtonIndex][occurrence])
-                {
-                    startScale = _buttonComponent[occurrence].transform.localScale;
-                    originalScale[FlowKitConstants.ButtonIndex][occurrence] = startScale;
-                    storedScale[FlowKitConstants.ButtonIndex][occurrence] = true;
-                }
-                else
-                {
-                    startScale = originalScale[FlowKitConstants.ButtonIndex][occurrence];
-                }
-            }
-
-            if (delay > 0) { yield return new WaitForSeconds(delay); }
+            if (delay > 0)
+            { yield return new WaitForSeconds(delay); }
             targetScale = startScale * scaleAmount;
 
             float elapsedTime = 0f;
@@ -186,6 +181,66 @@ namespace FlowKit.UI
 
             component.localScale = targetScale;
             FlowKitEvents.InvokeScaleEnd();
+        }
+
+        // ----------------------------------------------------- PRIVATE UTILITIES -----------------------------------------------------
+
+        private void GetStartScale(RectTransform component, int occurrence, out Vector2 startScale)
+        {
+            startScale = Vector2.zero;
+
+            if (component == _panelTransform)
+            {
+                if (!storedScale[FlowKitConstants.PanelIndex][0])
+                {
+                    startScale = _panelTransform.localScale;
+                    originalScale[FlowKitConstants.PanelIndex][0] = startScale;
+                    storedScale[FlowKitConstants.PanelIndex][0] = true;
+                }
+                else
+                {
+                    startScale = _panelTransform.localScale;
+                }
+            }
+            else if (component == _textComponent[occurrence].rectTransform)
+            {
+                if (!storedScale[FlowKitConstants.TextIndex][occurrence])
+                {
+                    startScale = _textComponent[occurrence].rectTransform.localScale;
+                    originalScale[FlowKitConstants.TextIndex][occurrence] = startScale;
+                    storedScale[FlowKitConstants.TextIndex][occurrence] = true;
+                }
+                else
+                {
+                    startScale = _textComponent[occurrence].rectTransform.localScale;
+                }
+            }
+            else if (component == _imageComponent[occurrence].rectTransform)
+            {
+                if (!storedScale[FlowKitConstants.ImageIndex][occurrence])
+                {
+                    startScale = _imageComponent[occurrence].rectTransform.localScale;
+                    originalScale[FlowKitConstants.ImageIndex][occurrence] = startScale;
+                    storedScale[FlowKitConstants.ImageIndex][occurrence] = true;
+                }
+                else
+                {
+                    startScale = _imageComponent[occurrence].rectTransform.localScale;
+                }
+            }
+            else if (component == (RectTransform)_buttonComponent[occurrence].transform)
+            {
+                if (!storedScale[FlowKitConstants.ButtonIndex][occurrence])
+                {
+                    startScale = _buttonComponent[occurrence].transform.localScale;
+                    originalScale[FlowKitConstants.ButtonIndex][occurrence] = startScale;
+                    storedScale[FlowKitConstants.ButtonIndex][occurrence] = true;
+                }
+                else
+                {
+                    startScale = _buttonComponent[occurrence].transform.localScale;
+                }
+            }
         }
     }
 }
