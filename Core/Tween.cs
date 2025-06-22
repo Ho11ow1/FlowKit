@@ -148,10 +148,10 @@ namespace FlowKit.Core
         /// <param name="easing">Specifies the easing method the transition should use</param>
         /// <param name="duration">Time in seconds for the transition duration</param>
         /// <param name="delay">Time in seconds to wait before starting the transition</param>
-        public void TransitionFromUp(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+        public void TransitionFromTop(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
         {
             occurrence -= 1;
-            transitionComponent.TransitionFromUp(target, occurrence, offset, easing, duration, delay);
+            transitionComponent.TransitionFromTop(target, occurrence, offset, easing, duration, delay);
         }
 
         /// <summary>
@@ -171,10 +171,10 @@ namespace FlowKit.Core
         /// <param name="easing">Specifies the easing method the transition should use</param>
         /// <param name="duration">Time in seconds for the transition duration</param>
         /// <param name="delay">Time in seconds to wait before starting the transition</param>
-        public void TransitionFromDown(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+        public void TransitionFromBottom(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
         {
             occurrence -= 1;
-            transitionComponent.TransitionFromDown(target, occurrence, offset, easing, duration, delay);
+            transitionComponent.TransitionFromBottom(target, occurrence, offset, easing, duration, delay);
         }
 
         /// <summary>
@@ -263,10 +263,10 @@ namespace FlowKit.Core
         /// <param name="easing">Specifies the easing method the transition should use</param>
         /// <param name="duration">Time in seconds for the transition duration</param>
         /// <param name="delay">Time in seconds to wait before starting the transition</param>
-        public void TransitionToUp(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+        public void TransitionToTop(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
         {
             occurrence -= 1;
-            transitionComponent.TransitionToUp(target, occurrence, offset, easing, duration, delay);
+            transitionComponent.TransitionToTop(target, occurrence, offset, easing, duration, delay);
         }
 
         /// <summary>
@@ -286,10 +286,10 @@ namespace FlowKit.Core
         /// <param name="easing">Specifies the easing method the transition should use</param>
         /// <param name="duration">Time in seconds for the transition duration</param>
         /// <param name="delay">Time in seconds to wait before starting the transition</param>
-        public void TransitionToDown(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+        public void TransitionToBottom(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
         {
             occurrence -= 1;
-            transitionComponent.TransitionToDown(target, occurrence, offset, easing, duration, delay);
+            transitionComponent.TransitionToBottom(target, occurrence, offset, easing, duration, delay);
         }
 
         /// <summary>
