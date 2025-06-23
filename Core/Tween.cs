@@ -28,7 +28,6 @@ using TMPro;
 
 using FlowKit.UI;
 using FlowKit.Common;
-using static FlowKit.Core.TweenQueue;
 
 namespace FlowKit.Core
 {
