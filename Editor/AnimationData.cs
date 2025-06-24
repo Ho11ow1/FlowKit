@@ -12,7 +12,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * --------------------------------------------------------
-* FlowKit - Tween EditorWindow AnimationData
+* FlowKit - Editor window AnimationData
 * Created by Hollow1
 * 
 * Provides AnimationData along with helper functions for
@@ -56,9 +56,9 @@ namespace FlowKit.Editor
             {
                 panelDataMap[panel] = new Dictionary<int, Dictionary<RectTransform, AnimationData>>
             {
-                { TweenWindow._textIndex, new Dictionary<RectTransform, AnimationData>() },
-                { TweenWindow._imageIndex, new Dictionary<RectTransform, AnimationData>() },
-                { TweenWindow._buttonIndex, new Dictionary<RectTransform, AnimationData>() }
+                { FlowKitWindow._textIndex, new Dictionary<RectTransform, AnimationData>() },
+                { FlowKitWindow._imageIndex, new Dictionary<RectTransform, AnimationData>() },
+                { FlowKitWindow._buttonIndex, new Dictionary<RectTransform, AnimationData>() }
             };
             }
         }
@@ -76,15 +76,15 @@ namespace FlowKit.Editor
             int typeIndex = -1;
             if (rect.GetComponent<TextMeshProUGUI>())
             {
-                typeIndex = TweenWindow._textIndex;
+                typeIndex = FlowKitWindow._textIndex;
             }
             else if (rect.GetComponent<Button>())
             {
-                typeIndex = TweenWindow._buttonIndex;
+                typeIndex = FlowKitWindow._buttonIndex;
             }
             else if (rect.GetComponent<Image>())
             {
-                typeIndex = TweenWindow._imageIndex;
+                typeIndex = FlowKitWindow._imageIndex;
             }
 
             if (typeIndex != -1)
@@ -114,17 +114,17 @@ namespace FlowKit.Editor
             if (rect.GetComponent<TextMeshProUGUI>())
             {
                 type = "AnimationTarget.Text";
-                typeIndex = TweenWindow._textIndex;
+                typeIndex = FlowKitWindow._textIndex;
             }
             else if (rect.GetComponent<Button>())
             {
                 type = "AnimationTarget.Button";
-                typeIndex = TweenWindow._buttonIndex;
+                typeIndex = FlowKitWindow._buttonIndex;
             }
             else if (rect.GetComponent<Image>())
             {
                 type = "AnimationTarget.Image";
-                typeIndex = TweenWindow._imageIndex;
+                typeIndex = FlowKitWindow._imageIndex;
             }
 
             if (typeIndex != -1)
@@ -154,11 +154,11 @@ namespace FlowKit.Editor
                 case _fadeText + "Out":
                     animationString = "FadeOut";
                     break;
-                case _transitionText + "FromUp":
-                    animationString = "TransitionFromUp";
+                case _transitionText + "FromTop":
+                    animationString = "TransitionFromTop";
                     break;
-                case _transitionText + "FromDown":
-                    animationString = "TransitionFromDown";
+                case _transitionText + "FromBottom":
+                    animationString = "TransitionFromBottom";
                     break;
                 case _transitionText + "FromLeft":
                     animationString = "TransitionFromLeft";
@@ -169,11 +169,11 @@ namespace FlowKit.Editor
                 case _transitionText + "FromPosition":
                     animationString = "TransitionFromPosition";
                     break;
-                case _transitionText + "ToUp":
-                    animationString = "TransitionToUp";
+                case _transitionText + "ToTop":
+                    animationString = "TransitionToTop";
                     break;
-                case _transitionText + "ToDown":
-                    animationString = "TransitionToDown";
+                case _transitionText + "ToBottom":
+                    animationString = "TransitionToBottom";
                     break;
                 case _transitionText + "ToLeft":
                     animationString = "TransitionToLeft";
