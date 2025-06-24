@@ -1,0 +1,25 @@
+■ FlowKit - Additional Documentation
+================================
+
+■ Performance Guidelines
+----------------------
+○ Use coroutines for repetitive group operations
+○ Use queues for complex single-element sequences
+○ Although the library is lightweight, avoid running too many animations simultaneously
+
+■ Common Patterns
+--------------
+○ Menu transitions
+○ Loading sequences
+○ Notification popups
+
+■ Troubleshooting
+--------------
+○ "Animation not playing?":
+  ・ Is the UI panel with [FlowKitEngine] active?
+  ・ Is the target UI element (Button, Text, etc.) present in the hierarchy?
+  ・ Are you using the correct occurrence number? (1st button = occurrence 1, not 0)
+  ・ Check the [Console] for any error messages
+○ Performance Tips:
+ ・ Avoid animating the [Canvas] directly (expensive) 
+ ・ Instead, animate a dedicated [UI panel] as intended
