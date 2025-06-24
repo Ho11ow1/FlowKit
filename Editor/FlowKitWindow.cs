@@ -12,7 +12,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * --------------------------------------------------------
-* FlowKit - Tweening Editor window component
+* FlowKit - Editor window component
 * Created by Hollow1
 * 
 * A window aimed to help users with code for their Animations
@@ -28,12 +28,12 @@ using TMPro;
 
 namespace FlowKit.Editor
 {
-    public class TweenWindow : EditorWindow
+    public class FlowKitWindow : EditorWindow
     {
-        private static TweenWindow window;
+        private static FlowKitWindow window;
 
-        // Tween variables
-        private readonly List<GameObject> _tweenList = new List<GameObject>();
+        // FlowKitEngine variables
+        private readonly List<GameObject> _flowkitList = new List<GameObject>();
         private Vector2 _scrollView;
 
         // Track which object is selected for code generation
@@ -56,7 +56,7 @@ namespace FlowKit.Editor
         private const int _dropdownWidth = 148;
 
         // Conveluted KeyValuePair finally works
-        private readonly Dictionary<GameObject, Dictionary<int, Dictionary<RectTransform, AnimationData>>> _panelDataMap = 
+        private readonly Dictionary<GameObject, Dictionary<int, Dictionary<RectTransform, AnimationData>>> _panelDataMap =
                      new Dictionary<GameObject, Dictionary<int, Dictionary<RectTransform, AnimationData>>>();
 
         // Component index mathching Core
@@ -64,10 +64,10 @@ namespace FlowKit.Editor
         internal const int _imageIndex = 2;
         internal const int _buttonIndex = 3;
 
-        [MenuItem("Window/FlowKit/Tween Helper")]
+        [MenuItem("Window/FlowKit/FlowKit Helper")]
         public static void ShowWindow()
         {
-            window = GetWindow<TweenWindow>("Tween Helper");
+            window = GetWindow<FlowKitWindow>("FlowKit Helper");
             window.position = new Rect(550, 250, 700, 550);
             window.Show();
         }
@@ -97,18 +97,18 @@ namespace FlowKit.Editor
         {
             GUILayout.Space(10);
 
-            EditorGUILayout.LabelField("Tween Objects", EditorStyles.boldLabel);
-            if (_tweenList.Count == 0)
+            EditorGUILayout.LabelField("FlowKitEngine Objects", EditorStyles.boldLabel);
+            if (_flowkitList.Count == 0)
             {
-                EditorGUILayout.HelpBox("No UI panels with `Tween` component found.", MessageType.Info);
+                EditorGUILayout.HelpBox("No UI panels with `FlowKitEngine` script found.", MessageType.Info);
             }
 
             _scrollView = EditorGUILayout.BeginScrollView(_scrollView);
             EditorGUILayout.BeginVertical("box");
 
-            for (int i = 0; i < _tweenList.Count; i++)
+            for (int i = 0; i < _flowkitList.Count; i++)
             {
-                GameObject obj = _tweenList[i];
+                GameObject obj = _flowkitList[i];
                 if (obj != null)
                 {
                     EditorGUILayout.BeginHorizontal(_componentStyle);
@@ -147,7 +147,7 @@ namespace FlowKit.Editor
 
         private void FindPanels()
         {
-            _tweenList.Clear();
+            _flowkitList.Clear();
             _panelDataMap.Clear();
 
             GameObject[] gameObjects = GameObject.FindObjectsOfType<GameObject>(true);
@@ -156,15 +156,15 @@ namespace FlowKit.Editor
             {
                 if (obj.layer == LayerMask.NameToLayer("UI"))
                 {
-                    if (obj.GetComponent<FlowKit.Core.Tween>() != null)
+                    if (obj.GetComponent<FlowKit.Core.FlowKitEngine>() != null)
                     {
-                        _tweenList.Add(obj);
+                        _flowkitList.Add(obj);
                         InitializePanelData(obj);
                     }
                 }
             }
 
-            Debug.Log($"Found {_tweenList.Count} UI panels with `Tween` scripts (including inactive)");
+            Debug.Log($"Found {_flowkitList.Count} UI panels with `FlowKitEngine` script (including inactive)");
         }
 
         private void InitializePanelData(GameObject panel)
@@ -248,13 +248,13 @@ namespace FlowKit.Editor
                 menu.AddItem(new GUIContent(AnimationData._fadeText + "/FadeIn"), data.animation == "FadeIn", (userData) => OnSelected((RectTransform)userData, "FadeIn"), rect);
                 menu.AddItem(new GUIContent(AnimationData._fadeText + "/FadeOut"), data.animation == "FadeOut", (userData) => OnSelected((RectTransform)userData, "FadeOut"), rect);
                 // Transition
-                menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionFromUp"), data.animation == "TransitionFromUp", (userData) => OnSelected((RectTransform)userData, "TransitionFromUp"), rect);
-                menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionFromDown"), data.animation == "TransitionFromDown", (userData) => OnSelected((RectTransform)userData, "TransitionFromDown"), rect);
+                menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionFromTop"), data.animation == "TransitionFromTop", (userData) => OnSelected((RectTransform)userData, "TransitionFromTop"), rect);
+                menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionFromBottom"), data.animation == "TransitionFromBottom", (userData) => OnSelected((RectTransform)userData, "TransitionFromBottom"), rect);
                 menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionFromLeft"), data.animation == "TransitionFromLeft", (userData) => OnSelected((RectTransform)userData, "TransitionFromLeft"), rect);
                 menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionFromRight"), data.animation == "TransitionFromRight", (userData) => OnSelected((RectTransform)userData, "TransitionFromRight"), rect);
                 menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionFromPosition"), data.animation == "TransitionFromPosition", (userData) => OnSelected((RectTransform)userData, "TransitionFromPosition"), rect);
-                menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionToUp"), data.animation == "TransitionToUp", (userData) => OnSelected((RectTransform)userData, "TransitionToUp"), rect);
-                menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionToDown"), data.animation == "TransitionToDown", (userData) => OnSelected((RectTransform)userData, "TransitionToDown"), rect);
+                menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionToTop"), data.animation == "TransitionToTop", (userData) => OnSelected((RectTransform)userData, "TransitionToTop"), rect);
+                menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionToBottom"), data.animation == "TransitionToBottomn", (userData) => OnSelected((RectTransform)userData, "TransitionToBottom"), rect);
                 menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionToLeft"), data.animation == "TransitionToLeft", (userData) => OnSelected((RectTransform)userData, "TransitionToLeft"), rect);
                 menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionToRight"), data.animation == "TransitionToRight", (userData) => OnSelected((RectTransform)userData, "TransitionToRight"), rect);
                 menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionToPosition"), data.animation == "TransitionToPosition", (userData) => OnSelected((RectTransform)userData, "TransitionToPosition"), rect);
@@ -343,9 +343,9 @@ namespace FlowKit.Editor
             string[] labels =
             {
             "[SerializeField] private GameObject panel;",
-            "private Tween tween;\n",
+            "private FlowKitEngine _panelFK;",
             "void Awake()",
-            "    tween = panel.GetComponent<Tween>();",
+            "    _panelFK = panel.GetComponent<FlowKitEngine>();",
             "private void PlayAnimation()",
         };
 
@@ -409,14 +409,14 @@ namespace FlowKit.Editor
 
             GUIStyle codeStyle = new GUIStyle(EditorStyles.label) { fontStyle = FontStyle.Bold };
 
-            EditorGUILayout.LabelField($"    tween.{animationString}({parameters});", codeStyle, GUILayout.Width(codeWidth));
+            EditorGUILayout.LabelField($"    _panelFK.{animationString}({parameters});", codeStyle, GUILayout.Width(codeWidth));
             EditorGUILayout.LabelField("}", GUILayout.Width(codeWidth));
             EditorGUILayout.Space(5);
 
             GUI.backgroundColor = Color.white;
             if (GUILayout.Button("Copy to Clipboard", GUILayout.Width(150)))
             {
-                var code = $"tween.{animationString}({parameters});";
+                var code = $"_panelFK.{animationString}({parameters});";
 
                 EditorGUIUtility.systemCopyBuffer = code;
                 Debug.Log("Code copied to clipboard!");

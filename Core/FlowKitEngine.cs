@@ -28,14 +28,13 @@ using TMPro;
 
 using FlowKit.UI;
 using FlowKit.Common;
-using static FlowKit.Core.TweenQueue;
 
 namespace FlowKit.Core
 {
-    public class Tween : MonoBehaviour
+    public class FlowKitEngine : MonoBehaviour
     {
         // Class variables
-        private TweenQueue queueComponent;
+        private FlowKitQueue queueComponent;
         private Fade fadeComponent;
         private Transition transitionComponent;
         private Rotate rotationComponent;
@@ -77,7 +76,7 @@ namespace FlowKit.Core
             if (_panel == null) { Debug.LogWarning($"[{gameObject.name}] No RectTransform component found."); }
             #endif
 
-            queueComponent = new TweenQueue(this);
+            queueComponent = new FlowKitQueue(this);
             fadeComponent = new Fade(_texts, _images, _buttons, _cg, this);
             transitionComponent = new Transition(_texts, _images, _buttons, _panel, this);
             rotationComponent = new Rotate(_texts, _images, _buttons, _panel, this);
