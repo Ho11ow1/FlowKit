@@ -10,7 +10,7 @@ using FlowKit.Common;
 namespace FlowKit.Extras
 {
     [AddComponentMenu("")]
-    public class TweenExample : MonoBehaviour
+    public class Example : MonoBehaviour
     {
         [Header("UI References")]
         [SerializeField] GameObject optionsPanel;

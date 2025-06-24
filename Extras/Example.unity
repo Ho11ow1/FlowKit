@@ -471,7 +471,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 1
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 1
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -786,7 +786,7 @@ GameObject:
   - component: {fileID: 561640521}
   - component: {fileID: 561640522}
   m_Layer: 0
-  m_Name: TweenController
+  m_Name: FlowKitController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -819,7 +819,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96e05f965a03c1a4aaafc4e66e5de0cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuPanel: {fileID: 562046768}
+  optionsPanel: {fileID: 562046768}
+  titlePanel: {fileID: 1605683967}
   useQueueExample: 0
 --- !u!1 &562046768
 GameObject:
