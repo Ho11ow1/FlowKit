@@ -1,3 +1,27 @@
+/* Copyright 2025 Hollow1
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* --------------------------------------------------------
+* FlowKit - Common definitions
+* Created by Hollow1
+* 
+* Provides a unified space for all internal and public
+* commonly used properties / values
+* 
+* Version: 1.0.0
+* GitHub: https://github.com/Ho11ow1/FlowKit
+* License: Apache License 2.0
+* -------------------------------------------------------- */
 using UnityEngine.Events;
 
 namespace FlowKit.Common
@@ -44,12 +68,12 @@ namespace FlowKit.Common
         internal static void InvokeTypeWriteEnd() { TypeWriteEnd?.Invoke(); }
     }
 
-    public static class FlowKitConstants
+    internal class FlowKitConstants
     {
-        public const int PanelIndex = 0;
-        public const int TextIndex = 1;
-        public const int ImageIndex = 2;
-        public const int ButtonIndex = 3;
-        public const float DefaultDuration = 0.5f;
+        internal const int PanelIndex = 0;
+        internal const int TextIndex = 1;
+        internal const int ImageIndex = 2;
+        internal const int ButtonIndex = 3;
+        internal const float DefaultDuration = 0.5f;
     }
 }
