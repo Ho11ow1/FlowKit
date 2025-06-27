@@ -513,7 +513,7 @@ GameObject:
   - component: {fileID: 405672150}
   - component: {fileID: 405672149}
   m_Layer: 5
-  m_Name: DisclaimerContainer
+  m_Name: Disclaimer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -659,7 +659,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -940,7 +940,7 @@ GameObject:
   - component: {fileID: 562046770}
   - component: {fileID: 562046773}
   m_Layer: 5
-  m_Name: OptionsContainer
+  m_Name: Options
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1067,7 +1067,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 177.5, y: -21.5}
+  m_AnchoredPosition: {x: 161, y: -21.5}
   m_SizeDelta: {x: -485, y: -915}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &690065441
@@ -1270,7 +1270,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 177.5, y: 140.99997}
+  m_AnchoredPosition: {x: 161, y: 140.99997}
   m_SizeDelta: {x: -485, y: -915}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &845774462
@@ -1501,7 +1501,7 @@ GameObject:
   - component: {fileID: 1569120036}
   - component: {fileID: 1569120035}
   m_Layer: 5
-  m_Name: GameTitle
+  m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1555,8 +1555,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1741,8 +1741,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -177.5, y: -21.5}
-  m_SizeDelta: {x: -485, y: -915}
+  m_AnchoredPosition: {x: -155.75, y: -21.5}
+  m_SizeDelta: {x: -488.5, y: -915}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1598889865
 GameObject:
@@ -1892,7 +1892,7 @@ GameObject:
   - component: {fileID: 1605683971}
   - component: {fileID: 1605683972}
   m_Layer: 5
-  m_Name: TitleContainer
+  m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2016,8 +2016,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -177.5, y: 141}
-  m_SizeDelta: {x: -485, y: -915}
+  m_AnchoredPosition: {x: -155.75, y: 141}
+  m_SizeDelta: {x: -488.5, y: -915}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1632770235
 MonoBehaviour:
@@ -2167,8 +2167,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
