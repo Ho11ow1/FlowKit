@@ -5,6 +5,7 @@
 ----------------------
 ○ Use coroutines for repetitive group operations
 ○ Use queues for complex single-element sequences
+○ Simple animations that require 1 to 3 method calls can be directly invoked within a function
 ○ Although the library is lightweight, avoid running too many animations simultaneously
 
 ■ Common Patterns

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Introduces the core Tweening functionality and Queue system
+// Introduces the core Animation functionality and Queue system
 using FlowKit.Core;
 // Introduces common tweening types and utilities
 using FlowKit.Common;
@@ -16,6 +16,7 @@ namespace FlowKit.Extras
         [SerializeField] GameObject optionsPanel;
         [SerializeField] GameObject titlePanel;
         [SerializeField] GameObject disclaimerPanel;
+        
         private FlowKitEngine _optionsFK;
         private FlowKitEngine _titleFK;
         private FlowKitEngine _disclaimerFK;
@@ -53,12 +54,12 @@ namespace FlowKit.Extras
          */
         private void OptionsQueue()
         {
+            // No need for a seperate function here since these are simple animations
+            _titleFK.TransitionFromTop(AnimationTarget.Text, 1, 650, EasingType.EaseIn, 2f);
+            _disclaimerFK.TypeWriteWithDuration(1, 3f);
+
             _optionsFK.Queue(new AnimationStep[]
             {
-                // Start the title and disclaimer animations
-                AnimationStep.Call(() => _titleFK.TransitionFromTop(AnimationTarget.Text, 1, 650, EasingType.EaseIn, 2f)),
-                AnimationStep.Call(() => _disclaimerFK.TypeWriteWithDuration(1, 3f)),
-
                 // Set Button & Button text visibility to invisible instantly
                 AnimationStep.Call(() => _optionsFK.FadeOut(AnimationTarget.Button, 1, 0f)),
                 AnimationStep.Call(() => _optionsFK.FadeOut(AnimationTarget.Text, 1, 0f)),
@@ -74,23 +75,27 @@ namespace FlowKit.Extras
                 AnimationStep.Call(() => _optionsFK.TransitionFromLeft(AnimationTarget.Button, 1, 650, EasingType.EaseIn, 2f)),
                 AnimationStep.Call(() => _optionsFK.FadeIn(AnimationTarget.Button, 1, 0f)),
                 AnimationStep.Call(() => _optionsFK.FadeIn(AnimationTarget.Text, 1, 0f)),
-                AnimationStep.Wait(1.5f), // Delay between each button transition
+                // Delay before animating the next button
+                AnimationStep.Wait(1.5f),
 
                 // Alternate direction for visual interest
                 AnimationStep.Call(() => _optionsFK.TransitionFromRight(AnimationTarget.Button, 2, 650, EasingType.EaseIn, 2f)),
                 AnimationStep.Call(() => _optionsFK.FadeIn(AnimationTarget.Button, 2, 0f)),
                 AnimationStep.Call(() => _optionsFK.FadeIn(AnimationTarget.Text, 2, 0f)),
-                AnimationStep.Wait(1.5f), // Delay between each button transition
+                // Delay before animating the next button
+                AnimationStep.Wait(1.5f),
 
+                // Revert back to left transition
                 AnimationStep.Call(() => _optionsFK.TransitionFromLeft(AnimationTarget.Button, 3, 650, EasingType.EaseIn, 2f)),
                 AnimationStep.Call(() => _optionsFK.FadeIn(AnimationTarget.Button, 3, 0f)),
                 AnimationStep.Call(() => _optionsFK.FadeIn(AnimationTarget.Text, 3, 0f)),
-                AnimationStep.Wait(1.5f), // Delay between each button transition
+                // Delay before animating the next button
+                AnimationStep.Wait(1.5f),
 
+                // Alternate direction for visual interest
                 AnimationStep.Call(() => _optionsFK.TransitionFromRight(AnimationTarget.Button, 4, 650, EasingType.EaseIn, 2f)),
                 AnimationStep.Call(() => _optionsFK.FadeIn(AnimationTarget.Button, 4, 0f)),
                 AnimationStep.Call(() => _optionsFK.FadeIn(AnimationTarget.Text, 4, 0f)),
-                AnimationStep.Wait(1.5f), // Delay between each button transition
             },
             name: "MenuLoad");
 
@@ -106,12 +111,11 @@ namespace FlowKit.Extras
          */
         private void OptionsTween()
         {
-            StartCoroutine(TweenRoutine());
-
-            // Start the title and disclaimer animations
             // No need for a coroutine here since these are simple animations
             _titleFK.TransitionFromTop(AnimationTarget.Text, 1, 650, EasingType.EaseIn, 2f);
             _disclaimerFK.TypeWriteWithDuration(1, 3f);
+
+            StartCoroutine(TweenRoutine());
         }
 
         private IEnumerator TweenRoutine()
@@ -143,7 +147,8 @@ namespace FlowKit.Extras
                 _optionsFK.FadeIn(AnimationTarget.Button, i, 0f);
                 _optionsFK.FadeIn(AnimationTarget.Text, i, 0f);
 
-                yield return new WaitForSeconds(1.5f); // Delay between each button transition
+                // Delay between each button transition
+                yield return new WaitForSeconds(1.5f);
             }
         }
     }
