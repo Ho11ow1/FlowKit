@@ -1,0 +1,15 @@
+{
+    "name": "FlowKit.Extras",
+    "references": [
+        "FlowKit.Core",
+        "FlowKit.Common"
+    ],
+    "includePlatforms": [],
+	"excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+	"defineConstraints": [],
+    "versionDefines": []
+}
