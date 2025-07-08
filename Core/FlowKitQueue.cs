@@ -18,7 +18,7 @@
 * Provides a queue-system best used for
 * single target complex animations
 * 
-* Version: 1.0.0
+* Version: 1.1.0
 * GitHub: https://github.com/Ho11ow1/FlowKit
 * License: Apache License 2.0
 * -------------------------------------------------------- */
