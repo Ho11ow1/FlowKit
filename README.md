@@ -1,14 +1,14 @@
 # FlowKit
 [![Status: Work In Progress](https://img.shields.io/badge/Status-Work%20In%20Progress-yellow.svg)](https://github.com/Ho11ow1/FlowKit)
-[![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-blue.svg)](https://github.com/Ho11ow1/FlowKit/releases)
+[![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-blue.svg)](https://github.com/Ho11ow1/FlowKit/releases)
 [![License: Apache-2-0](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://opensource.org/license/apache-2-0)<br/>
 [![Unity](https://img.shields.io/badge/Unity-2022.3.10f1%2B-black.svg?logo=unity&logoColor=white)](#)<br/>
 **A lightweight and flexible animation toolkit for Unity UI and visual effects.**<br/>
 Supports smooth fade, transition, scale, rotate, and typewriter animations, along with custom shaders and editor tools.
 
 ## Features
-- **Unified Tween API**
-  - Animate UI with a single entry point (`Tween.cs`)
+- **Unified FlowKit API**
+  - Animate UI with a single entry point (`FlowKitEngine.cs`)
   - Modular backend, internal-only animation components
 - **Fade, Scale, Rotate, Transition**
   - All driven through `CanvasGroup` or `RectTransform`
@@ -16,7 +16,7 @@ Supports smooth fade, transition, scale, rotate, and typewriter animations, alon
 - **Text Effects**
   - Built-in Typewriter effect for `TextMeshProUGUI`
 - **Editor Utilities (WIP)**
-  - For automatic code generation
+  - For animation live preview 
 - **Shader Support**
   - Expandable 2D/3D shader folders included
 
@@ -42,12 +42,12 @@ using FlowKit.Common;
 
 public class PopupController : MonoBehaviour
 {
-    [SerializeField] private Tween popupTween;
+    [SerializeField] private FlowKitEngine popupFK;
 
     void Start()
     {
         // Hide panel on load
-        popupTween.SetPanelVisibility(false);
+        popupFK.SetPanelVisibility(false);
 
         // Subscribe to animation events
         FlowKitEvents.FadeStart += () => Debug.Log("Fade started.");
@@ -56,13 +56,13 @@ public class PopupController : MonoBehaviour
 
     public void ShowPopup()
     {
-        popupTween.FadeIn(AnimationTarget.Panel, 1, 0.5f);
-        popupTween.TransitionFromLeft(AnimationTarget.Image, 1, 100f, EasingType.EaseInOut, 0.75f);
+        popupFK.FadeIn(AnimationTarget.Panel, 1, 0.5f);
+        popupFK.TransitionFromLeft(AnimationTarget.Image, 1, 100f, EasingType.EaseInOut, 0.75f);
     }
 
     public void HidePopup()
     {
-        popupTween.FadeOut(AnimationTarget.Panel, 1, 0.5f, 0.25f);
+        popupFK.FadeOut(AnimationTarget.Panel, 1, 0.5f, 0.25f);
     }
 
     void OnDestroy()
