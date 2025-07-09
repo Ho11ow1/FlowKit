@@ -32,7 +32,7 @@ using FlowKit.Common;
 namespace FlowKit.UI
 {
     [AddComponentMenu("")]
-    internal class Rotate
+    internal class RotateImpl
     {
         private readonly TextMeshProUGUI[] _textComponent;
         private readonly Image[] _imageComponent;
@@ -56,7 +56,7 @@ namespace FlowKit.UI
             new Utils.AutoIncreaseList<bool>()
         };
 
-        public Rotate(TextMeshProUGUI[] text, Image[] image, Button[] button, RectTransform panel, MonoBehaviour runner)
+        public RotateImpl(TextMeshProUGUI[] text, Image[] image, Button[] button, RectTransform panel, MonoBehaviour runner)
         {
             _textComponent = text;
             _imageComponent = image;

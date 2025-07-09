@@ -32,7 +32,7 @@ using FlowKit.Common;
 namespace FlowKit.UI
 {
     [AddComponentMenu("")]
-    internal class Fade
+    internal class FadeImpl
     {
         private readonly TextMeshProUGUI[] _textComponent;
         private readonly Image[] _imageComponent;
@@ -60,7 +60,7 @@ namespace FlowKit.UI
         private const float transparent = 0f;
         private const float visible = 1.0f;
 
-        public Fade(TextMeshProUGUI[] text, Image[] image, Button[] button, CanvasGroup panel, MonoBehaviour runner)
+        public FadeImpl(TextMeshProUGUI[] text, Image[] image, Button[] button, CanvasGroup panel, MonoBehaviour runner)
         {
             _textComponent = text;
             _imageComponent = image;

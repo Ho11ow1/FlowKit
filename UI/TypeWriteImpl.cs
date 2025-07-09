@@ -30,7 +30,7 @@ using FlowKit.Common;
 namespace FlowKit.UI
 {
     [AddComponentMenu("")]
-    internal class TypeWrite
+    internal class TypeWriteImpl
     {
         private readonly TextMeshProUGUI[] _textComponent;
         private readonly MonoBehaviour _monoBehaviour;
@@ -41,7 +41,7 @@ namespace FlowKit.UI
         private const float _standardDelay = 0.3f;
         private const float _standardDuration = 3f;
 
-        public TypeWrite(TextMeshProUGUI[] tmp, MonoBehaviour runner)
+        public TypeWriteImpl(TextMeshProUGUI[] tmp, MonoBehaviour runner)
         {
             _textComponent = tmp;
             _monoBehaviour = runner;
