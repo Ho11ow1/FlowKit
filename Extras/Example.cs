@@ -33,7 +33,7 @@ namespace FlowKit.Extras
 
         void Start()
         {
-            _optionsFK.SetPanelVisibility(true);
+            _optionsFK.Visibility.SetPanelVisibility(true);
 
             if (useQueue)
             {
@@ -55,47 +55,47 @@ namespace FlowKit.Extras
         private void OptionsQueue()
         {
             // No need for a seperate function here since these are simple animations
-            _titleFK.TransitionFromTop(AnimationTarget.Text, 1, 650, EasingType.EaseIn, 2f);
-            _disclaimerFK.TypeWriteWithDuration(1, 3f);
+            _titleFK.Transition.FromTop(AnimationTarget.Text, 1, 650, EasingType.EaseIn, 2f);
+            _disclaimerFK.Text.TypeWriteWithDuration(1, 3f);
 
             _optionsFK.Queue(new AnimationStep[]
             {
                 // Set Button & Button text visibility to invisible instantly
-                AnimationStep.Call(() => _optionsFK.FadeOut(AnimationTarget.Button, 1, 0f)),
-                AnimationStep.Call(() => _optionsFK.FadeOut(AnimationTarget.Text, 1, 0f)),
-                AnimationStep.Call(() => _optionsFK.FadeOut(AnimationTarget.Button, 2, 0f)),
-                AnimationStep.Call(() => _optionsFK.FadeOut(AnimationTarget.Text, 2, 0f)),
-                AnimationStep.Call(() => _optionsFK.FadeOut(AnimationTarget.Button, 3, 0f)),
-                AnimationStep.Call(() => _optionsFK.FadeOut(AnimationTarget.Text, 3, 0f)),
-                AnimationStep.Call(() => _optionsFK.FadeOut(AnimationTarget.Button, 4, 0f)),
-                AnimationStep.Call(() => _optionsFK.FadeOut(AnimationTarget.Text, 4, 0f)),
+                AnimationStep.Call(() => _optionsFK.Visibility.FadeOut(AnimationTarget.Button, 1, 0f)),
+                AnimationStep.Call(() => _optionsFK.Visibility.FadeOut(AnimationTarget.Text, 1, 0f)),
+                AnimationStep.Call(() => _optionsFK.Visibility.FadeOut(AnimationTarget.Button, 2, 0f)),
+                AnimationStep.Call(() => _optionsFK.Visibility.FadeOut(AnimationTarget.Text, 2, 0f)),
+                AnimationStep.Call(() => _optionsFK.Visibility.FadeOut(AnimationTarget.Button, 3, 0f)),
+                AnimationStep.Call(() => _optionsFK.Visibility.FadeOut(AnimationTarget.Text, 3, 0f)),
+                AnimationStep.Call(() => _optionsFK.Visibility.FadeOut(AnimationTarget.Button, 4, 0f)),
+                AnimationStep.Call(() => _optionsFK.Visibility.FadeOut(AnimationTarget.Text, 4, 0f)),
                 AnimationStep.Wait(0.5f),
 
                 // Start transitioning in the buttons and make them visible
-                AnimationStep.Call(() => _optionsFK.TransitionFromLeft(AnimationTarget.Button, 1, 650, EasingType.EaseIn, 2f)),
-                AnimationStep.Call(() => _optionsFK.FadeIn(AnimationTarget.Button, 1, 0f)),
-                AnimationStep.Call(() => _optionsFK.FadeIn(AnimationTarget.Text, 1, 0f)),
+                AnimationStep.Call(() => _optionsFK.Transition.FromLeft(AnimationTarget.Button, 1, 650, EasingType.EaseIn, 2f)),
+                AnimationStep.Call(() => _optionsFK.Visibility.FadeIn(AnimationTarget.Button, 1, 0f)),
+                AnimationStep.Call(() => _optionsFK.Visibility.FadeIn(AnimationTarget.Text, 1, 0f)),
                 // Delay before animating the next button
                 AnimationStep.Wait(1.5f),
 
                 // Alternate direction for visual interest
-                AnimationStep.Call(() => _optionsFK.TransitionFromRight(AnimationTarget.Button, 2, 650, EasingType.EaseIn, 2f)),
-                AnimationStep.Call(() => _optionsFK.FadeIn(AnimationTarget.Button, 2, 0f)),
-                AnimationStep.Call(() => _optionsFK.FadeIn(AnimationTarget.Text, 2, 0f)),
+                AnimationStep.Call(() => _optionsFK.Transition.FromRight(AnimationTarget.Button, 2, 650, EasingType.EaseIn, 2f)),
+                AnimationStep.Call(() => _optionsFK.Visibility.FadeIn(AnimationTarget.Button, 2, 0f)),
+                AnimationStep.Call(() => _optionsFK.Visibility.FadeIn(AnimationTarget.Text, 2, 0f)),
                 // Delay before animating the next button
                 AnimationStep.Wait(1.5f),
 
                 // Revert back to left transition
-                AnimationStep.Call(() => _optionsFK.TransitionFromLeft(AnimationTarget.Button, 3, 650, EasingType.EaseIn, 2f)),
-                AnimationStep.Call(() => _optionsFK.FadeIn(AnimationTarget.Button, 3, 0f)),
-                AnimationStep.Call(() => _optionsFK.FadeIn(AnimationTarget.Text, 3, 0f)),
+                AnimationStep.Call(() => _optionsFK.Transition.FromLeft(AnimationTarget.Button, 3, 650, EasingType.EaseIn, 2f)),
+                AnimationStep.Call(() => _optionsFK.Visibility.FadeIn(AnimationTarget.Button, 3, 0f)),
+                AnimationStep.Call(() => _optionsFK.Visibility.FadeIn(AnimationTarget.Text, 3, 0f)),
                 // Delay before animating the next button
                 AnimationStep.Wait(1.5f),
 
                 // Alternate direction for visual interest
-                AnimationStep.Call(() => _optionsFK.TransitionFromRight(AnimationTarget.Button, 4, 650, EasingType.EaseIn, 2f)),
-                AnimationStep.Call(() => _optionsFK.FadeIn(AnimationTarget.Button, 4, 0f)),
-                AnimationStep.Call(() => _optionsFK.FadeIn(AnimationTarget.Text, 4, 0f)),
+                AnimationStep.Call(() => _optionsFK.Transition.FromRight(AnimationTarget.Button, 4, 650, EasingType.EaseIn, 2f)),
+                AnimationStep.Call(() => _optionsFK.Visibility.FadeIn(AnimationTarget.Button, 4, 0f)),
+                AnimationStep.Call(() => _optionsFK.Visibility.FadeIn(AnimationTarget.Text, 4, 0f)),
             },
             name: "MenuLoad");
 
@@ -112,8 +112,8 @@ namespace FlowKit.Extras
         private void OptionsTween()
         {
             // No need for a coroutine here since these are simple animations
-            _titleFK.TransitionFromTop(AnimationTarget.Text, 1, 650, EasingType.EaseIn, 2f);
-            _disclaimerFK.TypeWriteWithDuration(1, 3f);
+            _titleFK.Transition.FromTop(AnimationTarget.Text, 1, 650, EasingType.EaseIn, 2f);
+            _disclaimerFK.Text.TypeWriteWithDuration(1, 3f);
 
             StartCoroutine(TweenRoutine());
         }
@@ -123,8 +123,8 @@ namespace FlowKit.Extras
             // Set Button & Button text visibility to invisible instantly
             for (int i = 1; i <= 4; i++)
             {
-                _optionsFK.FadeOut(AnimationTarget.Button, i, 0f);
-                _optionsFK.FadeOut(AnimationTarget.Text, i, 0f);
+                _optionsFK.Visibility.FadeOut(AnimationTarget.Button, i, 0f);
+                _optionsFK.Visibility.FadeOut(AnimationTarget.Text, i, 0f);
             }
 
             // Slight delay before starting the animation
@@ -136,16 +136,16 @@ namespace FlowKit.Extras
                 // Alternate direction for visual interest
                 if (i % 2 == 0)
                 {
-                    _optionsFK.TransitionFromRight(AnimationTarget.Button, i, 1000f, EasingType.EaseIn, 2f);
+                    _optionsFK.Transition.FromRight(AnimationTarget.Button, i, 1000f, EasingType.EaseIn, 2f);
                 }
                 else
                 {
-                    _optionsFK.TransitionFromLeft(AnimationTarget.Button, i, 1000f, EasingType.EaseIn, 2f);
+                    _optionsFK.Transition.FromLeft(AnimationTarget.Button, i, 1000f, EasingType.EaseIn, 2f);
                 }
 
                 // Set Button & Button text visibility to visible instantly
-                _optionsFK.FadeIn(AnimationTarget.Button, i, 0f);
-                _optionsFK.FadeIn(AnimationTarget.Text, i, 0f);
+                _optionsFK.Visibility.FadeIn(AnimationTarget.Button, i, 0f);
+                _optionsFK.Visibility.FadeIn(AnimationTarget.Text, i, 0f);
 
                 // Delay between each button transition
                 yield return new WaitForSeconds(1.5f);
