@@ -1,4 +1,5 @@
 using FlowKit.Common;
+using UnityEngine;
 
 namespace FlowKit.Core
 {
@@ -22,10 +23,10 @@ namespace FlowKit.Core
             /// </summary>
             /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
             /// <param name="delay">Time in seconds for the delay per character</param>
-            public void TypeWriteWithDelay(int occurrence, float delay = 0.3f)
+            public void TypeWriteWithDelay(int occurrence, float delay = FlowKitConstants.TypeWriter.PerCharacterDelay)
             {
                 occurrence -= 1;
-                _engine.typeWriteImpl.TypeWriterDelay(occurrence, delay);
+                _engine.textEffectImpl.TypeWriterDelay(occurrence, delay);
             }
 
             /// <summary>
@@ -38,10 +39,10 @@ namespace FlowKit.Core
             /// </summary>
             /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
             /// <param name="duration">Time in seconds for the entire text to animate</param>
-            public void TypeWriteWithDuration(int occurrence, float duration = 3f)
+            public void TypeWriteWithDuration(int occurrence, float duration = FlowKitConstants.TypeWriter.CompleteTextDuration)
             {
                 occurrence -= 1;
-                _engine.typeWriteImpl.TypeWriterDuration(occurrence, duration);
+                _engine.textEffectImpl.TypeWriterDuration(occurrence, duration);
             }
         }
     }

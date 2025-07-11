@@ -32,11 +32,11 @@ namespace FlowKit.Core
     {
         // Class variables
         private FlowKitQueue queueComponent;
-        private UI.FadeImpl fadeImpl;
+        private UI.VisibilityImpl visibilityImpl;
         private UI.TransitionImpl transitionImpl;
         private UI.RotateImpl rotateImpl;
         private UI.ScaleImpl scalingImpl;
-        private UI.TypeWriteImpl typeWriteImpl;
+        private UI.TextEffectImpl textEffectImpl;
 
         // Component variables
         private CanvasGroup _cg;
@@ -46,6 +46,14 @@ namespace FlowKit.Core
         private Button[] _buttons;
 
         void Awake()
+        {
+            InitVariables();
+            InitComponents();
+            InitModules();
+        }
+        // ----------------------------------------------------- PRIVATE INITALIZERS -----------------------------------------------------
+
+        private void InitVariables()
         {
             _cg = GetComponent<CanvasGroup>();
 
@@ -72,14 +80,20 @@ namespace FlowKit.Core
             if (_buttons == null) { Debug.LogWarning($"[{gameObject.name}] No Button component found in children. Parent: [{transform.parent.name ?? "none"}]"); }
             if (_panel == null) { Debug.LogWarning($"[{gameObject.name}] No RectTransform component found."); }
             #endif
+        }
 
+        private void InitComponents()
+        {
             queueComponent = new FlowKitQueue(this);
-            fadeImpl = new UI.FadeImpl(_texts, _images, _buttons, _cg, this);
+            visibilityImpl = new UI.VisibilityImpl(_texts, _images, _buttons, _cg, this);
             transitionImpl = new UI.TransitionImpl(_texts, _images, _buttons, _panel, this);
             rotateImpl = new UI.RotateImpl(_texts, _images, _buttons, _panel, this);
             scalingImpl = new UI.ScaleImpl(_texts, _images, _buttons, _panel, this);
-            typeWriteImpl = new UI.TypeWriteImpl(_texts, this);
+            textEffectImpl = new UI.TextEffectImpl(_texts, this);
+        }
 
+        private void InitModules()
+        {
             Visibility = new VisibilityModule(this);
             Transition = new TransitionModule(this);
             Scale = new ScaleModule(this);

@@ -18,7 +18,7 @@ namespace FlowKit.Core
             /// <param name="visible">Sets the panel visibility condition</param>
             public void SetPanelVisibility(bool visible)
             {
-                _engine.fadeImpl.SetPanelVisibility(visible);
+                _engine.visibilityImpl.SetPanelVisibility(visible);
             }
 
             /// <summary>
@@ -36,7 +36,7 @@ namespace FlowKit.Core
             public void FadeIn(AnimationTarget target, int occurrence, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
             {
                 occurrence -= 1;
-                _engine.fadeImpl.FadeIn(target, occurrence, duration, delay);
+                _engine.visibilityImpl.FadeIn(target, occurrence, duration, delay);
             }
 
             /// <summary>
@@ -54,7 +54,7 @@ namespace FlowKit.Core
             public void FadeOut(AnimationTarget target, int occurrence, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
             {
                 occurrence -= 1;
-                _engine.fadeImpl.FadeOut(target, occurrence, duration, delay);
+                _engine.visibilityImpl.FadeOut(target, occurrence, duration, delay);
             }
         }
     }
