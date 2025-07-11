@@ -72,15 +72,23 @@ namespace FlowKit.UI
             switch (target)
             {
                 case AnimationTarget.Panel:
+                    if (_panelTransform == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionFrom(_panelTransform, new Vector2(0, -offset), duration, delay, easing));
                     break;
                 case AnimationTarget.Text:
+                    if (_textComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionFrom(_textComponent[occurrence].rectTransform, new Vector2(0, -offset), duration, delay, easing));
                     break;
                 case AnimationTarget.Image:
+                    if (_imageComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionFrom(_imageComponent[occurrence].rectTransform, new Vector2(0, -offset), duration, delay, easing));
                     break;
                 case AnimationTarget.Button:
+                    if (_buttonComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionFrom((RectTransform)_buttonComponent[occurrence].transform, new Vector2(0, -offset), duration, delay, easing));
                     break;
             }
@@ -91,34 +99,50 @@ namespace FlowKit.UI
             switch (target)
             {
                 case AnimationTarget.Panel:
+                    if (_panelTransform == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionFrom(_panelTransform, new Vector2(0, -offset), duration, delay, easing));
                     break;
                 case AnimationTarget.Text:
+                    if (_textComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionFrom(_textComponent[occurrence].rectTransform, new Vector2(0, offset), duration, delay, easing));
                     break;
                 case AnimationTarget.Image:
+                    if (_imageComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionFrom(_imageComponent[occurrence].rectTransform, new Vector2(0, offset), duration, delay, easing));
                     break;
                 case AnimationTarget.Button:
+                    if (_buttonComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionFrom((RectTransform)_buttonComponent[occurrence].transform, new Vector2(0, offset), duration, delay, easing));
                     break;
             }
         }
 
         public void TransitionFromLeft(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
-        {    
+        {
             switch (target)
             {
                 case AnimationTarget.Panel:
+                    if (_panelTransform == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionFrom(_panelTransform, new Vector2(offset, 0), duration, delay, easing));
                     break;
                 case AnimationTarget.Text:
+                    if (_textComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionFrom(_textComponent[occurrence].rectTransform, new Vector2(offset, 0), duration, delay, easing));
                     break;
                 case AnimationTarget.Image:
+                    if (_imageComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionFrom(_imageComponent[occurrence].rectTransform, new Vector2(offset, 0), duration, delay, easing));
                     break;
                 case AnimationTarget.Button:
+                    if (_buttonComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionFrom((RectTransform)_buttonComponent[occurrence].transform, new Vector2(offset, 0), duration, delay, easing));
                     break;
             }
@@ -129,15 +153,23 @@ namespace FlowKit.UI
             switch (target)
             {
                 case AnimationTarget.Panel:
+                    if (_panelTransform == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionFrom(_panelTransform, new Vector2(-offset, 0), duration, delay, easing));
                     break;
                 case AnimationTarget.Text:
+                    if (_textComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionFrom(_textComponent[occurrence].rectTransform, new Vector2(-offset, 0), duration, delay, easing));
                     break;
                 case AnimationTarget.Image:
+                    if (_imageComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionFrom(_imageComponent[occurrence].rectTransform, new Vector2(-offset, 0), duration, delay, easing));
                     break;
                 case AnimationTarget.Button:
+                    if (_buttonComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionFrom((RectTransform)_buttonComponent[occurrence].transform, new Vector2(-offset, 0), duration, delay, easing));
                     break;
             }
@@ -148,15 +180,23 @@ namespace FlowKit.UI
             switch (target)
             {
                 case AnimationTarget.Panel:
+                    if (_panelTransform == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionFrom(_panelTransform, -offset, duration, delay, easing));
                     break;
                 case AnimationTarget.Text:
+                    if (_textComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionFrom(_textComponent[occurrence].rectTransform, -offset, duration, delay, easing));
                     break;
                 case AnimationTarget.Image:
+                    if (_imageComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionFrom(_imageComponent[occurrence].rectTransform, -offset, duration, delay, easing));
                     break;
                 case AnimationTarget.Button:
+                    if (_buttonComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionFrom((RectTransform)_buttonComponent[occurrence].transform, -offset, duration, delay, easing));
                     break;
             }
@@ -167,15 +207,23 @@ namespace FlowKit.UI
             switch (target)
             {
                 case AnimationTarget.Panel:
+                    if (_panelTransform == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionTo(_panelTransform, occurrence, new Vector2(0, offset), duration, delay, easing));
                     break;
                 case AnimationTarget.Text:
+                    if (_textComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionTo(_textComponent[occurrence].rectTransform, occurrence, new Vector2(0, offset), duration, delay, easing));
                     break;
                 case AnimationTarget.Image:
+                    if (_imageComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionTo(_imageComponent[occurrence].rectTransform, occurrence, new Vector2(0, offset), duration, delay, easing));
                     break;
                 case AnimationTarget.Button:
+                    if (_buttonComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionTo((RectTransform)_buttonComponent[occurrence].transform, occurrence, new Vector2(0, offset), duration, delay, easing));
                     break;
             }
@@ -186,15 +234,23 @@ namespace FlowKit.UI
             switch (target)
             {
                 case AnimationTarget.Panel:
+                    if (_panelTransform == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionTo(_panelTransform, occurrence, new Vector2(0, -offset), duration, delay, easing));
                     break;
                 case AnimationTarget.Text:
+                    if (_textComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionTo(_textComponent[occurrence].rectTransform, occurrence, new Vector2(0, -offset), duration, delay, easing));
                     break;
                 case AnimationTarget.Image:
+                    if (_imageComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionTo(_imageComponent[occurrence].rectTransform, occurrence, new Vector2(0, -offset), duration, delay, easing));
                     break;
                 case AnimationTarget.Button:
+                    if (_buttonComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionTo((RectTransform)_buttonComponent[occurrence].transform, occurrence, new Vector2(0, -offset), duration, delay, easing));
                     break;
             }
@@ -205,15 +261,23 @@ namespace FlowKit.UI
             switch (target)
             {
                 case AnimationTarget.Panel:
+                    if (_panelTransform == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionTo(_panelTransform, occurrence, new Vector2(-offset, 0), duration, delay, easing));
                     break;
                 case AnimationTarget.Text:
+                    if (_textComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionTo(_textComponent[occurrence].rectTransform, occurrence, new Vector2(-offset, 0), duration, delay, easing));
                     break;
                 case AnimationTarget.Image:
+                    if (_imageComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionTo(_imageComponent[occurrence].rectTransform, occurrence, new Vector2(-offset, 0), duration, delay, easing));
                     break;
                 case AnimationTarget.Button:
+                    if (_buttonComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionTo((RectTransform)_buttonComponent[occurrence].transform, occurrence, new Vector2(-offset, 0), duration, delay, easing));
                     break;
             }
@@ -224,15 +288,23 @@ namespace FlowKit.UI
             switch (target)
             {
                 case AnimationTarget.Panel:
+                    if (_panelTransform == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionTo(_panelTransform, occurrence, new Vector2(offset, 0), duration, delay, easing));
                     break;
                 case AnimationTarget.Text:
+                    if (_textComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionTo(_textComponent[occurrence].rectTransform, occurrence, new Vector2(offset, 0), duration, delay, easing));
                     break;
                 case AnimationTarget.Image:
+                    if (_imageComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionTo(_imageComponent[occurrence].rectTransform, occurrence, new Vector2(offset, 0), duration, delay, easing));
                     break;
                 case AnimationTarget.Button:
+                    if (_buttonComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionTo((RectTransform)_buttonComponent[occurrence].transform, occurrence, new Vector2(offset, 0), duration, delay, easing));
                     break;
             }
@@ -243,15 +315,23 @@ namespace FlowKit.UI
             switch (target)
             {
                 case AnimationTarget.Panel:
+                    if (_panelTransform == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionTo(_panelTransform, occurrence, offset, duration, delay, easing));
                     break;
                 case AnimationTarget.Text:
+                    if (_textComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionTo(_textComponent[occurrence].rectTransform, occurrence, offset, duration, delay, easing));
                     break;
                 case AnimationTarget.Image:
+                    if (_imageComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionTo(_imageComponent[occurrence].rectTransform, occurrence, offset, duration, delay, easing));
                     break;
                 case AnimationTarget.Button:
+                    if (_buttonComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(TransitionTo((RectTransform)_buttonComponent[occurrence].transform, occurrence, offset, duration, delay, easing));
                     break;
             }
@@ -308,8 +388,6 @@ namespace FlowKit.UI
 
         private IEnumerator TransitionFrom(RectTransform component, Vector2 offset, float duration, float delay, EasingType easing)
         {
-            if (component == null) { yield break; }
-
             Vector2 startPos, targetPos;
 
             if (delay > 0) { yield return new WaitForSeconds(delay); }
@@ -338,8 +416,6 @@ namespace FlowKit.UI
 
         private IEnumerator TransitionTo(RectTransform component, int occurrence, Vector2 offset, float duration, float delay, EasingType easing)
         {
-            if (component == null) { yield break; }
-
             GetStartPos(component, occurrence, out Vector2 startPos);
             Vector2 targetPos;
 

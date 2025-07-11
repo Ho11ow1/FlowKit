@@ -21,13 +21,12 @@
 * GitHub: https://github.com/Ho11ow1/FlowKit
 * License: Apache License 2.0
 * -------------------------------------------------------- */
+using FlowKit.Common;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-
-using FlowKit.Common;
 
 namespace FlowKit.UI
 {
@@ -72,15 +71,23 @@ namespace FlowKit.UI
             switch (target)
             {
                 case AnimationTarget.Panel:
+                    if (_panelTransform == null) { return; }
+
                     _monoBehaviour.StartCoroutine(ScaleUi(_panelTransform, occurrence, multiplier, duration, delay, easing));
                     break;
                 case AnimationTarget.Text:
+                    if (_textComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(ScaleUi(_textComponent[occurrence].rectTransform, occurrence, multiplier, duration, delay, easing));
                     break;
                 case AnimationTarget.Image:
+                    if (_imageComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(ScaleUi(_imageComponent[occurrence].rectTransform, occurrence, multiplier, duration, delay, easing));
                     break;
                 case AnimationTarget.Button:
+                    if (_buttonComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(ScaleUi((RectTransform)_buttonComponent[occurrence].transform, occurrence, multiplier, duration, delay, easing));
                     break;
             }
@@ -91,15 +98,23 @@ namespace FlowKit.UI
             switch (target)
             {
                 case AnimationTarget.Panel:
+                    if (_panelTransform == null) { return; }
+
                     _monoBehaviour.StartCoroutine(ScaleUi(_panelTransform, occurrence, 1 / multiplier, duration, delay, easing));
                     break;
                 case AnimationTarget.Text:
+                    if (_textComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(ScaleUi(_textComponent[occurrence].rectTransform, occurrence, 1 / multiplier, duration, delay, easing));
                     break;
                 case AnimationTarget.Image:
+                    if (_imageComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(ScaleUi(_imageComponent[occurrence].rectTransform, occurrence, 1 / multiplier, duration, delay, easing));
                     break;
                 case AnimationTarget.Button:
+                    if (_buttonComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(ScaleUi((RectTransform)_buttonComponent[occurrence].transform, occurrence, 1 / multiplier, duration, delay, easing));
                     break;
             }
@@ -156,9 +171,6 @@ namespace FlowKit.UI
 
         private IEnumerator ScaleUi(RectTransform component, int occurrence, float scaleAmount, float duration, float delay, EasingType easing)
         {
-            if (component == null)
-            { yield break; }
-
             GetStartScale(component, occurrence, out Vector2 startScale);
             Vector2 targetScale;
 

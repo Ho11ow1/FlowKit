@@ -12,10 +12,10 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * --------------------------------------------------------
-* FlowKit - TypeWriter Animation Component
+* FlowKit - TextEffects Animation Component
 * Created by Hollow1
 * 
-* Applies a typewriter effect to a TextMeshProUGUI component
+* Applies visual effects to a TextMeshProUGUI component
 * 
 * Version: 1.0.0
 * GitHub: https://github.com/Ho11ow1/FlowKit
@@ -30,7 +30,7 @@ using FlowKit.Common;
 namespace FlowKit.UI
 {
     [AddComponentMenu("")]
-    internal class TypeWriteImpl
+    internal class TextEffectImpl
     {
         private readonly TextMeshProUGUI[] _textComponent;
         private readonly MonoBehaviour _monoBehaviour;
@@ -38,10 +38,7 @@ namespace FlowKit.UI
         private readonly Utils.StringAutoIncreaseList _targetString = new Utils.StringAutoIncreaseList();
         private int _length;
 
-        private const float _standardDelay = 0.3f;
-        private const float _standardDuration = 3f;
-
-        public TypeWriteImpl(TextMeshProUGUI[] tmp, MonoBehaviour runner)
+        public TextEffectImpl(TextMeshProUGUI[] tmp, MonoBehaviour runner)
         {
             _textComponent = tmp;
             _monoBehaviour = runner;
@@ -49,15 +46,19 @@ namespace FlowKit.UI
 
         // ----------------------------------------------------- PUBLIC API -----------------------------------------------------
 
-        public void TypeWriterDelay(int occurrence, float delay = _standardDelay)
+        public void TypeWriterDelay(int occurrence, float delay = FlowKitConstants.TypeWriter.PerCharacterDelay)
         {
+            if (_textComponent[occurrence] == null) { return; }
+
             _targetString[occurrence] = _textComponent[occurrence].text;
             _length = _targetString[occurrence].Length;
             _monoBehaviour.StartCoroutine(WriterDelay(occurrence, delay));
         }
 
-        public void TypeWriterDuration(int occurrence, float duration = _standardDuration)
+        public void TypeWriterDuration(int occurrence, float duration = FlowKitConstants.TypeWriter.CompleteTextDuration)
         {
+            if (_textComponent[occurrence] == null) { return; }
+
             _targetString[occurrence] = _textComponent[occurrence].text;
             _length = _targetString[occurrence].Length;
             _monoBehaviour.StartCoroutine(WriterDuration(occurrence, duration));
@@ -67,8 +68,6 @@ namespace FlowKit.UI
 
         private IEnumerator WriterDuration(int occurrence, float duration)
         {
-            if (_textComponent == null) { yield break; }
-
             FlowKitEvents.InvokeTypeWriteStart();
             _textComponent[occurrence].text = "";
             string currentText = "";
@@ -89,8 +88,6 @@ namespace FlowKit.UI
 
         private IEnumerator WriterDelay(int occurrence, float delay)
         {
-            if (_textComponent == null) { yield break; }
-
             FlowKitEvents.InvokeTypeWriteStart();
             _textComponent[occurrence].text = "";
             string currentText = "";

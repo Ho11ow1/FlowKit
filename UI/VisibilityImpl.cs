@@ -12,10 +12,10 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * --------------------------------------------------------
-* FlowKit - Fade Animation Component
+* FlowKit - Visibility Animation Component
 * Created by Hollow1
 * 
-* Applies a Fade animation to a UI component
+* Applies visibility based animations to a UI component
 * 
 * Version: 1.0.0
 * GitHub: https://github.com/Ho11ow1/FlowKit
@@ -32,7 +32,7 @@ using FlowKit.Common;
 namespace FlowKit.UI
 {
     [AddComponentMenu("")]
-    internal class FadeImpl
+    internal class VisibilityImpl
     {
         private readonly TextMeshProUGUI[] _textComponent;
         private readonly Image[] _imageComponent;
@@ -56,11 +56,7 @@ namespace FlowKit.UI
             new Utils.AutoIncreaseList<bool>()
         };
 
-
-        private const float transparent = 0f;
-        private const float visible = 1.0f;
-
-        public FadeImpl(TextMeshProUGUI[] text, Image[] image, Button[] button, CanvasGroup panel, MonoBehaviour runner)
+        public VisibilityImpl(TextMeshProUGUI[] text, Image[] image, Button[] button, CanvasGroup panel, MonoBehaviour runner)
         {
             _textComponent = text;
             _imageComponent = image;
@@ -75,7 +71,7 @@ namespace FlowKit.UI
         {
             if (_panelAlpha == null) { return; }
 
-            _panelAlpha.alpha = visibility ? visible : transparent;
+            _panelAlpha.alpha = visibility ? FlowKitConstants.OpaqueAlpha : FlowKitConstants.TransparentAlpha;
         }
 
         public void FadeIn(AnimationTarget target, int occurrence, float delay = 0f, float duration = FlowKitConstants.DefaultDuration)
@@ -83,15 +79,23 @@ namespace FlowKit.UI
             switch (target)
             {
                 case AnimationTarget.Panel:
+                    if (_panelAlpha == null) { return; }
+
                     _monoBehaviour.StartCoroutine(FadeUiIn(_panelAlpha.gameObject, occurrence, duration, delay));
                     break;
                 case AnimationTarget.Text:
+                    if (_textComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(FadeUiIn(_textComponent[occurrence].gameObject, occurrence, duration, delay));
                     break;
                 case AnimationTarget.Image:
+                    if (_imageComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(FadeUiIn(_imageComponent[occurrence].gameObject, occurrence, duration, delay));
                     break;
                 case AnimationTarget.Button:
+                    if (_buttonComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(FadeUiIn(_buttonComponent[occurrence].gameObject, occurrence, duration, delay));
                     break;
             }
@@ -102,15 +106,23 @@ namespace FlowKit.UI
             switch (target)
             {
                 case AnimationTarget.Panel:
+                    if (_panelAlpha == null) { return; }
+
                     _monoBehaviour.StartCoroutine(FadeUiOut(_panelAlpha.gameObject, occurrence, duration, delay));
                     break;
                 case AnimationTarget.Text:
+                    if (_textComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(FadeUiOut(_textComponent[occurrence].gameObject, occurrence, duration, delay));
                     break;
                 case AnimationTarget.Image:
+                    if (_imageComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(FadeUiOut(_imageComponent[occurrence].gameObject, occurrence, duration, delay));
                     break;
                 case AnimationTarget.Button:
+                    if (_buttonComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(FadeUiOut(_buttonComponent[occurrence].gameObject, occurrence, duration, delay));
                     break;
             }
@@ -120,8 +132,6 @@ namespace FlowKit.UI
 
         private IEnumerator FadeUiIn(GameObject component, int occurrence, float duration, float delay)
         {
-            if (component == null) { yield break; }
-
             if (component == _panelAlpha.gameObject)
             {
                 if (!storedAlpha[FlowKitConstants.PanelIndex][0])
@@ -129,7 +139,7 @@ namespace FlowKit.UI
                     originalAlpha[FlowKitConstants.PanelIndex][0] = _panelAlpha.alpha;
                     storedAlpha[FlowKitConstants.PanelIndex][0] = true;
                 }
-                _panelAlpha.alpha = transparent;
+                _panelAlpha.alpha = FlowKitConstants.TransparentAlpha;
             }
             else if (component == _textComponent[occurrence].gameObject)
             {
@@ -138,7 +148,7 @@ namespace FlowKit.UI
                     originalAlpha[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].alpha;
                     storedAlpha[FlowKitConstants.TextIndex][occurrence] = true;
                 }
-                _textComponent[occurrence].alpha = transparent;
+                _textComponent[occurrence].alpha = FlowKitConstants.TransparentAlpha;
             }
             else if (component == _imageComponent[occurrence].gameObject)
             {
@@ -148,7 +158,7 @@ namespace FlowKit.UI
                     originalAlpha[FlowKitConstants.ImageIndex][occurrence] = imgColour.a;
                     storedAlpha[FlowKitConstants.ImageIndex][occurrence] = true;
                 }
-                imgColour.a = transparent;
+                imgColour.a = FlowKitConstants.TransparentAlpha;
                 _imageComponent[occurrence].color = imgColour;
             }
             else if (component == _buttonComponent[occurrence].gameObject)
@@ -159,7 +169,7 @@ namespace FlowKit.UI
                     originalAlpha[FlowKitConstants.ButtonIndex][occurrence] = btnColour.a;
                     storedAlpha[FlowKitConstants.ButtonIndex][occurrence] = true;
                 }
-                btnColour.a = transparent;
+                btnColour.a = FlowKitConstants.TransparentAlpha;
                 _buttonComponent[occurrence].image.color = btnColour;
             }
 
@@ -174,22 +184,22 @@ namespace FlowKit.UI
 
                 if (component == _panelAlpha.gameObject) 
                 { 
-                    _panelAlpha.alpha = Mathf.Lerp(transparent, visible, time); 
+                    _panelAlpha.alpha = Mathf.Lerp(FlowKitConstants.TransparentAlpha, FlowKitConstants.OpaqueAlpha, time); 
                 }
                 else if (component == _textComponent[occurrence].gameObject) 
                 { 
-                    _textComponent[occurrence].alpha = Mathf.Lerp(transparent, visible, time); 
+                    _textComponent[occurrence].alpha = Mathf.Lerp(FlowKitConstants.TransparentAlpha, FlowKitConstants.OpaqueAlpha, time); 
                 }
                 else if (component == _imageComponent[occurrence].gameObject) 
                 {
                     Color imgColour = _imageComponent[occurrence].color;
-                    imgColour.a = Mathf.Lerp(transparent, visible, time);
+                    imgColour.a = Mathf.Lerp(FlowKitConstants.TransparentAlpha, FlowKitConstants.OpaqueAlpha, time);
                     _imageComponent[occurrence].color = imgColour;
                 }
                 else if (component == _buttonComponent[occurrence].gameObject) 
                 { 
                     Color btnColour = _buttonComponent[occurrence].image.color;
-                    btnColour.a = Mathf.Lerp(transparent, visible, time);
+                    btnColour.a = Mathf.Lerp(FlowKitConstants.TransparentAlpha, FlowKitConstants.OpaqueAlpha, time);
                     _buttonComponent[occurrence].image.color = btnColour;
                 }
 
@@ -199,22 +209,22 @@ namespace FlowKit.UI
 
             if (component == _panelAlpha.gameObject) 
             {
-                _panelAlpha.alpha = visible; 
+                _panelAlpha.alpha = FlowKitConstants.OpaqueAlpha; 
             }
             else if (component == _textComponent[occurrence].gameObject) 
             { 
-                _textComponent[occurrence].alpha = visible; 
+                _textComponent[occurrence].alpha = FlowKitConstants.OpaqueAlpha; 
             }
             else if (component == _imageComponent[occurrence].gameObject)
             {
                 Color imgColour = _imageComponent[occurrence].color;
-                imgColour.a = visible;
+                imgColour.a = FlowKitConstants.OpaqueAlpha;
                 _imageComponent[occurrence].color = imgColour;
             }
             else if (component == _buttonComponent[occurrence].gameObject)
             {
                 Color btnColour = _buttonComponent[occurrence].image.color;
-                btnColour.a = visible;
+                btnColour.a = FlowKitConstants.OpaqueAlpha;
                 _buttonComponent[occurrence].image.color = btnColour;
             }
 
@@ -225,8 +235,6 @@ namespace FlowKit.UI
 
         private IEnumerator FadeUiOut(GameObject component, int occurrence, float duration, float delay)
         {
-            if (component == null) { yield break; }
-
             if (component == _panelAlpha.gameObject)
             {
                 if (!storedAlpha[FlowKitConstants.PanelIndex][0])
@@ -234,7 +242,7 @@ namespace FlowKit.UI
                     originalAlpha[FlowKitConstants.PanelIndex][0] = _panelAlpha.alpha;
                     storedAlpha[FlowKitConstants.PanelIndex][0] = true;
                 }
-                _panelAlpha.alpha = visible;
+                _panelAlpha.alpha = FlowKitConstants.OpaqueAlpha;
             }
             else if (component == _textComponent[occurrence].gameObject)
             {
@@ -243,7 +251,7 @@ namespace FlowKit.UI
                     originalAlpha[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].alpha;
                     storedAlpha[FlowKitConstants.TextIndex][occurrence] = true;
                 }
-                _textComponent[occurrence].alpha = visible;
+                _textComponent[occurrence].alpha = FlowKitConstants.OpaqueAlpha;
             }
             else if (component == _imageComponent[occurrence].gameObject)
             {
@@ -253,7 +261,7 @@ namespace FlowKit.UI
                     originalAlpha[FlowKitConstants.ImageIndex][occurrence] = imgColour.a;
                     storedAlpha[FlowKitConstants.ImageIndex][occurrence] = true;
                 }
-                imgColour.a = visible;
+                imgColour.a = FlowKitConstants.OpaqueAlpha;
                 _imageComponent[occurrence].color = imgColour;
             }
             else if (component == _buttonComponent[occurrence].gameObject)
@@ -264,7 +272,7 @@ namespace FlowKit.UI
                     originalAlpha[FlowKitConstants.ButtonIndex][occurrence] = btnColour.a;
                     storedAlpha[FlowKitConstants.ButtonIndex][occurrence] = true;
                 }
-                btnColour.a = visible;
+                btnColour.a = FlowKitConstants.OpaqueAlpha;
                 _buttonComponent[occurrence].image.color = btnColour;
             }
 
@@ -279,22 +287,22 @@ namespace FlowKit.UI
 
                 if (component == _panelAlpha.gameObject)
                 {
-                    _panelAlpha.alpha = Mathf.Lerp(visible, transparent, time);
+                    _panelAlpha.alpha = Mathf.Lerp(FlowKitConstants.OpaqueAlpha, FlowKitConstants.TransparentAlpha, time);
                 }
                 else if (component == _textComponent[occurrence].gameObject)
                 {
-                    _textComponent[occurrence].alpha = Mathf.Lerp(visible, transparent, time);
+                    _textComponent[occurrence].alpha = Mathf.Lerp(FlowKitConstants.OpaqueAlpha, FlowKitConstants.TransparentAlpha, time);
                 }
                 else if (component == _imageComponent[occurrence].gameObject)
                 {
                     Color imgColour = _imageComponent[occurrence].color;
-                    imgColour.a = Mathf.Lerp(visible, transparent, time);
+                    imgColour.a = Mathf.Lerp(FlowKitConstants.OpaqueAlpha, FlowKitConstants.TransparentAlpha, time);
                     _imageComponent[occurrence].color = imgColour;
                 }
                 else if (component == _buttonComponent[occurrence].gameObject)
                 {
                     Color btnColour = _buttonComponent[occurrence].image.color;
-                    btnColour.a = Mathf.Lerp(visible, transparent, time);
+                    btnColour.a = Mathf.Lerp(FlowKitConstants.OpaqueAlpha, FlowKitConstants.TransparentAlpha, time);
                     _buttonComponent[occurrence].image.color = btnColour;
                 }
 
@@ -304,22 +312,22 @@ namespace FlowKit.UI
 
             if (component == _panelAlpha.gameObject)
             {
-                _panelAlpha.alpha = transparent;
+                _panelAlpha.alpha = FlowKitConstants.TransparentAlpha;
             }
             else if (component == _textComponent[occurrence].gameObject)
             {
-                _textComponent[occurrence].alpha = transparent;
+                _textComponent[occurrence].alpha = FlowKitConstants.TransparentAlpha;
             }
             else if (component == _imageComponent[occurrence].gameObject)
             {
                 Color imgColour = _imageComponent[occurrence].color;
-                imgColour.a = transparent;
+                imgColour.a = FlowKitConstants.TransparentAlpha;
                 _imageComponent[occurrence].color = imgColour;
             }
             else if (component == _buttonComponent[occurrence].gameObject)
             {
                 Color btnColour = _buttonComponent[occurrence].image.color;
-                btnColour.a = transparent;
+                btnColour.a = FlowKitConstants.TransparentAlpha;
                 _buttonComponent[occurrence].image.color = btnColour;
             }
 

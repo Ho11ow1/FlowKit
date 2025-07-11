@@ -72,15 +72,23 @@ namespace FlowKit.UI
             switch (target)
             {
                 case AnimationTarget.Panel:
+                    if (_panelTransform == null) { return; }
+
                     _monoBehaviour.StartCoroutine(RotateUi(_panelTransform, occurrence, degrees, duration, delay, easing));
                     break;
                 case AnimationTarget.Text:
+                    if (_textComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(RotateUi(_textComponent[occurrence].rectTransform, occurrence, degrees, duration, delay, easing));
                     break;
                 case AnimationTarget.Image:
+                    if (_imageComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(RotateUi(_imageComponent[occurrence].rectTransform, occurrence, degrees, duration, delay, easing));
                     break;
                 case AnimationTarget.Button:
+                    if (_buttonComponent[occurrence] == null) { return; }
+
                     _monoBehaviour.StartCoroutine(RotateUi((RectTransform)_buttonComponent[occurrence].transform, occurrence, degrees, duration, delay, easing));
                     break;
             }
@@ -137,8 +145,6 @@ namespace FlowKit.UI
 
         private IEnumerator RotateUi(RectTransform component, int occurrence, float degrees, float duration, float delay, EasingType easing)
         {
-            if (component == null) { yield break; }
-
             GetStartRotation(component, occurrence, out Quaternion startRotation); 
             Quaternion targetRotation;
 
