@@ -74,6 +74,16 @@ namespace FlowKit.Common
         internal const int TextIndex = 1;
         internal const int ImageIndex = 2;
         internal const int ButtonIndex = 3;
+        //
         internal const float DefaultDuration = 0.5f;
+        //
+        internal class TypeWriter
+        {
+            internal const float PerCharacterDelay = 0.3f;
+            internal const float CompleteTextDuration = 3f;
+        }
+        //
+        internal const float TransparentAlpha = 0f;
+        internal const float OpaqueAlpha = 1f;
     }
 }
