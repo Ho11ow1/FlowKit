@@ -22,9 +22,10 @@
 * License: Apache License 2.0
 * -------------------------------------------------------- */
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
 using TMPro;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace FlowKit.Editor
 {
@@ -32,397 +33,154 @@ namespace FlowKit.Editor
     {
         private static FlowKitWindow window;
 
-        // FlowKitEngine variables
-        private readonly List<GameObject> _flowkitList = new List<GameObject>();
-        private Vector2 _scrollView;
+        private readonly Dictionary<GameObject, List<GameObject>> _parentChildMap = new Dictionary<GameObject, List<GameObject>>();
 
-        // Track which object is selected for code generation
-        private RectTransform _selectedForCodeGen = null;
+        private readonly GUIStyle _instructionStyle = new GUIStyle();
 
-        // Styling variables
-        private readonly GUIStyle _componentStyle = new GUIStyle();
-        private readonly GUIStyle _childrenStyle = new GUIStyle();
+        private GameObject selectedObject;
+        // Easier to test with target 
+        // Either move to target with button or go back to selected following original idea
+        private GameObject targetObject;
+        private float rotationSpeed = 90f;
 
-        // Colour variables
-        private Color _activeColour = new Color32(114, 144, 223, 255);
-        private Color _inactiveColour = new Color32(255, 105, 130, 255);
+        private bool isAnimating = false;
+        private double startTime = 0d;
 
-        // Size variables
-        private readonly GUILayoutOption _labelWidth = GUILayout.Width(52);
-        private readonly GUILayoutOption _inputWidth = GUILayout.Width(30);
-        private readonly GUILayoutOption _vectorWidth = GUILayout.Width(100);
-        private const int _selectWidth = 55;
-        private const int _childIndent = 15;
-        private const int _dropdownWidth = 148;
-
-        // Conveluted KeyValuePair finally works
-        private readonly Dictionary<GameObject, Dictionary<int, Dictionary<RectTransform, AnimationData>>> _panelDataMap =
-                     new Dictionary<GameObject, Dictionary<int, Dictionary<RectTransform, AnimationData>>>();
-
-        // Component index mathching Core
-        internal const int _textIndex = 1;
-        internal const int _imageIndex = 2;
-        internal const int _buttonIndex = 3;
-
-        [MenuItem("Window/FlowKit/FlowKit Helper")]
+        [MenuItem("Window/FlowKit/Live Preview")]
         public static void ShowWindow()
         {
-            window = GetWindow<FlowKitWindow>("FlowKit Helper");
-            window.position = new Rect(550, 250, 700, 550);
-            window.Show();
+            window = GetWindow<FlowKitWindow>("Live Preview");
+            window.minSize = new Vector2(500, 500);
         }
 
         void OnEnable()
         {
-            _componentStyle.alignment = TextAnchor.MiddleLeft;
-            _componentStyle.stretchWidth = true;
-            _componentStyle.wordWrap = false;
+            _parentChildMap.Clear();
 
-            _childrenStyle.alignment = TextAnchor.MiddleLeft;
-            _childrenStyle.margin = new RectOffset(0, 0, 0, 0);
-            _childrenStyle.padding = new RectOffset(0, 0, 0, 0);
-            _childrenStyle.margin.left = _childIndent;
-            _childrenStyle.stretchWidth = true;
-            _childrenStyle.wordWrap = false;
-
-            FindPanels();
+            InitParentsInMap();
+            InitStyles();
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
-            _panelDataMap.Clear();
+            _parentChildMap.Clear();
+
+            Undo.PerformUndo();
         }
 
         private void OnGUI()
         {
-            GUILayout.Space(10);
+            LabelInstructions(); 
+            DrawParents();
+            GetSelectedObject();
 
-            EditorGUILayout.LabelField("FlowKitEngine Objects", EditorStyles.boldLabel);
-            if (_flowkitList.Count == 0)
+            targetObject = (GameObject)EditorGUILayout.ObjectField("Target GameObject", targetObject, typeof(GameObject), true);
+            rotationSpeed = EditorGUILayout.FloatField("Rotation Speed", rotationSpeed);
+
+            if (GUILayout.Button(isAnimating ? "Stop Animation" : "Start Animation"))
             {
-                EditorGUILayout.HelpBox("No UI panels with `FlowKitEngine` script found.", MessageType.Info);
-            }
-
-            _scrollView = EditorGUILayout.BeginScrollView(_scrollView);
-            EditorGUILayout.BeginVertical("box");
-
-            for (int i = 0; i < _flowkitList.Count; i++)
-            {
-                GameObject obj = _flowkitList[i];
-                if (obj != null)
+                if (targetObject == null)
                 {
-                    EditorGUILayout.BeginHorizontal(_componentStyle);
+                    Debug.LogWarning("No target object selected for animation.");
 
-                    if (!obj.activeInHierarchy)
-                    {
-                        GUI.backgroundColor = _inactiveColour;
-                        EditorGUILayout.ObjectField(obj, typeof(GameObject), true);
-                    }
-                    else
-                    {
-                        GUI.backgroundColor = _activeColour;
-                        EditorGUILayout.ObjectField(obj, typeof(GameObject), true);
-                    }
-
-                    GUI.backgroundColor = _activeColour;
-                    if (!obj.activeInHierarchy)
-                    { GUI.backgroundColor = _inactiveColour; }
-                    if (GUILayout.Button("Find", GUILayout.Width(_selectWidth)))
-                    {
-                        Selection.activeGameObject = obj;
-                        EditorGUIUtility.PingObject(obj);
-                    }
-
-                    EditorGUILayout.EndHorizontal();
-
-                    DrawChildren(obj);
+                    return;
                 }
-            }
 
-            EditorGUILayout.EndVertical();
-            EditorGUILayout.EndScrollView();
+                isAnimating = !isAnimating;
+                startTime = EditorApplication.timeSinceStartup;
+
+                EditorUtility.SetDirty(targetObject); 
+                Undo.RecordObject(targetObject.transform, $"Undo {targetObject.name} Animation");
+            }
         }
 
-        // -------------------------------------------------------------- SET PANEL DATA --------------------------------------------------------------
-
-        private void FindPanels()
+        private void Update()
         {
-            _flowkitList.Clear();
-            _panelDataMap.Clear();
+            if (!isAnimating || targetObject == null) { return; }
 
-            GameObject[] gameObjects = GameObject.FindObjectsOfType<GameObject>(true);
+            double currentTime = EditorApplication.timeSinceStartup;
+            float deltaTime = (float)(currentTime - startTime);
+            startTime = currentTime;
+
+            targetObject.transform.Rotate(Vector3.up, rotationSpeed * deltaTime, Space.World);
+
+            SceneView.RepaintAll();
+        }
+
+        // -------------------------------------------------------------- INITIALIZERS --------------------------------------------------------------
+
+        private void InitParentsInMap()
+        {
+            GameObject[] gameObjects = GameObject.FindObjectsOfType<GameObject>(false);
 
             foreach (GameObject obj in gameObjects)
             {
                 if (obj.layer == LayerMask.NameToLayer("UI"))
                 {
-                    if (obj.GetComponent<FlowKit.Core.FlowKitEngine>() != null)
+                    if (obj.GetComponent<RectTransform>() && obj.GetComponent<Core.FlowKitEngine>())
                     {
-                        _flowkitList.Add(obj);
-                        InitializePanelData(obj);
+                        _parentChildMap.Add(obj, new List<GameObject>());
                     }
                 }
             }
-
-            Debug.Log($"Found {_flowkitList.Count} UI panels with `FlowKitEngine` script (including inactive)");
         }
 
-        private void InitializePanelData(GameObject panel)
+        private void InitStyles()
         {
-            if (!_panelDataMap.ContainsKey(panel))
-            {
-                _panelDataMap[panel] = new Dictionary<int, Dictionary<RectTransform, AnimationData>>
-            {
-                { _textIndex, new Dictionary<RectTransform, AnimationData>() },
-                { _imageIndex, new Dictionary<RectTransform, AnimationData>() },
-                { _buttonIndex, new Dictionary<RectTransform, AnimationData>() }
-            };
-            }
+            _instructionStyle.fontSize = 14;
+            _instructionStyle.normal.textColor = Color.white;
+            _instructionStyle.alignment = TextAnchor.MiddleCenter;
         }
 
         // -------------------------------------------------------------- DRAW GUI --------------------------------------------------------------
 
-        private void DrawChildren(GameObject gameObject)
+        // TODO: Make this look better
+        private void LabelInstructions()
         {
-            List<RectTransform> rects = new List<RectTransform>();
-
-            foreach (RectTransform child in gameObject.transform)
-            {
-                rects.Add(child);
-            }
-
-            foreach (RectTransform rect in rects)
-            {
-                EditorGUILayout.BeginHorizontal(_childrenStyle);
-
-                if (!rect.gameObject.activeInHierarchy)
-                {
-                    GUI.backgroundColor = _inactiveColour;
-                    EditorGUILayout.ObjectField(rect.gameObject, typeof(GameObject), true);
-                }
-                else
-                {
-                    EditorGUILayout.ObjectField(rect.gameObject, typeof(GameObject), true);
-                }
-
-                GUI.backgroundColor = _activeColour;
-                if (!rect.parent.gameObject.activeInHierarchy)
-                { GUI.backgroundColor = _inactiveColour; }
-                if (GUILayout.Button("Code", GUILayout.Width(_selectWidth)))
-                {
-                    _selectedForCodeGen = (_selectedForCodeGen == rect) ? null : rect;
-                    Repaint();
-                }
-
-                EditorGUILayout.EndHorizontal();
-
-                DrawAnimationControls(rect);
-
-                if (_selectedForCodeGen == rect)
-                {
-                    (AnimationData dataPoint, int indexPoint, string type) = AnimationData.GetTupleAnimationData(rect, _panelDataMap);
-                    if (dataPoint != null)
-                    {
-                        GenerateTweenCode(dataPoint, indexPoint, type);
-                    }
-                }
-            }
+            GUILayout.Label("To select a component for animation", _instructionStyle);
+            GUILayout.Label("double click within this window or select in the hierarchy window", _instructionStyle);
+            GUILayout.Label("(Object must be a child of a panel & be active in the hierarchy)", _instructionStyle);
         }
 
-        private void DrawAnimationControls(RectTransform rect)
+        private void DrawParents()
         {
-            AnimationData data = AnimationData.GetAnimationData(rect, _panelDataMap);
-            GUILayout.BeginHorizontal(_childrenStyle);
+            EditorGUILayout.BeginVertical();
 
-            GUIContent content = new GUIContent(data.animation, EditorGUIUtility.IconContent("d_UnityEditor.ConsoleWindow").image);
-
-            bool clicked = EditorGUILayout.DropdownButton(content, FocusType.Passive, GUILayout.Width(_dropdownWidth));
-            var button = GUILayoutUtility.GetLastRect();
-
-            Rect menuPos = SetMenuPosition(button);
-
-            if (clicked)
+            foreach (GameObject obj in _parentChildMap.Keys)
             {
-                GenericMenu menu = new GenericMenu();
-                // Fade
-                menu.AddItem(new GUIContent(AnimationData._fadeText + "/FadeIn"), data.animation == "FadeIn", (userData) => OnSelected((RectTransform)userData, "FadeIn"), rect);
-                menu.AddItem(new GUIContent(AnimationData._fadeText + "/FadeOut"), data.animation == "FadeOut", (userData) => OnSelected((RectTransform)userData, "FadeOut"), rect);
-                // Transition
-                menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionFromTop"), data.animation == "TransitionFromTop", (userData) => OnSelected((RectTransform)userData, "TransitionFromTop"), rect);
-                menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionFromBottom"), data.animation == "TransitionFromBottom", (userData) => OnSelected((RectTransform)userData, "TransitionFromBottom"), rect);
-                menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionFromLeft"), data.animation == "TransitionFromLeft", (userData) => OnSelected((RectTransform)userData, "TransitionFromLeft"), rect);
-                menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionFromRight"), data.animation == "TransitionFromRight", (userData) => OnSelected((RectTransform)userData, "TransitionFromRight"), rect);
-                menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionFromPosition"), data.animation == "TransitionFromPosition", (userData) => OnSelected((RectTransform)userData, "TransitionFromPosition"), rect);
-                menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionToTop"), data.animation == "TransitionToTop", (userData) => OnSelected((RectTransform)userData, "TransitionToTop"), rect);
-                menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionToBottom"), data.animation == "TransitionToBottomn", (userData) => OnSelected((RectTransform)userData, "TransitionToBottom"), rect);
-                menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionToLeft"), data.animation == "TransitionToLeft", (userData) => OnSelected((RectTransform)userData, "TransitionToLeft"), rect);
-                menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionToRight"), data.animation == "TransitionToRight", (userData) => OnSelected((RectTransform)userData, "TransitionToRight"), rect);
-                menu.AddItem(new GUIContent(AnimationData._transitionText + "/TransitionToPosition"), data.animation == "TransitionToPosition", (userData) => OnSelected((RectTransform)userData, "TransitionToPosition"), rect);
-                // Rotate
-                menu.AddItem(new GUIContent(AnimationData._rotateText), data.animation == AnimationData._rotateText, (userData) => OnSelected((RectTransform)userData, AnimationData._rotateText), rect);
-                // Scale
-                menu.AddItem(new GUIContent(AnimationData._scaleText + "/ScaleUp"), data.animation == "ScaleUp", (userData) => OnSelected((RectTransform)userData, "ScaleUp"), rect);
-                menu.AddItem(new GUIContent(AnimationData._scaleText + "/ScaleDown"), data.animation == "ScaleDown", (userData) => OnSelected((RectTransform)userData, "ScaleDown"), rect);
-                // TypeWrite
-                if (rect.gameObject.GetComponent<TextMeshProUGUI>())
-                {
-                    menu.AddItem(new GUIContent(AnimationData._typeWriteText), data.animation == AnimationData._typeWriteText, (userData) => OnSelected((RectTransform)userData, AnimationData._typeWriteText), rect);
-                }
+                EditorGUILayout.ObjectField(obj, typeof(GameObject), true);
 
-                menu.DropDown(menuPos);
-            }
-
-            if (data.animation != "" && data.animation != AnimationData._animationText)
-            {
-                EditorGUILayout.LabelField("Duration:", _labelWidth);
-                data.duration = EditorGUILayout.FloatField(data.duration, _inputWidth);
-
-                EditorGUILayout.LabelField("Delay:", _labelWidth);
-                data.delay = EditorGUILayout.FloatField(data.delay, _inputWidth);
-            }
-
-            if (data.animation.StartsWith(AnimationData._transitionText))
-            {
-                if (data.animation == "TransitionFromPosition" || data.animation == "TransitionToPosition")
-                {
-                    EditorGUILayout.LabelField("Offset:", _labelWidth);
-                    data.vector = EditorGUILayout.Vector2Field("", data.vector, _vectorWidth);
-                }
-                else
-                {
-                    EditorGUILayout.LabelField("Offset:", _labelWidth);
-                    data.offset = EditorGUILayout.FloatField(data.offset, _inputWidth);
-                }
-            }
-            else if (data.animation == AnimationData._rotateText)
-            {
-                EditorGUILayout.LabelField("Degrees:", _labelWidth);
-                data.degrees = EditorGUILayout.FloatField(data.degrees, _inputWidth);
-            }
-            else if (data.animation.StartsWith(AnimationData._scaleText))
-            {
-                EditorGUILayout.LabelField("Multiplier:", _labelWidth);
-                data.multiplier = EditorGUILayout.FloatField(data.multiplier, _inputWidth);
-            }
-
-            GUILayout.EndHorizontal();
-        }
-
-        private Rect SetMenuPosition(Rect buttonRect)
-        {
-            Vector2 mousePos = Event.current.mousePosition;
-            return new Rect(mousePos.x, mousePos.y, buttonRect.width, 0);
-        }
-
-        private void OnSelected(RectTransform rect, string animation)
-        {
-            if (rect != null)
-            {
-                AnimationData data = AnimationData.GetAnimationData(rect, _panelDataMap);
-                data.animation = animation;
-
-                Repaint();
-            }
-        }
-
-        // -------------------------------------------------------------- CODE GENERATION --------------------------------------------------------------
-
-        private void GenerateTweenCode(AnimationData data, int occurrence, string type)
-        {
-            if (data.animation == AnimationData._animationText || string.IsNullOrEmpty(data.animation))
-            {
-                EditorGUILayout.HelpBox("Please select an animation type first", MessageType.Warning);
-                return;
-            }
-
-            string animationString = AnimationData.GetAnimationString(data);
-
-            GUI.backgroundColor = Color.black;
-            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-            float codeWidth = 650f;
-            string[] labels =
-            {
-            "[SerializeField] private GameObject panel;",
-            "private FlowKitEngine _panelFK;",
-            "void Awake()",
-            "    _panelFK = panel.GetComponent<FlowKitEngine>();",
-            "private void PlayAnimation()",
-        };
-
-            EditorGUILayout.LabelField("// Generated Code", EditorStyles.boldLabel);
-            EditorGUILayout.Space(5);
-
-            EditorGUILayout.LabelField(labels[0], GUILayout.Width(codeWidth));
-            EditorGUILayout.LabelField(labels[1], GUILayout.Width(codeWidth));
-            EditorGUILayout.Space(5);
-
-            EditorGUILayout.LabelField(labels[2], GUILayout.Width(codeWidth));
-            EditorGUILayout.LabelField("{", GUILayout.Width(codeWidth));
-            EditorGUILayout.LabelField(labels[3], GUILayout.Width(codeWidth));
-            EditorGUILayout.LabelField("}", GUILayout.Width(codeWidth));
-            EditorGUILayout.Space(5);
-
-            EditorGUILayout.LabelField(labels[4], GUILayout.Width(codeWidth));
-            EditorGUILayout.LabelField("{", GUILayout.Width(codeWidth));
-
-            string parameters = $"{type}, {occurrence}";
-            if (data.animation == AnimationData._typeWriteText)
-            {
-                parameters = $"{occurrence}";
-            }
-
-            switch (data.animation)
-            {
-                case AnimationData._typeWriteText:
-                    if (data.delay > 0)
-                        parameters += $", delay: {data.delay}f";
-                    if (data.duration > 0)
-                        parameters += $", duration: {data.duration}f";
-                    break;
-
-                case "TransitionFromPosition":
-                case "TransitionToPosition":
-                    if (data.vector != Vector2.zero)
-                        parameters += $", new Vector2({data.vector.x}, {data.vector.y})";
-                    if (data.duration > 0)
-                        parameters += $", duration: {data.duration}f";
-                    if (data.delay > 0)
-                        parameters += $", delay: {data.delay}f";
-                    break;
-
-                default:
-                    if (data.duration > 0)
-                        parameters += $", duration: {data.duration}f";
-                    if (data.delay > 0)
-                        parameters += $", delay: {data.delay}f";
-
-                    if (data.animation.StartsWith(AnimationData._transitionText) && data.offset != 0)
-                        parameters += $", offset: {data.offset}f";
-
-                    else if (data.animation == AnimationData._rotateText && data.degrees != 0)
-                        parameters += $", degrees: {data.degrees}f";
-
-                    else if (data.animation.StartsWith(AnimationData._scaleText) && data.multiplier != 0)
-                        parameters += $", multiplier: {data.multiplier}f";
-                    break;
-            }
-
-            GUIStyle codeStyle = new GUIStyle(EditorStyles.label) { fontStyle = FontStyle.Bold };
-
-            EditorGUILayout.LabelField($"    _panelFK.{animationString}({parameters});", codeStyle, GUILayout.Width(codeWidth));
-            EditorGUILayout.LabelField("}", GUILayout.Width(codeWidth));
-            EditorGUILayout.Space(5);
-
-            GUI.backgroundColor = Color.white;
-            if (GUILayout.Button("Copy to Clipboard", GUILayout.Width(150)))
-            {
-                var code = $"_panelFK.{animationString}({parameters});";
-
-                EditorGUIUtility.systemCopyBuffer = code;
-                Debug.Log("Code copied to clipboard!");
+                DrawChildren(obj);
             }
 
             EditorGUILayout.EndVertical();
         }
+
+        private void DrawChildren(GameObject parent)
+        {
+            EditorGUILayout.BeginHorizontal();
+
+            foreach (RectTransform child in parent.transform)
+            {
+                EditorGUILayout.ObjectField(child.gameObject, typeof(GameObject), true);
+            }
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private void GetSelectedObject()
+        {
+            selectedObject = Selection.activeObject as GameObject;
+
+            if (selectedObject == null || !selectedObject.activeInHierarchy) { return; }
+            if (selectedObject.layer != LayerMask.NameToLayer("UI")) { return; }
+            if (selectedObject.GetComponent<RectTransform>() == null) { return; }
+
+            Debug.Log($"Selected object: {(selectedObject != null ? selectedObject.name : "null")}");
+        }
+
+        // -------------------------------------------------------------- ANIMATION TESTS --------------------------------------------------------------
+
+        
     }
 }
