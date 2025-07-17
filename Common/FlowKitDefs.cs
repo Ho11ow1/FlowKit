@@ -55,6 +55,8 @@ namespace FlowKit.Common
         public static event UnityAction RotateEnd;
         public static event UnityAction TypeWriteStart;
         public static event UnityAction TypeWriteEnd;
+        public static event UnityAction ColorCycleStart;
+        public static event UnityAction ColorCycleEnd;
 
         internal static void InvokeFadeStart() { FadeStart?.Invoke(); }
         internal static void InvokeFadeEnd() { FadeEnd?.Invoke(); }
@@ -66,6 +68,8 @@ namespace FlowKit.Common
         internal static void InvokeRotateEnd() { RotateEnd?.Invoke(); }
         internal static void InvokeTypeWriteStart() { TypeWriteStart?.Invoke(); }
         internal static void InvokeTypeWriteEnd() { TypeWriteEnd?.Invoke(); }
+        internal static void InvokeColorCycleStart() { ColorCycleStart?.Invoke(); }
+        internal static void InvokeColorCycleEnd() { ColorCycleEnd?.Invoke(); }
     }
 
     internal class FlowKitConstants
