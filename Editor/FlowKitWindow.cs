@@ -22,10 +22,10 @@
 * License: Apache License 2.0
 * -------------------------------------------------------- */
 using System.Collections.Generic;
-using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace FlowKit.Editor
 {
@@ -34,17 +34,22 @@ namespace FlowKit.Editor
         private static FlowKitWindow window;
 
         private readonly Dictionary<GameObject, List<GameObject>> _parentChildMap = new Dictionary<GameObject, List<GameObject>>();
+        private readonly Dictionary<GameObject, Vector2> _positionMap = new Dictionary<GameObject, Vector2>();
+        private readonly Dictionary<GameObject, Quaternion> _rotationMap = new Dictionary<GameObject, Quaternion>();
+        private readonly Dictionary<GameObject, Vector2> _scaleMap = new Dictionary<GameObject, Vector2>();
+        private readonly Dictionary<GameObject, float> _alphaMap = new Dictionary<GameObject, float>();
 
         private readonly GUIStyle _instructionStyle = new GUIStyle();
+        private const int animationControlSpacing = 5;
 
+        private bool isAnimating;
+        private double startTime;
         private GameObject selectedObject;
-        // Easier to test with target 
-        // Either move to target with button or go back to selected following original idea
-        private GameObject targetObject;
-        private float rotationSpeed = 90f;
 
-        private bool isAnimating = false;
-        private double startTime = 0d;
+        private AnimationDefs.FadeVars fade;
+        private AnimationDefs.TransitionVars transition;
+        private AnimationDefs.ScaleVars scale;
+        private AnimationDefs.RotateVars rotate;
 
         [MenuItem("Window/FlowKit/Live Preview")]
         public static void ShowWindow()
@@ -55,59 +60,58 @@ namespace FlowKit.Editor
 
         void OnEnable()
         {
-            _parentChildMap.Clear();
-
+            InitData();
             InitParentsInMap();
             InitStyles();
         }
 
         private void OnDisable()
         {
-            _parentChildMap.Clear();
-
-            Undo.PerformUndo();
+            StopPreview();
+            ResetAllTransforms();
+            ClearSavedData();
         }
 
         private void OnGUI()
         {
-            LabelInstructions(); 
+            LabelInstructions();
+            
             DrawParents();
+            DrawSelectedControls();
+
             GetSelectedObject();
-
-            targetObject = (GameObject)EditorGUILayout.ObjectField("Target GameObject", targetObject, typeof(GameObject), true);
-            rotationSpeed = EditorGUILayout.FloatField("Rotation Speed", rotationSpeed);
-
-            if (GUILayout.Button(isAnimating ? "Stop Animation" : "Start Animation"))
-            {
-                if (targetObject == null)
-                {
-                    Debug.LogWarning("No target object selected for animation.");
-
-                    return;
-                }
-
-                isAnimating = !isAnimating;
-                startTime = EditorApplication.timeSinceStartup;
-
-                EditorUtility.SetDirty(targetObject); 
-                Undo.RecordObject(targetObject.transform, $"Undo {targetObject.name} Animation");
-            }
         }
 
-        private void Update()
+        private void EditorUpdate()
         {
-            if (!isAnimating || targetObject == null) { return; }
+            if (selectedObject == null || !isAnimating) { return; }
 
             double currentTime = EditorApplication.timeSinceStartup;
             float deltaTime = (float)(currentTime - startTime);
             startTime = currentTime;
 
-            targetObject.transform.Rotate(Vector3.up, rotationSpeed * deltaTime, Space.World);
+            selectedObject.transform.Rotate(Vector3.forward, -rotate.duration * deltaTime, Space.World);
 
             SceneView.RepaintAll();
+            Repaint();
+        }
+
+        private void StopPreview()
+        {
+            isAnimating = false;
+            selectedObject = null;
+            EditorApplication.update -= EditorUpdate;
         }
 
         // -------------------------------------------------------------- INITIALIZERS --------------------------------------------------------------
+
+        private void InitData()
+        {
+            fade = new AnimationDefs.FadeVars();
+            transition = new AnimationDefs.TransitionVars();
+            scale = new AnimationDefs.ScaleVars();
+            rotate = new AnimationDefs.RotateVars();
+        }
 
         private void InitParentsInMap()
         {
@@ -120,9 +124,32 @@ namespace FlowKit.Editor
                     if (obj.GetComponent<RectTransform>() && obj.GetComponent<Core.FlowKitEngine>())
                     {
                         _parentChildMap.Add(obj, new List<GameObject>());
+                        SaveTransform(obj);
+                        InitChildrenInMap(obj);
                     }
                 }
             }
+        }
+
+        private void InitChildrenInMap(GameObject parent)
+        {
+            List<GameObject> children = new List<GameObject>();
+
+            foreach (Transform childTransform in parent.transform)
+            {
+                GameObject child = childTransform.gameObject;
+
+                if (child.layer == LayerMask.NameToLayer("UI"))
+                {
+                    if (child.GetComponent<RectTransform>())
+                    {
+                        children.Add(child);
+                        SaveTransform(child);
+                    }
+                }
+            }
+
+            _parentChildMap[parent] = children;
         }
 
         private void InitStyles()
@@ -149,7 +176,6 @@ namespace FlowKit.Editor
             foreach (GameObject obj in _parentChildMap.Keys)
             {
                 EditorGUILayout.ObjectField(obj, typeof(GameObject), true);
-
                 DrawChildren(obj);
             }
 
@@ -160,9 +186,9 @@ namespace FlowKit.Editor
         {
             EditorGUILayout.BeginHorizontal();
 
-            foreach (RectTransform child in parent.transform)
+            foreach (GameObject child in _parentChildMap[parent])
             {
-                EditorGUILayout.ObjectField(child.gameObject, typeof(GameObject), true);
+                EditorGUILayout.ObjectField(child, typeof(GameObject), true);
             }
 
             EditorGUILayout.EndHorizontal();
@@ -172,15 +198,178 @@ namespace FlowKit.Editor
         {
             selectedObject = Selection.activeObject as GameObject;
 
-            if (selectedObject == null || !selectedObject.activeInHierarchy) { return; }
-            if (selectedObject.layer != LayerMask.NameToLayer("UI")) { return; }
-            if (selectedObject.GetComponent<RectTransform>() == null) { return; }
-
-            Debug.Log($"Selected object: {(selectedObject != null ? selectedObject.name : "null")}");
+            if (selectedObject == null || !selectedObject.activeInHierarchy) 
+            { 
+                selectedObject = null; 
+                return; 
+            }
+            if (selectedObject.layer != LayerMask.NameToLayer("UI")) 
+            { 
+                selectedObject = null; 
+                return; 
+            }
+            if (selectedObject.GetComponent<RectTransform>() == null) 
+            { 
+                selectedObject = null; 
+                return; 
+            }
         }
 
-        // -------------------------------------------------------------- ANIMATION TESTS --------------------------------------------------------------
+        private void DrawSelectedControls()
+        {
+            EditorGUILayout.Space(animationControlSpacing);
 
-        
+            rotate.duration = EditorGUILayout.FloatField("Rotation Speed", rotate.duration);
+
+            if (GUILayout.Button(isAnimating ? "Stop Animation" : "Start Animation"))
+            {
+                isAnimating = !isAnimating;
+
+                if (isAnimating)
+                {
+                    EditorApplication.update -= EditorUpdate;
+                    EditorApplication.update += EditorUpdate;
+                    startTime = EditorApplication.timeSinceStartup;
+                }
+                else
+                {
+                    EditorApplication.update -= EditorUpdate;
+                }
+            }
+        }
+
+        // -------------------------------------------------------------- TRANSFORM SETTERS --------------------------------------------------------------
+
+        private void SaveTransform(GameObject obj)
+        {
+            SavePosition(obj);
+            SaveRotation(obj);
+            SaveScale(obj);
+            SaveAlpha(obj);
+        }
+
+        private void SavePosition(GameObject obj)
+        {
+            _positionMap.Add(obj, obj.transform.localPosition);
+        }
+
+        private void SaveRotation(GameObject obj)
+        {
+            _rotationMap.Add(obj, obj.transform.localRotation);
+        }
+
+        private void SaveScale(GameObject obj)
+        {
+            _scaleMap.Add(obj, obj.transform.localScale);
+        }
+
+        private void SaveAlpha(GameObject obj)
+        {
+            if (obj.TryGetComponent<Button>(out Button btn))
+            {
+                _alphaMap.Add(obj, btn.image.color.a);
+            }
+            else if (obj.TryGetComponent<Image>(out Image img))
+            {
+                _alphaMap.Add(obj, img.color.a);
+            }
+            else if (obj.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI text))
+            {
+                _alphaMap.Add(obj, text.color.a);
+            }
+            else if (obj.TryGetComponent<CanvasGroup>(out CanvasGroup cg))
+            {
+                _alphaMap.Add(obj, cg.alpha);
+            }
+        }
+
+        // -------------------------------------------------------------- TRANSFORM RESETS --------------------------------------------------------------
+
+        private void ClearSavedData()
+        {
+            _parentChildMap.Clear();
+            _positionMap.Clear();
+            _rotationMap.Clear();
+            _scaleMap.Clear();
+            _alphaMap.Clear();
+        }
+
+        private void ResetAllTransforms()
+        {
+            ResetPosition();
+            ResetRotation();
+            ResetScale();
+            ResetAlpha();
+        }
+
+        private void ResetPosition()
+        {
+            foreach (var kvp in _positionMap)
+            {
+                GameObject obj = kvp.Key;
+                if (obj == null) { continue; }
+
+                Vector2 originalPos = kvp.Value;
+
+                obj.transform.localPosition = originalPos;
+            }
+        }
+
+        private void ResetRotation()
+        {
+            foreach (var kvp in _rotationMap)
+            {
+                GameObject obj = kvp.Key;
+                if (obj == null) { continue; }
+
+                Quaternion originalRotation = kvp.Value;
+
+                obj.transform.localRotation = originalRotation;
+            }
+        }
+
+        private void ResetScale()
+        {
+            foreach (var kvp in _scaleMap)
+            {
+                GameObject obj = kvp.Key;
+                if (obj == null) { continue; }
+
+                Vector2 originalScale = kvp.Value;
+
+                obj.transform.localScale = originalScale;
+            }
+        }
+
+        private void ResetAlpha()
+        {
+            foreach (var kvp in _alphaMap)
+            {
+                GameObject obj = kvp.Key;
+                if (obj == null) { continue; }
+
+                float originalAlpha = kvp.Value;
+
+                if (obj.TryGetComponent<Button>(out Button btn))
+                {
+                    Color color = btn.image.color;
+                    btn.image.color = new Color(color.r, color.g, color.b, originalAlpha);
+                }
+                else if (obj.TryGetComponent<Image>(out Image img))
+                {
+                    Color color = img.color;
+                    img.color = new Color(color.r, color.g, color.b, originalAlpha);
+                }
+                else if (obj.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI text))
+                {
+                    Color color = text.color;
+                    text.color = new Color(color.r, color.g, color.b, originalAlpha);
+                }
+                else if (obj.TryGetComponent<CanvasGroup>(out CanvasGroup cg))
+                {
+                    cg.alpha = originalAlpha;
+                }
+            }
+        }
     }
 }
