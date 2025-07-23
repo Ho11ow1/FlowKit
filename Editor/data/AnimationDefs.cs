@@ -4,11 +4,22 @@ namespace FlowKit.Editor
 {
     internal class AnimationDefs
     {
+        internal enum AnimationType
+        {
+            None,
+            Rotate,
+            Transition,
+            Scale,
+            Fade
+        }
+
         // -------------------------------------------------------------- ROTATION --------------------------------------------------------------
         internal class RotateVars
         {
             public float degrees;
             public float duration;
+            public float degreesPerTick => degrees / duration;
+            public Quaternion targetRotation;
         }
 
         // -------------------------------------------------------------- TRANSITION --------------------------------------------------------------
@@ -59,20 +70,15 @@ namespace FlowKit.Editor
         {
             public float multiplier;
             public float duration;
+            public Vector2 targetScale;
         }
 
         // -------------------------------------------------------------- FADE --------------------------------------------------------------
 
         internal class FadeVars
         {
-            public FadeType type;
+            public float alphaTarget;
             public float duration;
-        }
-
-        internal enum FadeType
-        {
-            FadeIn,
-            FadeOut
         }
     }
 }
