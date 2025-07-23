@@ -31,6 +31,7 @@ namespace FlowKit.Editor
 {
     public class FlowKitWindow : EditorWindow
     {
+        #region Variables
         private static FlowKitWindow window;
 
         private readonly Dictionary<GameObject, List<GameObject>> _parentChildMap = new Dictionary<GameObject, List<GameObject>>();
@@ -44,12 +45,15 @@ namespace FlowKit.Editor
 
         private bool isAnimating;
         private double startTime;
+        private double lastFrameTime;
         private GameObject selectedObject;
 
         private AnimationDefs.FadeVars fade;
         private AnimationDefs.TransitionVars transition;
         private AnimationDefs.ScaleVars scale;
         private AnimationDefs.RotateVars rotate;
+        private AnimationDefs.AnimationType animationType = AnimationDefs.AnimationType.None;
+        #endregion
 
         [MenuItem("Window/FlowKit/Live Preview")]
         public static void ShowWindow()
@@ -77,30 +81,80 @@ namespace FlowKit.Editor
             LabelInstructions();
             
             DrawParents();
+            DrawAnimationSelection();
             DrawSelectedControls();
 
             GetSelectedObject();
         }
 
-        private void EditorUpdate()
+        private void EditorUpdateRotate()
         {
             if (selectedObject == null || !isAnimating) { return; }
 
             double currentTime = EditorApplication.timeSinceStartup;
-            float deltaTime = (float)(currentTime - startTime);
-            startTime = currentTime;
+            float deltaTime = (float)(currentTime - lastFrameTime);
+            lastFrameTime = currentTime;
+            if ((float)(currentTime - startTime) >= rotate.duration) 
+            { 
+                isAnimating = false;
+                selectedObject.transform.localRotation = rotate.targetRotation;
+                return; 
+            }
 
-            selectedObject.transform.Rotate(Vector3.forward, -rotate.duration * deltaTime, Space.World);
+            float t = (float)(currentTime - startTime) / rotate.duration;
+            selectedObject.transform.localRotation = Quaternion.Lerp(selectedObject.transform.localRotation, rotate.targetRotation, t * deltaTime);
 
             SceneView.RepaintAll();
             Repaint();
         }
 
-        private void StopPreview()
+        private void EditorUpdateTransition()
         {
-            isAnimating = false;
-            selectedObject = null;
-            EditorApplication.update -= EditorUpdate;
+            if (selectedObject == null || !isAnimating) { return; }
+
+            double currentTime = EditorApplication.timeSinceStartup;
+            float deltaTime = (float)(currentTime - lastFrameTime);
+            lastFrameTime = currentTime;
+
+
+
+            SceneView.RepaintAll();
+            Repaint();
+        }
+
+        private void EditorUpdateScale()
+        {
+            if (selectedObject == null || !isAnimating) { return; }
+
+            double currentTime = EditorApplication.timeSinceStartup;
+            float deltaTime = (float)(currentTime - lastFrameTime);
+            lastFrameTime = currentTime;
+            if ((float)(currentTime - startTime) >= scale.duration)
+            {
+                isAnimating = false;
+                selectedObject.transform.localScale = scale.targetScale;
+                return;
+            }
+
+            float t = (float)(currentTime - startTime) / scale.duration;
+            selectedObject.transform.localScale = Vector2.Lerp(selectedObject.transform.localScale, scale.targetScale, t * deltaTime);
+
+            SceneView.RepaintAll();
+            Repaint();
+        }
+
+        private void EditorUpdateAlpha()
+        {
+            if (selectedObject == null || !isAnimating) { return; }
+
+            double currentTime = EditorApplication.timeSinceStartup;
+            float deltaTime = (float)(currentTime - lastFrameTime);
+            lastFrameTime = currentTime;
+
+
+
+            SceneView.RepaintAll();
+            Repaint();
         }
 
         // -------------------------------------------------------------- INITIALIZERS --------------------------------------------------------------
@@ -194,32 +248,37 @@ namespace FlowKit.Editor
             EditorGUILayout.EndHorizontal();
         }
 
-        private void GetSelectedObject()
+        private void DrawAnimationSelection()
         {
-            selectedObject = Selection.activeObject as GameObject;
+            EditorGUILayout.BeginVertical();
 
-            if (selectedObject == null || !selectedObject.activeInHierarchy) 
-            { 
-                selectedObject = null; 
-                return; 
-            }
-            if (selectedObject.layer != LayerMask.NameToLayer("UI")) 
-            { 
-                selectedObject = null; 
-                return; 
-            }
-            if (selectedObject.GetComponent<RectTransform>() == null) 
-            { 
-                selectedObject = null; 
-                return; 
-            }
+            animationType = (AnimationDefs.AnimationType)EditorGUILayout.EnumPopup("Animation Type: ", animationType);
+
+            EditorGUILayout.EndVertical();
         }
 
         private void DrawSelectedControls()
         {
             EditorGUILayout.Space(animationControlSpacing);
 
-            rotate.duration = EditorGUILayout.FloatField("Rotation Speed", rotate.duration);
+            switch (animationType)
+            {
+                case AnimationDefs.AnimationType.Rotate:
+                    rotate.degrees = EditorGUILayout.FloatField("Degrees", rotate.degrees);
+                    rotate.duration = EditorGUILayout.FloatField("Duration", rotate.duration);
+                    break;
+                case AnimationDefs.AnimationType.Transition:
+                    transition.duration = EditorGUILayout.FloatField("Duration", transition.duration);
+                    break;
+                case AnimationDefs.AnimationType.Scale:
+                    scale.multiplier = EditorGUILayout.FloatField("Multiplier", scale.multiplier);
+                    scale.duration = EditorGUILayout.FloatField("Duration", scale.duration);
+                    break;
+                case AnimationDefs.AnimationType.Fade:
+                    fade.alphaTarget = EditorGUILayout.FloatField("Alpha target", Mathf.Clamp01(fade.alphaTarget));
+                    fade.duration = EditorGUILayout.FloatField("Duration", fade.duration);
+                    break;
+            }
 
             if (GUILayout.Button(isAnimating ? "Stop Animation" : "Start Animation"))
             {
@@ -227,19 +286,97 @@ namespace FlowKit.Editor
 
                 if (isAnimating)
                 {
-                    EditorApplication.update -= EditorUpdate;
-                    EditorApplication.update += EditorUpdate;
-                    startTime = EditorApplication.timeSinceStartup;
+                    SubscribeToUpdate(animationType);
                 }
                 else
                 {
-                    EditorApplication.update -= EditorUpdate;
+                    StopPreview();
                 }
             }
         }
 
-        // -------------------------------------------------------------- TRANSFORM SETTERS --------------------------------------------------------------
+        // -------------------------------------------------------------- Internal functionality --------------------------------------------------------------
 
+        private void StopPreview()
+        {
+            isAnimating = false;
+            selectedObject = null;
+
+            EditorApplication.update -= EditorUpdateRotate;
+            EditorApplication.update -= EditorUpdateTransition;
+            EditorApplication.update -= EditorUpdateScale;
+            EditorApplication.update -= EditorUpdateAlpha;
+        }
+
+        private void GetSelectedObject()
+        {
+            selectedObject = Selection.activeObject as GameObject;
+
+            if (selectedObject == null || !selectedObject.activeInHierarchy)
+            {
+                selectedObject = null;
+                return;
+            }
+            if (selectedObject.layer != LayerMask.NameToLayer("UI"))
+            {
+                selectedObject = null;
+                return;
+            }
+            if (selectedObject.GetComponent<RectTransform>() == null)
+            {
+                selectedObject = null;
+                return;
+            }
+        }
+
+        private void SubscribeToUpdate(AnimationDefs.AnimationType animationType)
+        {
+            switch (animationType)
+            {
+                case AnimationDefs.AnimationType.Rotate:
+                    EditorApplication.update -= EditorUpdateTransition;
+                    EditorApplication.update -= EditorUpdateScale;
+                    EditorApplication.update -= EditorUpdateAlpha;
+
+                    EditorApplication.update += EditorUpdateRotate;
+                    startTime = EditorApplication.timeSinceStartup;
+                    lastFrameTime = startTime;
+                    rotate.targetRotation = selectedObject.transform.localRotation * Quaternion.Euler(0, 0, -rotate.degrees);
+                    break;
+                case AnimationDefs.AnimationType.Transition:
+                    EditorApplication.update -= EditorUpdateRotate;
+                    EditorApplication.update -= EditorUpdateScale;
+                    EditorApplication.update -= EditorUpdateAlpha;
+
+                    EditorApplication.update += EditorUpdateTransition;
+                    startTime = EditorApplication.timeSinceStartup;
+                    lastFrameTime = startTime;
+                break;
+                case AnimationDefs.AnimationType.Scale:
+                    EditorApplication.update -= EditorUpdateRotate;
+                    EditorApplication.update -= EditorUpdateTransition;
+                    EditorApplication.update -= EditorUpdateAlpha;
+
+                    EditorApplication.update += EditorUpdateScale;
+                    startTime = EditorApplication.timeSinceStartup;
+                    lastFrameTime = startTime;
+                    scale.targetScale = selectedObject.transform.localScale * scale.multiplier;
+                break;
+                case AnimationDefs.AnimationType.Fade:
+                    EditorApplication.update -= EditorUpdateRotate;
+                    EditorApplication.update -= EditorUpdateTransition;
+                    EditorApplication.update -= EditorUpdateScale;
+
+                    EditorApplication.update += EditorUpdateAlpha;
+                    startTime = EditorApplication.timeSinceStartup;
+                    lastFrameTime = startTime;
+                break;
+            }
+        }
+
+        // -------------------------------------------------------------- TRANSFORM SETTERS --------------------------------------------------------------
+    #region Transform Methods
+        #region Save Transform
         private void SaveTransform(GameObject obj)
         {
             SavePosition(obj);
@@ -282,9 +419,10 @@ namespace FlowKit.Editor
                 _alphaMap.Add(obj, cg.alpha);
             }
         }
+        #endregion
 
         // -------------------------------------------------------------- TRANSFORM RESETS --------------------------------------------------------------
-
+        #region Reset Transform
         private void ClearSavedData()
         {
             _parentChildMap.Clear();
@@ -372,4 +510,6 @@ namespace FlowKit.Editor
             }
         }
     }
+    #endregion
+    #endregion
 }
