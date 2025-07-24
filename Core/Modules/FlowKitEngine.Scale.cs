@@ -10,7 +10,26 @@ namespace FlowKit.Core
         {
             private readonly FlowKitEngine _engine;
 
-            public ScaleModule(FlowKitEngine engine) { _engine = engine; }
+            public ScaleModule(FlowKitEngine engine) 
+            { 
+                _engine = engine; 
+            }
+
+            /// <summary>
+            /// Reverts the target UI elements' scale back to it's original scale | <b>[NOT Animated]</b>
+            ///  <list type="bullet">
+            ///     <item>
+            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///     </item>
+            /// </list>
+            /// </summary>
+            /// <param name="target">Target component to scale (Panel, Text, Image, Button)</param>
+            /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
+            public void ResetScale(AnimationTarget target, int occurrence)
+            {
+                occurrence -= 1;
+                _engine.scalingImpl.Reset(target, occurrence, _engine.gameObject);
+            }
 
             /// <summary>
             /// Scales up the target UI element.
@@ -56,22 +75,6 @@ namespace FlowKit.Core
             {
                 occurrence -= 1;
                 _engine.scalingImpl.ScaleDown(target, occurrence, multiplier, easing, duration, delay);
-            }
-
-            /// <summary>
-            /// Reverts the target UI elements' scale back to it's original scale | <b>[NOT Animated]</b>
-            ///  <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
-            /// </list>
-            /// </summary>
-            /// <param name="target">Target component to scale (Panel, Text, Image, Button)</param>
-            /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
-            public void ResetScale(AnimationTarget target, int occurrence)
-            {
-                occurrence -= 1;
-                _engine.scalingImpl.Reset(target, occurrence, _engine.gameObject);
             }
         }
     }

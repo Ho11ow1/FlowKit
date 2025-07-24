@@ -12,7 +12,26 @@ namespace FlowKit.Core
         {
             private readonly FlowKitEngine _engine;
 
-            public TransitionModule(FlowKitEngine engine) { _engine = engine; }
+            public TransitionModule(FlowKitEngine engine) 
+            { 
+                _engine = engine; 
+            }
+
+            /// <summary>
+            /// Reverts the target UI elements' position back to it's original position | <b>[NOT Animated]</b>
+            ///  <list type="bullet">
+            ///     <item>
+            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///     </item>
+            /// </list>
+            /// </summary>
+            /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
+            /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
+            public void ResetPosition(AnimationTarget target, int occurrence)
+            {
+                occurrence -= 1;
+                _engine.transitionImpl.Reset(target, occurrence, _engine.gameObject);
+            }
 
             /// <summary>
             /// Transitions the UI element from a position offset upward back to its starting position
@@ -242,22 +261,6 @@ namespace FlowKit.Core
             {
                 occurrence -= 1;
                 _engine.transitionImpl.TransitionToPosition(target, occurrence, offset, easing, duration, delay);
-            }
-
-            /// <summary>
-            /// Reverts the target UI elements' position back to it's original position | <b>[NOT Animated]</b>
-            ///  <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
-            /// </list>
-            /// </summary>
-            /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
-            /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
-            public void ResetPosition(AnimationTarget target, int occurrence)
-            {
-                occurrence -= 1;
-                _engine.transitionImpl.Reset(target, occurrence, _engine.gameObject);
             }
         }
     }

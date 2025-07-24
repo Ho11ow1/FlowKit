@@ -10,7 +10,26 @@ namespace FlowKit.Core
         {
             private readonly FlowKitEngine _engine;
 
-            public RotateModule(FlowKitEngine engine) { _engine = engine; }
+            public RotateModule(FlowKitEngine engine) 
+            { 
+                _engine = engine; 
+            }
+
+            /// <summary>
+            /// Reverts the target UI elements' rotation back to it's original rotation | <b>[NOT Animated]</b>
+            ///  <list type="bullet">
+            ///     <item>
+            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///     </item>
+            /// </list>
+            /// </summary>
+            /// <param name="target">Target component to rotate (Panel, Text, Image, Button)</param>
+            /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
+            public void ResetRotation(AnimationTarget target, int occurrence)
+            {
+                occurrence -= 1;
+                _engine.rotateImpl.Reset(target, occurrence, _engine.gameObject);
+            }
 
             /// <summary>
             /// Rotates the target UI element.
@@ -33,22 +52,6 @@ namespace FlowKit.Core
             {
                 occurrence -= 1;
                 _engine.rotateImpl.Rotation(target, occurrence, degrees, easing, duration, delay);
-            }
-
-            /// <summary>
-            /// Reverts the target UI elements' rotation back to it's original rotation | <b>[NOT Animated]</b>
-            ///  <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
-            /// </list>
-            /// </summary>
-            /// <param name="target">Target component to rotate (Panel, Text, Image, Button)</param>
-            /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
-            public void ResetRotation(AnimationTarget target, int occurrence)
-            {
-                occurrence -= 1;
-                _engine.rotateImpl.Reset(target, occurrence, _engine.gameObject);
             }
         }
     }

@@ -11,7 +11,10 @@ namespace FlowKit.Core
         {
             private readonly FlowKitEngine _engine;
 
-            public TextModule(FlowKitEngine engine) { _engine = engine; }
+            public TextModule(FlowKitEngine engine) 
+            { 
+                _engine = engine; 
+            }
 
             /// <summary>
             /// Applies a typeWriter effect to the TextMeshPro component.
