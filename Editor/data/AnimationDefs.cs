@@ -18,7 +18,6 @@ namespace FlowKit.Editor
         {
             public float degrees;
             public float duration;
-            public float degreesPerTick => degrees / duration;
             public Quaternion targetRotation;
         }
 
@@ -29,38 +28,32 @@ namespace FlowKit.Editor
             public TransitionDirection direction;
             public TransitionOffset offset;
             public float duration;
+            public Vector2 targetPos;
+            public Vector2 startPos;
+
+            public TransitionVars()
+            {
+                offset = new TransitionOffset();
+            }
         }
 
         internal class TransitionOffset
         {
-            public bool isVector;
             public Vector2 vectorOffset;
             public float floatOffset;
-
-            public TransitionOffset(Vector2 vec)
-            {
-                isVector = true;
-                vectorOffset = vec;
-            }
-
-            public TransitionOffset(float val)
-            {
-                isVector = false;
-                floatOffset = val;
-            }
         }
 
         internal enum TransitionDirection
         {
             FromTop,
-            FromBottom,
-            FromRight,
             FromLeft,
+            FromRight,
+            FromBottom,
             FromPosition,
             ToTop,
-            ToBottom,
-            ToRight,
             ToLeft,
+            ToRight,
+            ToBottom,
             ToPosition
         }
 
@@ -77,8 +70,9 @@ namespace FlowKit.Editor
 
         internal class FadeVars
         {
-            public float alphaTarget;
+            public int alphaTarget;
             public float duration;
+            public Color currentColor;
         }
     }
 }
