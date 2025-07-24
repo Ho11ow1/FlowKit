@@ -42,6 +42,7 @@ namespace FlowKit.Editor
 
         private readonly GUIStyle _instructionStyle = new GUIStyle();
         private const int animationControlSpacing = 5;
+        private const int parentChildGroupSpacing = 3;
 
         private bool isAnimating;
         private double startTime;
@@ -94,18 +95,19 @@ namespace FlowKit.Editor
             double currentTime = EditorApplication.timeSinceStartup;
             float deltaTime = (float)(currentTime - lastFrameTime);
             lastFrameTime = currentTime;
+            float time = (float)(currentTime - startTime) / rotate.duration;
+
             if ((float)(currentTime - startTime) >= rotate.duration) 
             { 
                 isAnimating = false;
                 selectedObject.transform.localRotation = rotate.targetRotation;
+                SceneView.RepaintAll();
                 return; 
             }
 
-            float t = (float)(currentTime - startTime) / rotate.duration;
-            selectedObject.transform.localRotation = Quaternion.Lerp(selectedObject.transform.localRotation, rotate.targetRotation, t * deltaTime);
+            selectedObject.transform.localRotation = Quaternion.Lerp(selectedObject.transform.localRotation, rotate.targetRotation, time * deltaTime);
 
             SceneView.RepaintAll();
-            Repaint();
         }
 
         private void EditorUpdateTransition()
@@ -113,13 +115,21 @@ namespace FlowKit.Editor
             if (selectedObject == null || !isAnimating) { return; }
 
             double currentTime = EditorApplication.timeSinceStartup;
-            float deltaTime = (float)(currentTime - lastFrameTime);
             lastFrameTime = currentTime;
+            float time = (float)(currentTime - startTime) / transition.duration;
 
+            if ((float)(currentTime - startTime) >= transition.duration)
+            {
+                isAnimating = false;
+                selectedObject.transform.localPosition = transition.targetPos;
+                SceneView.RepaintAll();
+                return;
+            }
 
+            Vector3 newPos = Vector3.Lerp(transition.startPos, transition.targetPos, time);
+            selectedObject.transform.localPosition = newPos;
 
             SceneView.RepaintAll();
-            Repaint();
         }
 
         private void EditorUpdateScale()
@@ -129,18 +139,19 @@ namespace FlowKit.Editor
             double currentTime = EditorApplication.timeSinceStartup;
             float deltaTime = (float)(currentTime - lastFrameTime);
             lastFrameTime = currentTime;
+            float time = (float)(currentTime - startTime) / scale.duration;
+
             if ((float)(currentTime - startTime) >= scale.duration)
             {
                 isAnimating = false;
                 selectedObject.transform.localScale = scale.targetScale;
+                SceneView.RepaintAll();
                 return;
             }
 
-            float t = (float)(currentTime - startTime) / scale.duration;
-            selectedObject.transform.localScale = Vector2.Lerp(selectedObject.transform.localScale, scale.targetScale, t * deltaTime);
+            selectedObject.transform.localScale = Vector2.Lerp(selectedObject.transform.localScale, scale.targetScale, time * deltaTime);
 
             SceneView.RepaintAll();
-            Repaint();
         }
 
         private void EditorUpdateAlpha()
@@ -150,11 +161,21 @@ namespace FlowKit.Editor
             double currentTime = EditorApplication.timeSinceStartup;
             float deltaTime = (float)(currentTime - lastFrameTime);
             lastFrameTime = currentTime;
+            float time = (float)(currentTime - startTime) / fade.duration;
 
+            if ((float)(currentTime - startTime) >= fade.duration)
+            {
+                isAnimating = false;
+                HandleAlphaReset();
+                Canvas.ForceUpdateCanvases();
+                SceneView.RepaintAll();
+                return;
+            }
 
+            HandleAlphaLerp(time * deltaTime);
 
+            Canvas.ForceUpdateCanvases();
             SceneView.RepaintAll();
-            Repaint();
         }
 
         // -------------------------------------------------------------- INITIALIZERS --------------------------------------------------------------
@@ -215,12 +236,19 @@ namespace FlowKit.Editor
 
         // -------------------------------------------------------------- DRAW GUI --------------------------------------------------------------
 
-        // TODO: Make this look better
         private void LabelInstructions()
         {
-            GUILayout.Label("To select a component for animation", _instructionStyle);
-            GUILayout.Label("double click within this window or select in the hierarchy window", _instructionStyle);
-            GUILayout.Label("(Object must be a child of a panel & be active in the hierarchy)", _instructionStyle);
+            string[] instructions =
+            {
+                "To animate a component, double-click it in this window",
+                "or select it from the Hierarchy panel.",
+                "(Ensure the object is active and a child of a panel.)"
+            };
+
+            foreach (string line in instructions)
+            {
+                GUILayout.Label(line, _instructionStyle);
+            }
         }
 
         private void DrawParents()
@@ -231,6 +259,7 @@ namespace FlowKit.Editor
             {
                 EditorGUILayout.ObjectField(obj, typeof(GameObject), true);
                 DrawChildren(obj);
+                EditorGUILayout.Space(parentChildGroupSpacing);
             }
 
             EditorGUILayout.EndVertical();
@@ -268,6 +297,17 @@ namespace FlowKit.Editor
                     rotate.duration = EditorGUILayout.FloatField("Duration", rotate.duration);
                     break;
                 case AnimationDefs.AnimationType.Transition:
+                    transition.direction = (AnimationDefs.TransitionDirection)EditorGUILayout.EnumPopup("Direction", transition.direction);
+
+                    if (transition.direction == AnimationDefs.TransitionDirection.FromPosition || transition.direction == AnimationDefs.TransitionDirection.ToPosition)
+                    {
+                        transition.offset.vectorOffset = EditorGUILayout.Vector2Field("Offset", transition.offset.vectorOffset);
+                    }
+                    else
+                    {
+                        transition.offset.floatOffset = EditorGUILayout.FloatField("Offset", transition.offset.floatOffset);
+                    }
+
                     transition.duration = EditorGUILayout.FloatField("Duration", transition.duration);
                     break;
                 case AnimationDefs.AnimationType.Scale:
@@ -275,7 +315,7 @@ namespace FlowKit.Editor
                     scale.duration = EditorGUILayout.FloatField("Duration", scale.duration);
                     break;
                 case AnimationDefs.AnimationType.Fade:
-                    fade.alphaTarget = EditorGUILayout.FloatField("Alpha target", Mathf.Clamp01(fade.alphaTarget));
+                    fade.alphaTarget = EditorGUILayout.IntField("Alpha target", fade.alphaTarget);
                     fade.duration = EditorGUILayout.FloatField("Duration", fade.duration);
                     break;
             }
@@ -351,6 +391,7 @@ namespace FlowKit.Editor
                     EditorApplication.update += EditorUpdateTransition;
                     startTime = EditorApplication.timeSinceStartup;
                     lastFrameTime = startTime;
+                    HandleTransitionPosSet();
                 break;
                 case AnimationDefs.AnimationType.Scale:
                     EditorApplication.update -= EditorUpdateRotate;
@@ -374,9 +415,119 @@ namespace FlowKit.Editor
             }
         }
 
+        // -------------------------------------------------------------- PRIVATE HANDLERS --------------------------------------------------------------
+
+        private void HandleTransitionPosSet()
+        {
+            if (transition.direction.ToString().StartsWith("From"))
+            {
+                if (transition.direction == AnimationDefs.TransitionDirection.FromPosition)
+                {
+                    transition.targetPos = selectedObject.transform.localPosition;
+                    transition.startPos = selectedObject.transform.localPosition - (Vector3)transition.offset.vectorOffset;
+                }
+                else if (transition.direction == AnimationDefs.TransitionDirection.FromTop)
+                {
+                    transition.targetPos = selectedObject.transform.localPosition;
+                    transition.startPos = selectedObject.transform.localPosition + new Vector3(0, transition.offset.floatOffset, 0);
+                }
+                else if (transition.direction == AnimationDefs.TransitionDirection.FromBottom)
+                {
+                    transition.targetPos = selectedObject.transform.localPosition;
+                    transition.startPos = selectedObject.transform.localPosition - new Vector3(0, transition.offset.floatOffset, 0);
+                }
+                else if (transition.direction == AnimationDefs.TransitionDirection.FromLeft)
+                {
+                    transition.targetPos = selectedObject.transform.localPosition;
+                    transition.startPos = selectedObject.transform.localPosition - new Vector3(transition.offset.floatOffset, 0, 0);
+                }
+                else if (transition.direction == AnimationDefs.TransitionDirection.FromRight)
+                {
+                    transition.targetPos = selectedObject.transform.localPosition;
+                    transition.startPos = selectedObject.transform.localPosition + new Vector3(transition.offset.floatOffset, 0, 0);
+                }
+            }
+            else
+            {
+                if (transition.direction == AnimationDefs.TransitionDirection.ToPosition)
+                {
+                    transition.startPos = selectedObject.transform.localPosition;
+                    transition.targetPos = selectedObject.transform.localPosition + (Vector3)transition.offset.vectorOffset;
+                }
+                else if (transition.direction == AnimationDefs.TransitionDirection.ToTop)
+                {
+                    transition.startPos = selectedObject.transform.localPosition;
+                    transition.targetPos = selectedObject.transform.localPosition + new Vector3(0, transition.offset.floatOffset, 0);
+                }
+                else if (transition.direction == AnimationDefs.TransitionDirection.ToBottom)
+                {
+                    transition.startPos = selectedObject.transform.localPosition;
+                    transition.targetPos = selectedObject.transform.localPosition - new Vector3(0, transition.offset.floatOffset, 0);
+                }
+                else if (transition.direction == AnimationDefs.TransitionDirection.ToLeft)
+                {
+                    transition.startPos = selectedObject.transform.localPosition;
+                    transition.targetPos = selectedObject.transform.localPosition - new Vector3(transition.offset.floatOffset, 0, 0);
+                }
+                else if (transition.direction == AnimationDefs.TransitionDirection.ToRight)
+                {
+                    transition.startPos = selectedObject.transform.localPosition;
+                    transition.targetPos = selectedObject.transform.localPosition + new Vector3(transition.offset.floatOffset, 0, 0);
+                }
+            }
+        }
+
+        private void HandleAlphaLerp(float time)
+        {
+            if (selectedObject.TryGetComponent<Button>(out Button btn) && btn.image != null)
+            {
+                Color btnColor = btn.image.color;
+                btnColor.a = Mathf.Lerp(btn.image.color.a, fade.alphaTarget, time);
+                btn.image.color = btnColor;
+            }
+            else if (selectedObject.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI text))
+            {
+                text.alpha = Mathf.Lerp(text.alpha, fade.alphaTarget, time);
+            }
+            else if (selectedObject.TryGetComponent<CanvasGroup>(out CanvasGroup cg))
+            {
+                cg.alpha = Mathf.Lerp(cg.alpha, fade.alphaTarget, time);
+            }
+            else if (selectedObject.TryGetComponent<Image>(out Image img))
+            {
+                Color imgColor = img.color;
+                imgColor.a = Mathf.Lerp(img.color.a, fade.alphaTarget, time);
+                img.color = imgColor;
+            }
+        }
+
+        private void HandleAlphaReset()
+        {
+            if (selectedObject.TryGetComponent<Button>(out Button btn) && btn.image != null)
+            {
+                Color btnColor = btn.image.color;
+                btnColor.a = fade.alphaTarget;
+                btn.image.color = btnColor;
+            }
+            else if (selectedObject.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI text))
+            {
+                text.alpha = fade.alphaTarget;
+            }
+            else if (selectedObject.TryGetComponent<CanvasGroup>(out CanvasGroup cg))
+            {
+                cg.alpha = fade.alphaTarget;
+            }
+            else if (selectedObject.TryGetComponent<Image>(out Image img))
+            {
+                Color imgColor = img.color;
+                imgColor.a = fade.alphaTarget;
+                img.color = imgColor;
+            }
+        }
+
         // -------------------------------------------------------------- TRANSFORM SETTERS --------------------------------------------------------------
-    #region Transform Methods
-        #region Save Transform
+        
+        #region Transform Methods
         private void SaveTransform(GameObject obj)
         {
             SavePosition(obj);
@@ -419,10 +570,9 @@ namespace FlowKit.Editor
                 _alphaMap.Add(obj, cg.alpha);
             }
         }
-        #endregion
 
         // -------------------------------------------------------------- TRANSFORM RESETS --------------------------------------------------------------
-        #region Reset Transform
+
         private void ClearSavedData()
         {
             _parentChildMap.Clear();
@@ -510,6 +660,5 @@ namespace FlowKit.Editor
             }
         }
     }
-    #endregion
     #endregion
 }
