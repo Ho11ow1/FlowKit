@@ -16,7 +16,7 @@ namespace FlowKit.Core
             }
 
             /// <summary>
-            /// Reverts the target UI elements' alpha value back to it's original | <b>[NOT Animated]</b>
+            /// Reverts the target UI elements' alpha value back to it's original value | <b>[NOT Animated]</b>
             ///  <list type="bullet">
             ///     <item>
             ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
@@ -41,7 +41,7 @@ namespace FlowKit.Core
             }
 
             /// <summary>
-            /// Fades in the UI element
+            /// Fades in the UI element from transparent to fully opaque
             /// <list type="bullet">
             ///     <item>
             ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
@@ -59,7 +59,7 @@ namespace FlowKit.Core
             }
 
             /// <summary>
-            /// Fades out the UI element
+            /// Fades out the UI element from fully opaque to transparent
             /// <list type="bullet">
             ///     <item>
             ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
