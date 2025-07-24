@@ -128,6 +128,84 @@ namespace FlowKit.UI
             }
         }
 
+        public void FadeTo(AnimationTarget target, int occurrence, float alpha, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+        {
+            switch (target)
+            {
+                case AnimationTarget.Panel:
+                    if (_panelAlpha == null) { return; }
+
+                    _monoBehaviour.StartCoroutine(FadeUiTo(_panelAlpha.gameObject, occurrence, alpha, duration, delay));
+                    break;
+                case AnimationTarget.Text:
+                    if (_textComponent[occurrence] == null) { return; }
+
+                    _monoBehaviour.StartCoroutine(FadeUiTo(_textComponent[occurrence].gameObject, occurrence, alpha, duration, delay));
+                    break;
+                case AnimationTarget.Image:
+                    if (_imageComponent[occurrence] == null) { return; }
+
+                    _monoBehaviour.StartCoroutine(FadeUiTo(_imageComponent[occurrence].gameObject, occurrence, alpha, duration, delay));
+                    break;
+                case AnimationTarget.Button:
+                    if (_buttonComponent[occurrence] == null) { return; }
+
+                    _monoBehaviour.StartCoroutine(FadeUiTo(_buttonComponent[occurrence].gameObject, occurrence, alpha, duration, delay));
+                    break;
+            }
+        }
+
+        public void Reset(AnimationTarget target, int occurrence, GameObject gameObject)
+        {
+            switch (target)
+            {
+                case AnimationTarget.Panel:
+                    #if UNITY_EDITOR
+                    if (!storedAlpha[FlowKitConstants.PanelIndex][0])
+                    {
+                        Debug.LogError($"No saved alpha value found for Panel: [{gameObject.name}]");
+                    }
+                    #endif
+
+                    _panelAlpha.alpha= originalAlpha[FlowKitConstants.PanelIndex][0];
+                    break;
+                case AnimationTarget.Text:
+                    #if UNITY_EDITOR
+                    if (!storedAlpha[FlowKitConstants.TextIndex][occurrence])
+                    {
+                        Debug.LogError($"No saved alpha value found for Text component child. Panel: [{gameObject.name}]");
+                    }
+                    #endif
+
+                    _textComponent[occurrence].alpha = originalAlpha[FlowKitConstants.TextIndex][occurrence];
+                    break;
+                case AnimationTarget.Image:
+                    #if UNITY_EDITOR
+                    if (!storedAlpha[FlowKitConstants.ImageIndex][occurrence])
+                    {
+                        Debug.LogError($"No saved alpha value found for Image component child. Panel: [{gameObject.name}]");
+                    }
+                    #endif
+
+                    Color imgColor = _imageComponent[occurrence].color;
+                    imgColor.a = originalAlpha[FlowKitConstants.ImageIndex][occurrence];
+                    _imageComponent[occurrence].color = imgColor;
+                    break;
+                case AnimationTarget.Button:
+                    #if UNITY_EDITOR
+                    if (!storedAlpha[FlowKitConstants.ButtonIndex][occurrence])
+                    {
+                        Debug.LogError($"No saved alpha value found for Button component child. Panel: [{gameObject.name}]");
+                    }
+                    #endif
+
+                    Color btnColor = _buttonComponent[occurrence].image.color;
+                    btnColor.a = originalAlpha[FlowKitConstants.ButtonIndex][occurrence];
+                    _buttonComponent[occurrence].image.color = btnColor;
+                    break;
+            }
+        }
+
         // ----------------------------------------------------- FADE IN ANIMATION -----------------------------------------------------
 
         private IEnumerator FadeUiIn(GameObject component, int occurrence, float duration, float delay)
@@ -328,6 +406,101 @@ namespace FlowKit.UI
             {
                 Color btnColour = _buttonComponent[occurrence].image.color;
                 btnColour.a = FlowKitConstants.TransparentAlpha;
+                _buttonComponent[occurrence].image.color = btnColour;
+            }
+
+            FlowKitEvents.InvokeFadeEnd();
+        }
+
+        private IEnumerator FadeUiTo(GameObject component, int occurrence, float targetAlpha, float duration, float delay)
+        {
+            if (component == _panelAlpha.gameObject)
+            {
+                if (!storedAlpha[FlowKitConstants.PanelIndex][0])
+                {
+                    originalAlpha[FlowKitConstants.PanelIndex][0] = _panelAlpha.alpha;
+                    storedAlpha[FlowKitConstants.PanelIndex][0] = true;
+                }
+            }
+            else if (component == _textComponent[occurrence].gameObject)
+            {
+                if (!storedAlpha[FlowKitConstants.TextIndex][occurrence])
+                {
+                    originalAlpha[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].alpha;
+                    storedAlpha[FlowKitConstants.TextIndex][occurrence] = true;
+                }
+            }
+            else if (component == _imageComponent[occurrence].gameObject)
+            {
+                Color imgColour = _imageComponent[occurrence].color;
+                if (!storedAlpha[FlowKitConstants.ImageIndex][occurrence])
+                {
+                    originalAlpha[FlowKitConstants.ImageIndex][occurrence] = imgColour.a;
+                    storedAlpha[FlowKitConstants.ImageIndex][occurrence] = true;
+                }
+            }
+            else if (component == _buttonComponent[occurrence].gameObject)
+            {
+                Color btnColour = _buttonComponent[occurrence].image.color;
+                if (!storedAlpha[FlowKitConstants.ButtonIndex][occurrence])
+                {
+                    originalAlpha[FlowKitConstants.ButtonIndex][occurrence] = btnColour.a;
+                    storedAlpha[FlowKitConstants.ButtonIndex][occurrence] = true;
+                }
+            }
+
+            if (delay > 0) { yield return new WaitForSeconds(delay); }
+
+            float elapsedTime = 0f;
+            FlowKitEvents.InvokeFadeStart();
+
+            while (elapsedTime < duration)
+            {
+                float time = elapsedTime / duration;
+
+                if (component == _panelAlpha.gameObject)
+                {
+                    _panelAlpha.alpha = Mathf.Lerp(_panelAlpha.alpha, targetAlpha, time);
+                }
+                else if (component == _textComponent[occurrence].gameObject)
+                {
+                    _textComponent[occurrence].alpha = Mathf.Lerp(_textComponent[occurrence].alpha, targetAlpha, time);
+                }
+                else if (component == _imageComponent[occurrence].gameObject)
+                {
+                    Color imgColour = _imageComponent[occurrence].color;
+                    imgColour.a = Mathf.Lerp(imgColour.a, targetAlpha, time);
+                    _imageComponent[occurrence].color = imgColour;
+                }
+                else if (component == _buttonComponent[occurrence].gameObject)
+                {
+                    Color btnColour = _buttonComponent[occurrence].image.color;
+                    btnColour.a = Mathf.Lerp(btnColour.a, targetAlpha, time);
+                    _buttonComponent[occurrence].image.color = btnColour;
+                }
+
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+
+            if (component == _panelAlpha.gameObject)
+            {
+                _panelAlpha.alpha = targetAlpha;
+            }
+            else if (component == _textComponent[occurrence].gameObject)
+            {
+                _textComponent[occurrence].alpha = targetAlpha;
+            }
+            else if (component == _imageComponent[occurrence].gameObject)
+            {
+                Color imgColour = _imageComponent[occurrence].color;
+                imgColour.a = targetAlpha;
+                _imageComponent[occurrence].color = imgColour;
+            }
+            else if (component == _buttonComponent[occurrence].gameObject)
+            {
+                Color btnColour = _buttonComponent[occurrence].image.color;
+                btnColour.a = targetAlpha;
                 _buttonComponent[occurrence].image.color = btnColour;
             }
 
