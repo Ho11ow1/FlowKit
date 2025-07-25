@@ -32,6 +32,23 @@ namespace FlowKit.Core
             }
 
             /// <summary>
+            /// Sets the scale of a target UI element immediately | <b>[NOT Animated]</b>
+            ///  <list type="bullet">
+            ///     <item>
+            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///     </item>
+            /// </list>
+            /// </summary>
+            /// <param name="target">Target component to scale (Panel, Text, Image, Button)</param>
+            /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
+            /// <param name="scale">Specifies the target scale of the element</param>
+            public void SetScale(AnimationTarget target, int occurrence, float scale)
+            {
+                occurrence -= 1;
+                _engine.scalingImpl.SetScale(target, occurrence, scale);
+            }
+
+            /// <summary>
             /// Scales up the target UI element.
             /// <list type="bullet">
             ///     <item>

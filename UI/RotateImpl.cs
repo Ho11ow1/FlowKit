@@ -67,6 +67,41 @@ namespace FlowKit.UI
 
         // ----------------------------------------------------- PUBLIC API -----------------------------------------------------
 
+        public void SetRotation(AnimationTarget target, int occurrence, float degrees)
+        {
+            switch (target)
+            {
+                case AnimationTarget.Panel:
+                    if (_panelTransform == null) { return; }
+
+                    SaveRotation(_panelTransform.gameObject, 0);
+
+                    _panelTransform.localRotation = Quaternion.Euler(0, 0, degrees);
+                    break;
+                case AnimationTarget.Text:
+                    if (_textComponent[occurrence] == null) { return; }
+
+                    SaveRotation(_textComponent[occurrence].gameObject, occurrence);
+
+                    _textComponent[occurrence].rectTransform.localRotation = Quaternion.Euler(0, 0, degrees);
+                    break;
+                case AnimationTarget.Image:
+                    if (_imageComponent[occurrence] == null) { return; }
+
+                    SaveRotation(_imageComponent[occurrence].gameObject, occurrence);
+
+                    _imageComponent[occurrence].rectTransform.localRotation = Quaternion.Euler(0, 0, degrees);
+                    break;
+                case AnimationTarget.Button:
+                    if (_buttonComponent[occurrence] == null) { return; }
+
+                    SaveRotation(_buttonComponent[occurrence].gameObject, occurrence);
+
+                    ((RectTransform)_buttonComponent[occurrence].transform).localRotation = Quaternion.Euler(0, 0, degrees);
+                    break;
+            }
+        }
+
         public void Rotation(AnimationTarget target, int occurrence, float degrees, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
         {
             switch (target)
@@ -171,6 +206,46 @@ namespace FlowKit.UI
 
         // ----------------------------------------------------- PRIVATE UTILITIES -----------------------------------------------------
 
+        private void SaveRotation(GameObject component, int occurrence)
+        {
+            if (component == _panelTransform.gameObject)
+            {
+                if (!storedRotation[FlowKitConstants.PanelIndex][0])
+                {
+                    originalRotation[FlowKitConstants.PanelIndex][0] = _panelTransform.localRotation;
+                    storedRotation[FlowKitConstants.PanelIndex][0] = true;
+                }
+                return;
+            }
+            else if (component == _textComponent[occurrence].gameObject)
+            {
+                if (!storedRotation[FlowKitConstants.TextIndex][occurrence])
+                {
+                    originalRotation[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].rectTransform.localRotation;
+                    storedRotation[FlowKitConstants.TextIndex][occurrence] = true;
+                }
+                return;
+            }
+            else if (component == _imageComponent[occurrence].gameObject)
+            {
+                if (!storedRotation[FlowKitConstants.ImageIndex][occurrence])
+                {
+                    originalRotation[FlowKitConstants.ImageIndex][occurrence] = _imageComponent[occurrence].rectTransform.localRotation;
+                    storedRotation[FlowKitConstants.ImageIndex][occurrence] = true;
+                }
+                return;
+            }
+            else if (component == _buttonComponent[occurrence].gameObject)
+            {
+                if (!storedRotation[FlowKitConstants.ButtonIndex][occurrence])
+                {
+                    originalRotation[FlowKitConstants.ButtonIndex][occurrence] = ((RectTransform)_buttonComponent[occurrence].transform).localRotation;
+                    storedRotation[FlowKitConstants.ButtonIndex][occurrence] = true;
+                }
+                return;
+            }
+        }
+
         private void GetStartRotation(RectTransform component, int occurrence, out Quaternion startRotation)
         {
             startRotation = Quaternion.identity;
@@ -179,53 +254,33 @@ namespace FlowKit.UI
             {
                 if (!storedRotation[FlowKitConstants.PanelIndex][0])
                 {
-                    startRotation = _panelTransform.localRotation;
-                    originalRotation[FlowKitConstants.PanelIndex][0] = startRotation;
-                    storedRotation[FlowKitConstants.PanelIndex][0] = true;
+                    SaveRotation(_panelTransform.gameObject, 0);
                 }
-                else
-                {
-                    startRotation = _panelTransform.localRotation;
-                }
+                startRotation = _panelTransform.localRotation;
             }
             else if (component == _textComponent[occurrence].rectTransform)
             {
                 if (!storedRotation[FlowKitConstants.TextIndex][occurrence])
                 {
-                    startRotation = _textComponent[occurrence].rectTransform.localRotation;
-                    originalRotation[FlowKitConstants.TextIndex][occurrence] = startRotation;
-                    storedRotation[FlowKitConstants.TextIndex][occurrence] = true;
+                    SaveRotation(_textComponent[occurrence].gameObject, occurrence);
                 }
-                else
-                {
-                    startRotation = _textComponent[occurrence].rectTransform.localRotation;
-                }
+                startRotation = _textComponent[occurrence].rectTransform.localRotation;
             }
             else if (component == _imageComponent[occurrence].rectTransform)
             {
                 if (!storedRotation[FlowKitConstants.ImageIndex][occurrence])
                 {
-                    startRotation = _imageComponent[occurrence].rectTransform.localRotation;
-                    originalRotation[FlowKitConstants.ImageIndex][occurrence] = startRotation;
-                    storedRotation[FlowKitConstants.ImageIndex][occurrence] = true;
+                    SaveRotation(_imageComponent[occurrence].gameObject, occurrence);
                 }
-                else
-                {
-                    startRotation = _imageComponent[occurrence].rectTransform.localRotation;
-                }
+                startRotation = _imageComponent[occurrence].rectTransform.localRotation;
             }
             else if (component == (RectTransform)_buttonComponent[occurrence].transform)
             {
                 if (!storedRotation[FlowKitConstants.ButtonIndex][occurrence])
                 {
-                    startRotation = _buttonComponent[occurrence].transform.localRotation;
-                    originalRotation[FlowKitConstants.ButtonIndex][occurrence] = startRotation;
-                    storedRotation[FlowKitConstants.ButtonIndex][occurrence] = true;
+                    SaveRotation(_buttonComponent[occurrence].gameObject, occurrence);
                 }
-                else
-                {
-                    startRotation = _buttonComponent[occurrence].transform.localRotation;
-                }
+                startRotation = _buttonComponent[occurrence].transform.localRotation;
             }
         }
     }

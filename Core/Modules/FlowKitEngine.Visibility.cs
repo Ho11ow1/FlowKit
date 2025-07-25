@@ -32,12 +32,29 @@ namespace FlowKit.Core
             }
 
             /// <summary>
-            /// Immediately sets the UI panel visibility
+            /// Immediately sets the UI panel visibility | <b>[NOT Animated]</b>
+            ///  <list type="bullet">
+            ///     <item>
+            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///     </item>
+            /// </list>
             /// </summary>
             /// <param name="visible">Sets the panel visibility condition</param>
             public void SetPanelVisibility(bool visible)
             {
-                _engine.visibilityImpl.SetPanelVisibility(visible);
+                _engine.visibilityImpl.SetVisibility(AnimationTarget.Panel, 0, visible);
+            }
+
+            /// <summary>
+            /// Immediately sets the visibility of a target UI element | <b>[NOT Animated]</b>
+            /// </summary>
+            /// <param name="target">Target component to fade (Panel, Text, Image, Button)</param>
+            /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
+            /// <param name="visible">Specifies if the target element should be visible</param>
+            public void SetVisibility(AnimationTarget target, int occurrence, bool visible)
+            {
+                occurrence -= 1;
+                _engine.visibilityImpl.SetVisibility(target, occurrence, visible);
             }
 
             /// <summary>

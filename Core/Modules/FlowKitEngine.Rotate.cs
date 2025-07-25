@@ -32,6 +32,23 @@ namespace FlowKit.Core
             }
 
             /// <summary>
+            /// Immediately sets the rotation of the target UI element to the specified degrees | <b>[NOT Animated]</b>
+            ///  <list type="bullet">
+            ///     <item>
+            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///     </item>
+            /// </list>
+            /// </summary>
+            /// <param name="target">Target component to rotate (Panel, Text, Image, Button)</param>
+            /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
+            /// <param name="degrees">Degrees the rotation should rotate, positive values go counter-clockwise, negative clockwise</param>
+            public void SetRotation(AnimationTarget target, int occurrence, float degrees)
+            {
+                occurrence -= 1;
+                _engine.rotateImpl.SetRotation(target, occurrence, degrees);
+            }
+
+            /// <summary>
             /// Rotates the target UI element.
             /// <list type="bullet">
             ///     <item>
