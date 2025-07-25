@@ -67,11 +67,59 @@ namespace FlowKit.UI
 
         // ----------------------------------------------------- PUBLIC API -----------------------------------------------------
 
-        public void SetPanelVisibility(bool visibility)
+        public void SetVisibility(AnimationTarget target, int occurrence, bool visibility)
         {
-            if (_panelAlpha == null) { return; }
+            switch (target)
+            {
+                case AnimationTarget.Panel:
+                    if (_panelAlpha == null) { return; }
 
-            _panelAlpha.alpha = visibility ? FlowKitConstants.OpaqueAlpha : FlowKitConstants.TransparentAlpha;
+                    if (!storedAlpha[FlowKitConstants.PanelIndex][0])
+                    {
+                        originalAlpha[FlowKitConstants.PanelIndex][0] = _panelAlpha.alpha;
+                        storedAlpha[FlowKitConstants.PanelIndex][0] = true;
+                    }
+
+                    _panelAlpha.alpha = visibility ? FlowKitConstants.OpaqueAlpha : FlowKitConstants.TransparentAlpha;
+                    break;
+                case AnimationTarget.Text:
+                    if (_textComponent[occurrence] == null) { return; }
+
+                    if (!storedAlpha[FlowKitConstants.TextIndex][occurrence])
+                    {
+                        originalAlpha[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].alpha;
+                        storedAlpha[FlowKitConstants.TextIndex][occurrence] = true;
+                    }
+
+                    _textComponent[occurrence].alpha = visibility ? FlowKitConstants.OpaqueAlpha : FlowKitConstants.TransparentAlpha;
+                    break;
+                case AnimationTarget.Image:
+                    if (_imageComponent[occurrence] == null) { return; }
+
+                    if (!storedAlpha[FlowKitConstants.ImageIndex][occurrence])
+                    {
+                        originalAlpha[FlowKitConstants.ImageIndex][occurrence] = _imageComponent[occurrence].color.a;
+                        storedAlpha[FlowKitConstants.ImageIndex][occurrence] = true;
+                    }
+
+                    Color imgColor = _imageComponent[occurrence].color;
+                    imgColor.a = visibility ? FlowKitConstants.OpaqueAlpha : FlowKitConstants.TransparentAlpha;
+                    _imageComponent[occurrence].color = imgColor;
+                    break;
+                case AnimationTarget.Button:
+                    if (_buttonComponent[occurrence] == null) { return; }
+
+                    if (!storedAlpha[FlowKitConstants.ButtonIndex][occurrence])
+                    {
+                        originalAlpha[FlowKitConstants.ButtonIndex][occurrence] = _buttonComponent[occurrence].image.color.a;
+                        storedAlpha[FlowKitConstants.ButtonIndex][occurrence] = true;
+                    }
+
+                    Color btnColor = _buttonComponent[occurrence].image.color;
+                    btnColor.a = visibility ? FlowKitConstants.OpaqueAlpha : FlowKitConstants.TransparentAlpha;
+                    _buttonComponent[occurrence].image.color = btnColor;
+                    break;
+            }
         }
 
         public void FadeIn(AnimationTarget target, int occurrence, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)

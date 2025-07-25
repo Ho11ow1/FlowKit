@@ -67,6 +67,57 @@ namespace FlowKit.UI
 
         // ----------------------------------------------------- PUBLIC API -----------------------------------------------------
 
+        public void SetRotation(AnimationTarget target, int occurrence, float degrees)
+        {
+            switch (target)
+            {
+                case AnimationTarget.Panel:
+                    if (_panelTransform == null) { return; }
+
+                    if (!storedRotation[FlowKitConstants.PanelIndex][0])
+                    {
+                        originalRotation[FlowKitConstants.PanelIndex][0] = _panelTransform.localRotation;
+                        storedRotation[FlowKitConstants.PanelIndex][0] = true;
+                    }
+
+                    _panelTransform.localRotation = Quaternion.Euler(0, 0, degrees);
+                    break;
+                case AnimationTarget.Text:
+                    if (_textComponent[occurrence] == null) { return; }
+
+                    if (!storedRotation[FlowKitConstants.TextIndex][occurrence])
+                    {
+                        originalRotation[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].rectTransform.localRotation;
+                        storedRotation[FlowKitConstants.TextIndex][occurrence] = true;
+                    }
+
+                    _textComponent[occurrence].rectTransform.localRotation = Quaternion.Euler(0, 0, degrees);
+                    break;
+                case AnimationTarget.Image:
+                    if (_imageComponent[occurrence] == null) { return; }
+
+                    if (!storedRotation[FlowKitConstants.ImageIndex][occurrence])
+                    {
+                        originalRotation[FlowKitConstants.ImageIndex][occurrence] = _imageComponent[occurrence].rectTransform.localRotation;
+                        storedRotation[FlowKitConstants.ImageIndex][occurrence] = true;
+                    }
+
+                    _imageComponent[occurrence].rectTransform.localRotation = Quaternion.Euler(0, 0, degrees);
+                    break;
+                case AnimationTarget.Button:
+                    if (_buttonComponent[occurrence] == null) { return; }
+
+                    if (!storedRotation[FlowKitConstants.ButtonIndex][occurrence])
+                    {
+                        originalRotation[FlowKitConstants.ButtonIndex][occurrence] = ((RectTransform)_buttonComponent[occurrence].transform).localRotation;
+                        storedRotation[FlowKitConstants.ButtonIndex][occurrence] = true;
+                    }
+
+                    ((RectTransform)_buttonComponent[occurrence].transform).localRotation = Quaternion.Euler(0, 0, degrees);
+                    break;
+            }
+        }
+
         public void Rotation(AnimationTarget target, int occurrence, float degrees, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
         {
             switch (target)

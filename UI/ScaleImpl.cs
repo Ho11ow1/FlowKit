@@ -66,6 +66,57 @@ namespace FlowKit.UI
 
         // ----------------------------------------------------- PUBLIC API -----------------------------------------------------
 
+        public void SetScale(AnimationTarget target, int occurrence, float scale)
+        {
+            switch (target)
+            {
+                case AnimationTarget.Panel:
+                    if (_panelTransform == null) { return; }
+
+                    if (!storedScale[FlowKitConstants.PanelIndex][0])
+                    {
+                        originalScale[FlowKitConstants.PanelIndex][0] = _panelTransform.localScale;
+                        storedScale[FlowKitConstants.PanelIndex][0] = true;
+                    }
+
+                    _panelTransform.localScale = new Vector2(scale, scale);
+                    break;
+                case AnimationTarget.Text:
+                    if (_textComponent[occurrence] == null) { return; }
+
+                    if (!storedScale[FlowKitConstants.TextIndex][occurrence])
+                    {
+                        originalScale[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].rectTransform.localScale;
+                        storedScale[FlowKitConstants.TextIndex][occurrence] = true;
+                    }
+
+                    _textComponent[occurrence].rectTransform.localScale = new Vector2(scale, scale);
+                    break;
+                case AnimationTarget.Image:
+                    if (_imageComponent[occurrence] == null) { return; }
+
+                    if (!storedScale[FlowKitConstants.ImageIndex][occurrence])
+                    {
+                        originalScale[FlowKitConstants.ImageIndex][occurrence] = _imageComponent[occurrence].rectTransform.localScale;
+                        storedScale[FlowKitConstants.ImageIndex][occurrence] = true;
+                    }
+
+                    _imageComponent[occurrence].rectTransform.localScale = new Vector2(scale, scale);
+                    break;
+                case AnimationTarget.Button:
+                    if (_buttonComponent[occurrence] == null) { return; }
+
+                    if (!storedScale[FlowKitConstants.ButtonIndex][occurrence])
+                    {
+                        originalScale[FlowKitConstants.ButtonIndex][occurrence] = ((RectTransform)_buttonComponent[occurrence].transform).localScale;
+                        storedScale[FlowKitConstants.ButtonIndex][occurrence] = true;
+                    }
+
+                    ((RectTransform)_buttonComponent[occurrence].transform).localScale = new Vector2(scale, scale);
+                    break;
+            }
+        }
+
         public void ScaleUp(AnimationTarget target, int occurrence, float multiplier, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
         {
             switch (target)
