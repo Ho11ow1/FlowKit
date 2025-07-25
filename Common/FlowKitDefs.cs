@@ -55,6 +55,8 @@ namespace FlowKit.Common
         public static event UnityAction RotateEnd;
         public static event UnityAction TypeWriteStart;
         public static event UnityAction TypeWriteEnd;
+        public static event UnityAction ColorCycleStart;
+        public static event UnityAction ColorCycleEnd;
 
         internal static void InvokeFadeStart() { FadeStart?.Invoke(); }
         internal static void InvokeFadeEnd() { FadeEnd?.Invoke(); }
@@ -66,6 +68,8 @@ namespace FlowKit.Common
         internal static void InvokeRotateEnd() { RotateEnd?.Invoke(); }
         internal static void InvokeTypeWriteStart() { TypeWriteStart?.Invoke(); }
         internal static void InvokeTypeWriteEnd() { TypeWriteEnd?.Invoke(); }
+        internal static void InvokeColorCycleStart() { ColorCycleStart?.Invoke(); }
+        internal static void InvokeColorCycleEnd() { ColorCycleEnd?.Invoke(); }
     }
 
     internal class FlowKitConstants
@@ -74,6 +78,16 @@ namespace FlowKit.Common
         internal const int TextIndex = 1;
         internal const int ImageIndex = 2;
         internal const int ButtonIndex = 3;
+        //
         internal const float DefaultDuration = 0.5f;
+        //
+        internal class TypeWriter
+        {
+            internal const float PerCharacterDelay = 0.3f;
+            internal const float CompleteTextDuration = 3f;
+        }
+        //
+        internal const float TransparentAlpha = 0f;
+        internal const float OpaqueAlpha = 1f;
     }
 }
