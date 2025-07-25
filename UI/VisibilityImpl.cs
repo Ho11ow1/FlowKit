@@ -74,33 +74,21 @@ namespace FlowKit.UI
                 case AnimationTarget.Panel:
                     if (_panelAlpha == null) { return; }
 
-                    if (!storedAlpha[FlowKitConstants.PanelIndex][0])
-                    {
-                        originalAlpha[FlowKitConstants.PanelIndex][0] = _panelAlpha.alpha;
-                        storedAlpha[FlowKitConstants.PanelIndex][0] = true;
-                    }
+                    SaveAlpha(_panelAlpha.gameObject, 0);
 
                     _panelAlpha.alpha = visibility ? FlowKitConstants.OpaqueAlpha : FlowKitConstants.TransparentAlpha;
                     break;
                 case AnimationTarget.Text:
                     if (_textComponent[occurrence] == null) { return; }
 
-                    if (!storedAlpha[FlowKitConstants.TextIndex][occurrence])
-                    {
-                        originalAlpha[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].alpha;
-                        storedAlpha[FlowKitConstants.TextIndex][occurrence] = true;
-                    }
+                    SaveAlpha(_textComponent[occurrence].gameObject, occurrence);
 
                     _textComponent[occurrence].alpha = visibility ? FlowKitConstants.OpaqueAlpha : FlowKitConstants.TransparentAlpha;
                     break;
                 case AnimationTarget.Image:
                     if (_imageComponent[occurrence] == null) { return; }
 
-                    if (!storedAlpha[FlowKitConstants.ImageIndex][occurrence])
-                    {
-                        originalAlpha[FlowKitConstants.ImageIndex][occurrence] = _imageComponent[occurrence].color.a;
-                        storedAlpha[FlowKitConstants.ImageIndex][occurrence] = true;
-                    }
+                    SaveAlpha(_imageComponent[occurrence].gameObject, occurrence);
 
                     Color imgColor = _imageComponent[occurrence].color;
                     imgColor.a = visibility ? FlowKitConstants.OpaqueAlpha : FlowKitConstants.TransparentAlpha;
@@ -109,11 +97,7 @@ namespace FlowKit.UI
                 case AnimationTarget.Button:
                     if (_buttonComponent[occurrence] == null) { return; }
 
-                    if (!storedAlpha[FlowKitConstants.ButtonIndex][occurrence])
-                    {
-                        originalAlpha[FlowKitConstants.ButtonIndex][occurrence] = _buttonComponent[occurrence].image.color.a;
-                        storedAlpha[FlowKitConstants.ButtonIndex][occurrence] = true;
-                    }
+                    SaveAlpha(_buttonComponent[occurrence].gameObject, occurrence);
 
                     Color btnColor = _buttonComponent[occurrence].image.color;
                     btnColor.a = visibility ? FlowKitConstants.OpaqueAlpha : FlowKitConstants.TransparentAlpha;
@@ -258,43 +242,25 @@ namespace FlowKit.UI
 
         private IEnumerator FadeInOut(GameObject component, int occurrence, float duration, float delay, bool fadeIn)
         {
+            SaveAlpha(component, occurrence);
+
             if (component == _panelAlpha.gameObject)
             {
-                if (!storedAlpha[FlowKitConstants.PanelIndex][0])
-                {
-                    originalAlpha[FlowKitConstants.PanelIndex][0] = _panelAlpha.alpha;
-                    storedAlpha[FlowKitConstants.PanelIndex][0] = true;
-                }
                 _panelAlpha.alpha = fadeIn ? FlowKitConstants.TransparentAlpha : FlowKitConstants.OpaqueAlpha;
             }
             else if (component == _textComponent[occurrence].gameObject)
             {
-                if (!storedAlpha[FlowKitConstants.TextIndex][occurrence])
-                {
-                    originalAlpha[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].alpha;
-                    storedAlpha[FlowKitConstants.TextIndex][occurrence] = true;
-                }
                 _textComponent[occurrence].alpha = fadeIn ? FlowKitConstants.TransparentAlpha : FlowKitConstants.OpaqueAlpha;
             }
             else if (component == _imageComponent[occurrence].gameObject)
             {
                 Color imgColor = _imageComponent[occurrence].color;
-                if (!storedAlpha[FlowKitConstants.ImageIndex][occurrence])
-                {
-                    originalAlpha[FlowKitConstants.ImageIndex][occurrence] = imgColor.a;
-                    storedAlpha[FlowKitConstants.ImageIndex][occurrence] = true;
-                }
                 imgColor.a = fadeIn ? FlowKitConstants.TransparentAlpha : FlowKitConstants.OpaqueAlpha;
                 _imageComponent[occurrence].color = imgColor;
             }
             else if (component == _buttonComponent[occurrence].gameObject)
             {
                 Color btnColor = _buttonComponent[occurrence].image.color;
-                if (!storedAlpha[FlowKitConstants.ButtonIndex][occurrence])
-                {
-                    originalAlpha[FlowKitConstants.ButtonIndex][occurrence] = btnColor.a;
-                    storedAlpha[FlowKitConstants.ButtonIndex][occurrence] = true;
-                }
                 btnColor.a = fadeIn ? FlowKitConstants.TransparentAlpha : FlowKitConstants.OpaqueAlpha;
                 _buttonComponent[occurrence].image.color = btnColor;
             }
@@ -365,40 +331,7 @@ namespace FlowKit.UI
 
         private IEnumerator FadeUiTo(GameObject component, int occurrence, float targetAlpha, float duration, float delay)
         {
-            if (component == _panelAlpha.gameObject)
-            {
-                if (!storedAlpha[FlowKitConstants.PanelIndex][0])
-                {
-                    originalAlpha[FlowKitConstants.PanelIndex][0] = _panelAlpha.alpha;
-                    storedAlpha[FlowKitConstants.PanelIndex][0] = true;
-                }
-            }
-            else if (component == _textComponent[occurrence].gameObject)
-            {
-                if (!storedAlpha[FlowKitConstants.TextIndex][occurrence])
-                {
-                    originalAlpha[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].alpha;
-                    storedAlpha[FlowKitConstants.TextIndex][occurrence] = true;
-                }
-            }
-            else if (component == _imageComponent[occurrence].gameObject)
-            {
-                Color imgColour = _imageComponent[occurrence].color;
-                if (!storedAlpha[FlowKitConstants.ImageIndex][occurrence])
-                {
-                    originalAlpha[FlowKitConstants.ImageIndex][occurrence] = imgColour.a;
-                    storedAlpha[FlowKitConstants.ImageIndex][occurrence] = true;
-                }
-            }
-            else if (component == _buttonComponent[occurrence].gameObject)
-            {
-                Color btnColour = _buttonComponent[occurrence].image.color;
-                if (!storedAlpha[FlowKitConstants.ButtonIndex][occurrence])
-                {
-                    originalAlpha[FlowKitConstants.ButtonIndex][occurrence] = btnColour.a;
-                    storedAlpha[FlowKitConstants.ButtonIndex][occurrence] = true;
-                }
-            }
+            SaveAlpha(component, occurrence);
 
             if (delay > 0) { yield return new WaitForSeconds(delay); }
 
@@ -456,6 +389,48 @@ namespace FlowKit.UI
             }
 
             FlowKitEvents.InvokeFadeEnd();
+        }
+
+        // ----------------------------------------------------- PRIVATE UTILITIES -----------------------------------------------------
+
+        private void SaveAlpha(GameObject component, int occurrence)
+        {
+            if (component == _panelAlpha.gameObject)
+            {
+                if (!storedAlpha[FlowKitConstants.PanelIndex][0])
+                {
+                    originalAlpha[FlowKitConstants.PanelIndex][0] = _panelAlpha.alpha;
+                    storedAlpha[FlowKitConstants.PanelIndex][0] = true;
+                }
+                return;
+            }
+            else if (component == _textComponent[occurrence].gameObject)
+            {
+                if (!storedAlpha[FlowKitConstants.TextIndex][occurrence])
+                {
+                    originalAlpha[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].alpha;
+                    storedAlpha[FlowKitConstants.TextIndex][occurrence] = true;
+                }
+                return;
+            }
+            else if (component == _imageComponent[occurrence].gameObject)
+            {
+                if (!storedAlpha[FlowKitConstants.ImageIndex][occurrence])
+                {
+                    originalAlpha[FlowKitConstants.ImageIndex][occurrence] = _imageComponent[occurrence].color.a;
+                    storedAlpha[FlowKitConstants.ImageIndex][occurrence] = true;
+                }
+                return;
+            }
+            else if (component == _buttonComponent[occurrence].gameObject)
+            {
+                if (!storedAlpha[FlowKitConstants.ButtonIndex][occurrence])
+                {
+                    originalAlpha[FlowKitConstants.ButtonIndex][occurrence] = _buttonComponent[occurrence].image.color.a;
+                    storedAlpha[FlowKitConstants.ButtonIndex][occurrence] = true;
+                }
+                return;
+            }
         }
     }
 }

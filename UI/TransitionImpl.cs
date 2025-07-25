@@ -67,6 +67,41 @@ namespace FlowKit.UI
 
         // ----------------------------------------------------- PUBLIC API -----------------------------------------------------
 
+        public void SetPosition(AnimationTarget target, int occurrence, Vector2 newPosition)
+        {
+            switch (target)
+            {
+                case AnimationTarget.Panel:
+                    if (_panelTransform == null) { return; }
+
+                    SavePosition(_panelTransform.gameObject, 0);
+
+                    _panelTransform.anchoredPosition = newPosition;
+                    break;
+                case AnimationTarget.Text:
+                    if (_textComponent[occurrence] == null) { return; }
+
+                    SavePosition(_textComponent[occurrence].gameObject, occurrence);
+
+                    _textComponent[occurrence].rectTransform.anchoredPosition = newPosition;
+                    break;
+                case AnimationTarget.Image:
+                    if (_imageComponent[occurrence] == null) { return; }
+
+                    SavePosition(_imageComponent[occurrence].gameObject, occurrence);
+                    
+                    _imageComponent[occurrence].rectTransform.anchoredPosition = newPosition;
+                    break;
+                case AnimationTarget.Button:
+                    if (_buttonComponent[occurrence] == null) { return; }
+
+                    SavePosition(_buttonComponent[occurrence].gameObject, occurrence);
+                    
+                    ((RectTransform)_buttonComponent[occurrence].transform).anchoredPosition = newPosition;
+                    break;
+            }
+        }
+
         public void TransitionFromTop(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
         {
             switch (target)
@@ -441,6 +476,46 @@ namespace FlowKit.UI
 
         // ----------------------------------------------------- PRIVATE UTILITIES -----------------------------------------------------
 
+        private void SavePosition(GameObject component, int occurrence)
+        {
+            if (component == _panelTransform.gameObject)
+            {
+                if (!storedPosition[FlowKitConstants.PanelIndex][0])
+                {
+                    originalPosition[FlowKitConstants.PanelIndex][0] = _panelTransform.anchoredPosition;
+                    storedPosition[FlowKitConstants.PanelIndex][0] = true;
+                }
+                return;
+            }
+            else if (component == _textComponent[occurrence].gameObject)
+            {
+                if (!storedPosition[FlowKitConstants.TextIndex][occurrence])
+                {
+                    originalPosition[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].rectTransform.anchoredPosition;
+                    storedPosition[FlowKitConstants.TextIndex][occurrence] = true;
+                }
+                return;
+            }
+            else if (component == _imageComponent[occurrence].gameObject)
+            {
+                if (!storedPosition[FlowKitConstants.ImageIndex][occurrence])
+                {
+                    originalPosition[FlowKitConstants.ImageIndex][occurrence] = _imageComponent[occurrence].rectTransform.anchoredPosition;
+                    storedPosition[FlowKitConstants.ImageIndex][occurrence] = true;
+                }
+                return;
+            }
+            else if (component == _buttonComponent[occurrence].gameObject)
+            {
+                if (!storedPosition[FlowKitConstants.ButtonIndex][occurrence])
+                {
+                    originalPosition[FlowKitConstants.ButtonIndex][occurrence] = ((RectTransform)_buttonComponent[occurrence].transform).anchoredPosition;
+                    storedPosition[FlowKitConstants.ButtonIndex][occurrence] = true;
+                }
+                return;
+            }
+        }
+
         private void GetStartPos(RectTransform component, int occurrence, out Vector2 startPos)
         {
             startPos = Vector2.zero;
@@ -449,53 +524,33 @@ namespace FlowKit.UI
             {
                 if (!storedPosition[FlowKitConstants.PanelIndex][0])
                 {
-                    startPos = _panelTransform.anchoredPosition;
-                    originalPosition[FlowKitConstants.PanelIndex][0] = startPos;
-                    storedPosition[FlowKitConstants.PanelIndex][0] = true;
+                    SavePosition(_panelTransform.gameObject, occurrence);
                 }
-                else
-                {
-                    startPos = _panelTransform.anchoredPosition;
-                }
+                startPos = _panelTransform.anchoredPosition;
             }
             else if (component == _textComponent[occurrence].rectTransform)
             {
                 if (!storedPosition[FlowKitConstants.TextIndex][occurrence])
                 {
-                    startPos = _textComponent[occurrence].rectTransform.anchoredPosition;
-                    originalPosition[FlowKitConstants.TextIndex][occurrence] = startPos;
-                    storedPosition[FlowKitConstants.TextIndex][occurrence] = true;
+                    SavePosition(_textComponent[occurrence].gameObject, occurrence);
                 }
-                else
-                {
-                    startPos = _textComponent[occurrence].rectTransform.anchoredPosition;
-                }
+                startPos = _textComponent[occurrence].rectTransform.anchoredPosition;
             }
             else if (component == _imageComponent[occurrence].rectTransform)
             {
                 if (!storedPosition[FlowKitConstants.ImageIndex][occurrence])
                 {
-                    startPos = _imageComponent[occurrence].rectTransform.anchoredPosition;
-                    originalPosition[FlowKitConstants.ImageIndex][occurrence] = startPos;
-                    storedPosition[FlowKitConstants.ImageIndex][occurrence] = true;
+                    SavePosition(_imageComponent[occurrence].gameObject, occurrence);
                 }
-                else
-                {
-                    startPos = _imageComponent[occurrence].rectTransform.anchoredPosition;
-                }
+                startPos = _imageComponent[occurrence].rectTransform.anchoredPosition;
             }
             else if (component == (RectTransform)_buttonComponent[occurrence].transform)
             {
                 if (!storedPosition[FlowKitConstants.ButtonIndex][occurrence])
                 {
-                    startPos = ((RectTransform)_buttonComponent[occurrence].transform).anchoredPosition;
-                    originalPosition[FlowKitConstants.ButtonIndex][occurrence] = startPos;
-                    storedPosition[FlowKitConstants.ButtonIndex][occurrence] = true;
+                    SavePosition(_buttonComponent[occurrence].gameObject, occurrence);
                 }
-                else
-                {
-                    startPos = ((RectTransform)_buttonComponent[occurrence].transform).anchoredPosition;
-                }
+                startPos = ((RectTransform)_buttonComponent[occurrence].transform).anchoredPosition;
             }
         }
     }
