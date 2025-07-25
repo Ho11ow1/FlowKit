@@ -33,6 +33,11 @@ namespace FlowKit.Core
 
             /// <summary>
             /// Immediately sets the UI panel visibility | <b>[NOT Animated]</b>
+            ///  <list type="bullet">
+            ///     <item>
+            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///     </item>
+            /// </list>
             /// </summary>
             /// <param name="visible">Sets the panel visibility condition</param>
             public void SetPanelVisibility(bool visible)

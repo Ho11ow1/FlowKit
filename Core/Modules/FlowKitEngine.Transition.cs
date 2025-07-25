@@ -34,6 +34,23 @@ namespace FlowKit.Core
             }
 
             /// <summary>
+            /// Immediately sets the target UI element's position to the specified position | <b>[NOT Animated]</b>
+            ///  <list type="bullet">
+            ///     <item>
+            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///     </item>
+            /// </list>
+            /// </summary>
+            /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
+            /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
+            /// <param name="position">Specifies the position where the element will appear on it's current panel (Based on anchor preset)</param>
+            public void SetPosition(AnimationTarget target, int occurrence, Vector2 position)
+            {
+                occurrence -= 1;
+                _engine.transitionImpl.SetPosition(target, occurrence, position);
+            }
+
+            /// <summary>
             /// Transitions the UI element from a position offset upward back to its starting position
             /// <list type="bullet">
             ///     <item>
