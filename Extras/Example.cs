@@ -13,8 +13,8 @@ namespace FlowKit.Extras
     public class Example : MonoBehaviour
     {
         [Header("UI Panel References")]
-        [SerializeField] private FlowKitEngine _optionsFK;
         [SerializeField] private FlowKitEngine _titleFK;
+        [SerializeField] private FlowKitEngine _optionsFK;
         [SerializeField] private FlowKitEngine _disclaimerFK;
 
         [Header("Example Controls")]
