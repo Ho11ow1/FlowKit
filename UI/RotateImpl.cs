@@ -72,28 +72,28 @@ namespace FlowKit.UI
             switch (target)
             {
                 case AnimationTarget.Panel:
-                    if (_panelTransform == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
 
                     SaveRotation(_panelTransform.gameObject, 0);
 
                     _panelTransform.localRotation = Quaternion.Euler(0, 0, degrees);
                     break;
                 case AnimationTarget.Text:
-                    if (_textComponent[occurrence] == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
 
                     SaveRotation(_textComponent[occurrence].gameObject, occurrence);
 
                     _textComponent[occurrence].rectTransform.localRotation = Quaternion.Euler(0, 0, degrees);
                     break;
                 case AnimationTarget.Image:
-                    if (_imageComponent[occurrence] == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
 
                     SaveRotation(_imageComponent[occurrence].gameObject, occurrence);
 
                     _imageComponent[occurrence].rectTransform.localRotation = Quaternion.Euler(0, 0, degrees);
                     break;
                 case AnimationTarget.Button:
-                    if (_buttonComponent[occurrence] == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
 
                     SaveRotation(_buttonComponent[occurrence].gameObject, occurrence);
 
@@ -107,22 +107,22 @@ namespace FlowKit.UI
             switch (target)
             {
                 case AnimationTarget.Panel:
-                    if (_panelTransform == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
 
                     _monoBehaviour.StartCoroutine(RotateUi(_panelTransform, occurrence, degrees, duration, delay, easing));
                     break;
                 case AnimationTarget.Text:
-                    if (_textComponent[occurrence] == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
 
                     _monoBehaviour.StartCoroutine(RotateUi(_textComponent[occurrence].rectTransform, occurrence, degrees, duration, delay, easing));
                     break;
                 case AnimationTarget.Image:
-                    if (_imageComponent[occurrence] == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
 
                     _monoBehaviour.StartCoroutine(RotateUi(_imageComponent[occurrence].rectTransform, occurrence, degrees, duration, delay, easing));
                     break;
                 case AnimationTarget.Button:
-                    if (_buttonComponent[occurrence] == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
 
                     _monoBehaviour.StartCoroutine(RotateUi((RectTransform)_buttonComponent[occurrence].transform, occurrence, degrees, duration, delay, easing));
                     break;
@@ -137,7 +137,8 @@ namespace FlowKit.UI
                     #if UNITY_EDITOR
                     if (!storedRotation[FlowKitConstants.PanelIndex][0]) 
                     { 
-                        Debug.LogError($"No saved rotation found for Panel: [{gameObject.name}]"); 
+                        Debug.LogError($"No saved rotation found for Panel: [{gameObject.name}]");
+                        return;
                     }
                     #endif
 
@@ -147,7 +148,8 @@ namespace FlowKit.UI
                     #if UNITY_EDITOR
                     if (!storedRotation[FlowKitConstants.TextIndex][occurrence]) 
                     { 
-                        Debug.LogError($"No saved rotation found for Text component child. Panel: [{gameObject.name}]"); 
+                        Debug.LogError($"No saved rotation found for Text component child. Panel: [{gameObject.name}]");
+                        return;
                     }
                     #endif
 
@@ -157,7 +159,8 @@ namespace FlowKit.UI
                     #if UNITY_EDITOR
                     if (!storedRotation[FlowKitConstants.ImageIndex][occurrence]) 
                     { 
-                        Debug.LogError($"No saved rotation found for Image component child. Panel: [{gameObject.name}]"); 
+                        Debug.LogError($"No saved rotation found for Image component child. Panel: [{gameObject.name}]");
+                        return;
                     }
                     #endif
 
@@ -167,7 +170,8 @@ namespace FlowKit.UI
                     #if UNITY_EDITOR
                     if (!storedRotation[FlowKitConstants.ButtonIndex][occurrence]) 
                     { 
-                        Debug.LogError($"No saved rotation found for Button component child. Panel: [{gameObject.name}]"); 
+                        Debug.LogError($"No saved rotation found for Button component child. Panel: [{gameObject.name}]");
+                        return;
                     }
                     #endif
 
@@ -205,6 +209,23 @@ namespace FlowKit.UI
         }
 
         // ----------------------------------------------------- PRIVATE UTILITIES -----------------------------------------------------
+
+        private bool IndexNullChecksPass(AnimationTarget target, int occurrence)
+        {
+            switch (target)
+            {
+                case AnimationTarget.Panel:
+                    return _panelTransform != null;
+                case AnimationTarget.Text:
+                    return occurrence < _textComponent.Length && _textComponent[occurrence] != null;
+                case AnimationTarget.Image:
+                    return occurrence < _imageComponent.Length && _imageComponent[occurrence] != null;
+                case AnimationTarget.Button:
+                    return occurrence < _buttonComponent.Length && _buttonComponent[occurrence] != null;
+                default:
+                    return false;
+            }
+        }
 
         private void SaveRotation(GameObject component, int occurrence)
         {

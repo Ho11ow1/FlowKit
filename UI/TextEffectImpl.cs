@@ -48,7 +48,7 @@ namespace FlowKit.UI
 
         public void DelayTypeWrite(int occurrence, float delay = FlowKitConstants.TypeWriter.PerCharacterDelay)
         {
-            if (_textComponent[occurrence] == null) { return; }
+            if (!IndexNullChecksPass(occurrence)) { return; }
 
             _targetString[occurrence] = _textComponent[occurrence].text;
             _length = _targetString[occurrence].Length;
@@ -57,7 +57,7 @@ namespace FlowKit.UI
 
         public void DurationTypeWrite(int occurrence, float duration = FlowKitConstants.TypeWriter.CompleteTextDuration)
         {
-            if (_textComponent[occurrence] == null) { return; }
+            if (!IndexNullChecksPass(occurrence)) { return; }
 
             _targetString[occurrence] = _textComponent[occurrence].text;
             _length = _targetString[occurrence].Length;
@@ -66,7 +66,7 @@ namespace FlowKit.UI
 
         public void ColorCycle(int occurrence, float duration, float delay, Color32 newColor)
         {
-            if (_textComponent[occurrence] == null) { return; }
+            if (!IndexNullChecksPass(occurrence)) { return; }
 
             Color32 oldColor = (Color32)(_textComponent[occurrence].color);
             _monoBehaviour.StartCoroutine(ColorCycler(occurrence, duration, delay, oldColor, newColor));
@@ -129,6 +129,13 @@ namespace FlowKit.UI
 
             _textComponent[occurrence].color = oldColor;
             FlowKitEvents.InvokeColorCycleEnd();
+        }
+
+        // ----------------------------------------------------- PRIVATE UTILITIES -----------------------------------------------------
+
+        private bool IndexNullChecksPass(int occurrence)
+        {
+            return occurrence < _textComponent.Length && _textComponent[occurrence] != null;
         }
     }
 }

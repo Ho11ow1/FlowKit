@@ -72,21 +72,21 @@ namespace FlowKit.UI
             switch (target)
             {
                 case AnimationTarget.Panel:
-                    if (_panelAlpha == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
 
                     SaveAlpha(_panelAlpha.gameObject, 0);
 
                     _panelAlpha.alpha = visibility ? FlowKitConstants.OpaqueAlpha : FlowKitConstants.TransparentAlpha;
                     break;
                 case AnimationTarget.Text:
-                    if (_textComponent[occurrence] == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
 
                     SaveAlpha(_textComponent[occurrence].gameObject, occurrence);
 
                     _textComponent[occurrence].alpha = visibility ? FlowKitConstants.OpaqueAlpha : FlowKitConstants.TransparentAlpha;
                     break;
                 case AnimationTarget.Image:
-                    if (_imageComponent[occurrence] == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
 
                     SaveAlpha(_imageComponent[occurrence].gameObject, occurrence);
 
@@ -95,7 +95,7 @@ namespace FlowKit.UI
                     _imageComponent[occurrence].color = imgColor;
                     break;
                 case AnimationTarget.Button:
-                    if (_buttonComponent[occurrence] == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
 
                     SaveAlpha(_buttonComponent[occurrence].gameObject, occurrence);
 
@@ -111,22 +111,22 @@ namespace FlowKit.UI
             switch (target)
             {
                 case AnimationTarget.Panel:
-                    if (_panelAlpha == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
 
                     _monoBehaviour.StartCoroutine(FadeInOut(_panelAlpha.gameObject, occurrence, duration, delay, true));
                     break;
                 case AnimationTarget.Text:
-                    if (_textComponent[occurrence] == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
 
                     _monoBehaviour.StartCoroutine(FadeInOut(_textComponent[occurrence].gameObject, occurrence, duration, delay, true));
                     break;
                 case AnimationTarget.Image:
-                    if (_imageComponent[occurrence] == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
 
                     _monoBehaviour.StartCoroutine(FadeInOut(_imageComponent[occurrence].gameObject, occurrence, duration, delay, true));
                     break;
                 case AnimationTarget.Button:
-                    if (_buttonComponent[occurrence] == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
 
                     _monoBehaviour.StartCoroutine(FadeInOut(_buttonComponent[occurrence].gameObject, occurrence, duration, delay, true));
                     break;
@@ -138,22 +138,22 @@ namespace FlowKit.UI
             switch (target)
             {
                 case AnimationTarget.Panel:
-                    if (_panelAlpha == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
 
                     _monoBehaviour.StartCoroutine(FadeInOut(_panelAlpha.gameObject, occurrence, duration, delay, false));
                     break;
                 case AnimationTarget.Text:
-                    if (_textComponent[occurrence] == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
 
                     _monoBehaviour.StartCoroutine(FadeInOut(_textComponent[occurrence].gameObject, occurrence, duration, delay, false));
                     break;
                 case AnimationTarget.Image:
-                    if (_imageComponent[occurrence] == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
 
                     _monoBehaviour.StartCoroutine(FadeInOut(_imageComponent[occurrence].gameObject, occurrence, duration, delay, false));
                     break;
                 case AnimationTarget.Button:
-                    if (_buttonComponent[occurrence] == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
 
                     _monoBehaviour.StartCoroutine(FadeInOut(_buttonComponent[occurrence].gameObject, occurrence, duration, delay, false));
                     break;
@@ -165,22 +165,22 @@ namespace FlowKit.UI
             switch (target)
             {
                 case AnimationTarget.Panel:
-                    if (_panelAlpha == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
 
                     _monoBehaviour.StartCoroutine(FadeUiTo(_panelAlpha.gameObject, occurrence, alpha, duration, delay));
                     break;
                 case AnimationTarget.Text:
-                    if (_textComponent[occurrence] == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
 
                     _monoBehaviour.StartCoroutine(FadeUiTo(_textComponent[occurrence].gameObject, occurrence, alpha, duration, delay));
                     break;
                 case AnimationTarget.Image:
-                    if (_imageComponent[occurrence] == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
 
                     _monoBehaviour.StartCoroutine(FadeUiTo(_imageComponent[occurrence].gameObject, occurrence, alpha, duration, delay));
                     break;
                 case AnimationTarget.Button:
-                    if (_buttonComponent[occurrence] == null) { return; }
+                    if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
 
                     _monoBehaviour.StartCoroutine(FadeUiTo(_buttonComponent[occurrence].gameObject, occurrence, alpha, duration, delay));
                     break;
@@ -196,6 +196,7 @@ namespace FlowKit.UI
                     if (!storedAlpha[FlowKitConstants.PanelIndex][0])
                     {
                         Debug.LogError($"No saved alpha value found for Panel: [{gameObject.name}]");
+                        return;
                     }
                     #endif
 
@@ -206,6 +207,7 @@ namespace FlowKit.UI
                     if (!storedAlpha[FlowKitConstants.TextIndex][occurrence])
                     {
                         Debug.LogError($"No saved alpha value found for Text component child. Panel: [{gameObject.name}]");
+                        return;
                     }
                     #endif
 
@@ -216,6 +218,7 @@ namespace FlowKit.UI
                     if (!storedAlpha[FlowKitConstants.ImageIndex][occurrence])
                     {
                         Debug.LogError($"No saved alpha value found for Image component child. Panel: [{gameObject.name}]");
+                        return;
                     }
                     #endif
 
@@ -228,6 +231,7 @@ namespace FlowKit.UI
                     if (!storedAlpha[FlowKitConstants.ButtonIndex][occurrence])
                     {
                         Debug.LogError($"No saved alpha value found for Button component child. Panel: [{gameObject.name}]");
+                        return;
                     }
                     #endif
 
@@ -392,6 +396,23 @@ namespace FlowKit.UI
         }
 
         // ----------------------------------------------------- PRIVATE UTILITIES -----------------------------------------------------
+
+        private bool IndexNullChecksPass(AnimationTarget target, int occurrence)
+        {
+            switch (target)
+            {
+                case AnimationTarget.Panel:
+                    return _panelAlpha != null;
+                case AnimationTarget.Text:
+                    return occurrence < _textComponent.Length && _textComponent[occurrence] != null;
+                case AnimationTarget.Image:
+                    return occurrence < _imageComponent.Length && _imageComponent[occurrence] != null;
+                case AnimationTarget.Button:
+                    return occurrence < _buttonComponent.Length && _buttonComponent[occurrence] != null;
+                default:
+                    return false;
+            }
+        }
 
         private void SaveAlpha(GameObject component, int occurrence)
         {
