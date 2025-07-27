@@ -2,17 +2,18 @@
 
 A list of planned features and improvements for future FlowKit versions.
 
-## ✅ Completed (v1.1.0)
-- [ Core ] Rename Tween -> FlowKitEngine
-- [ Core ] Animation queue system
-- [ Core ] Internal structure fixes to always take into account current values
-- [ Core ] New reset methods which allows resetting each property to it's original inspector-set values
+## ✅ Completed (v1.2.0)
+- [ Core ] Split core into multiple properties based on their functionality
+- [ Core ] Introduce new `Set` methods to allow for immediate action (This was perviously only possible with setting the duration value to 0f)
+- [ Core ] Add `Reset` methods where needed
+- [ Core ] Create `Planned` Color cycling method allowing cycling between the current and input Color32
 - [ Core ] Improve API method documentation
-- [ Extras ] New scene & code example + Additional_Notes for usage and troubleshooting
+- [ Editor ] Create Live Preview for simple in-editor testing (Currently only supports a linear-curve and basic animations)
+- [ Extras ] Update to use new Set methods for simplicity
+- [ UI ] Improved internal Index & Null checks forcing silent failure when errors would normally occur
 
 ## 🔜 In Progress
-- Editor tooling rewrite (Code assist) -> (Live preview)
 - Custom shaders for both 2D and 3D projects
 
 ## 🧠 Planned
-- Additional Text focus effects such as Flicker or Color Cycling
+- Preset counters such as clocks, score counters, currency counters (In some way or another)
