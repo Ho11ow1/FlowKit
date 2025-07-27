@@ -17,7 +17,7 @@
 * 
 * Applies visibility based animations to a UI component
 * 
-* Version: 1.0.0
+* Version: 1.2.0
 * GitHub: https://github.com/Ho11ow1/FlowKit
 * License: Apache License 2.0
 * -------------------------------------------------------- */

@@ -1,6 +1,6 @@
 {
     "name": "com.hollow1.flowkit",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "displayName": "FlowKit",
     "description": "A lightweight and flexible animation toolkit for Unity UI and visual effects.",
     "unity": "2022.3",
@@ -22,6 +22,6 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/Ho11ow1/FlowKit.git",
-        "revision": "v1.1.0"
+        "revision": "v1.2.0"
     }
 }

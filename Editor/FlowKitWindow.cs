@@ -15,9 +15,10 @@
 * FlowKit - Editor window component
 * Created by Hollow1
 * 
-* A window aimed to help users with code for their Animations
+* A window aimed to allow users to preview simple animations
+* in the Unity Editor
 * 
-* Version: 1.0.0
+* Version: 1.2.0
 * GitHub: https://github.com/Ho11ow1/FlowKit
 * License: Apache License 2.0
 * -------------------------------------------------------- */
