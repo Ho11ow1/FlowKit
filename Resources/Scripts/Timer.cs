@@ -11,6 +11,7 @@ public class Timer : MonoBehaviour
 
     [SerializeField] private float time = 0f;
     [SerializeField, Range(0f, 3600f)] private float maxTime = 300f;
+    [Tooltip("If Countdown is selected, timer will ignore the set Time and start from Max Timer")]
     [SerializeField] TimerMode timerMode = TimerMode.StopWatch; 
 
     private enum TimerMode
@@ -40,6 +41,9 @@ public class Timer : MonoBehaviour
         UpdateTimerState();
     }
 
+    //
+    // Comment out time = x; && SetCurrentTime(time); to not reset the timer when the timers finish.
+    //
     private void UpdateTimerState()
     {
         SetCurrentTime(time);
@@ -88,6 +92,9 @@ public class Timer : MonoBehaviour
 
     // ----------------------------------------------------- PUBLIC CONDITION METHODS -----------------------------------------------------
 
+    /// <summary>
+    /// Start the timer if it is not already running.
+    /// </summary>
     public void StartTimer()
     {
         if (timerMode == TimerMode.CountDown && maxTime > 0f)
@@ -99,6 +106,9 @@ public class Timer : MonoBehaviour
         TimerStart?.Invoke();
     }
 
+    /// <summary>
+    /// Stops the timer and resets the time to it's initial state.
+    /// </summary>
     public void StopTimer()
     {
         isRunning = false;
@@ -108,11 +118,20 @@ public class Timer : MonoBehaviour
         TimerEnd?.Invoke();
     }
 
+    /// <summary>
+    /// Pauses the timer if it is running.
+    /// </summary>
     public void PauseTimer()
     {
-        isRunning = false;
+        if (isRunning)
+        {
+            isRunning = false;
+        }
     }
 
+    /// <summary>
+    /// Resumes the timer if it is paused.
+    /// </summary>
     public void ResumeTimer()
     {
         if (!isRunning)
@@ -121,6 +140,9 @@ public class Timer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Resets the timer to its initial state.
+    /// </summary>
     public void ResetTimer()
     {
         if (timerMode == TimerMode.CountDown && maxTime > 0f)
@@ -136,17 +158,35 @@ public class Timer : MonoBehaviour
 
     // ----------------------------------------------------- PUBLIC TIME METHODS -----------------------------------------------------
 
+    /// <summary>
+    /// Returns the current time in seconds as a float.
+    /// </summary>
     public float GetTime()
     {
         return time;
     }
 
+    /// <summary>
+    /// Returns the current time in seconds as an integer.
+    /// </summary>
+    public int GetTimeInSeconds()
+    {
+        return Mathf.FloorToInt(time);
+    }
+
+    /// <summary>
+    /// Sets the curremt timer value.
+    /// </summary>
+    /// <param name="time">Specifies the time in seconds</param>
     public void SetTime(float time)
     {
         this.time = Mathf.Max(0f, time);
         SetCurrentTime(this.time);
     }
 
+    /// <summary>
+    /// Returns the current time in a HH:MM:SS format if hours are greater than 0, otherwise in MM:SS format.
+    /// </summary>
     public string GetFormattedTime()
     {
         var hours = Mathf.FloorToInt(time / 3600);
@@ -165,16 +205,42 @@ public class Timer : MonoBehaviour
 
     // ----------------------------------------------------- PUBLIC MAX TIME METHODS -----------------------------------------------------
 
+    /// <summary>
+    /// Returns the maximum time in seconds as a float.
+    /// </summary>
     public float GetMaxTime()
     {
         return maxTime;
     }
 
+    /// <summary>
+    /// Return the maximum time in seconds as an integer.
+    /// </summary>
+    public int GetMaxTimeInSeconds()
+    {
+        return Mathf.FloorToInt(maxTime);
+    }
+
+    /// <summary>
+    /// Sets the maximum time for the timer.
+    /// </summary>
+    /// <param name="maxTime">Specifies the maximum time in seconds</param>
     public void SetMaxTime(float maxTime)
     {
         this.maxTime = Mathf.Max(0f, maxTime);
     }
 
+    /// <summary>
+    /// Returns the remaining time in seconds based on the timer mode.
+    /// <list type="bullet">
+    ///     <item>
+    ///         <description><b>CountDown:</b>: Returns the current time</description>
+    ///     </item>
+    ///     <item>
+    ///         <description><b>StopWatch:</b>: Returns maxTime - currentTime, or float.MaxValue if maxTime is less than or equal to 0</description>
+    ///     </item>
+    /// </list>
+    /// </summary>
     public float GetRemainingTime()
     {
         if (timerMode == TimerMode.CountDown)
@@ -189,11 +255,26 @@ public class Timer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Returns true if the timer has a maximum time set above 0.
+    /// </summary>
     public bool MaxTimeExists()
     {
         return maxTime > 0f;
     }
 
+    /// <summary>
+    /// Returns the timer progress as a percentage (0-100).
+    /// <list type="bullet">
+    ///     <item>
+    ///         <description><b>CountDown:</b>: Progress from 0% (full time remaining) to 100% (timer finished)</description>
+    ///     </item>
+    ///     <item>
+    ///         <description><b>StopWatch:</b>: Progress from 0% (just started) to 100% (maxTime reached)</description>
+    ///     </item>
+    /// </list>
+    /// Returns 0% if no maxTime is set.
+    /// </summary>
     public float GetProgressPercentage()
     {
         if (timerMode == TimerMode.CountDown)
