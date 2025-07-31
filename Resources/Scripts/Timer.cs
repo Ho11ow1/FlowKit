@@ -43,13 +43,8 @@ namespace FlowKit
             UpdateTimerState();
         }
 
-        //
-        // Comment out time = x; && SetCurrentTime(time); to not reset the timer when the timers finish.
-        //
         private void UpdateTimerState()
         {
-            SetCurrentTime(time);
-
             if (timerMode == TimerMode.StopWatch)
             {
                 time += Time.deltaTime;
@@ -57,9 +52,7 @@ namespace FlowKit
                 if (maxTime > 0f && time >= maxTime)
                 {
                     time = maxTime;
-                    SetCurrentTime(time);
                     StopTimer();
-                    TimerMaxReached?.Invoke();
                 }
             }
             else if (timerMode == TimerMode.CountDown)
@@ -69,11 +62,11 @@ namespace FlowKit
                 if (time <= 0f)
                 {
                     time = 0f;
-                    SetCurrentTime(time);
                     StopTimer();
-                    TimerEnd?.Invoke();
                 }
             }
+
+            SetCurrentTime(time);
         }
 
         private void SetCurrentTime(float setTime)
@@ -109,14 +102,16 @@ namespace FlowKit
         }
 
         /// <summary>
-        /// Stops the timer and resets the time to it's initial state.
+        /// Stops the timer.
         /// </summary>
         public void StopTimer()
         {
             isRunning = false;
 
-            ResetTimer();
-
+            if (maxTime > 0f && time >= maxTime)
+            {
+                TimerMaxReached?.Invoke();
+            }
             TimerEnd?.Invoke();
         }
 
