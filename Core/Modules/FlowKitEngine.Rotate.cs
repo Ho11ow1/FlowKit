@@ -23,7 +23,7 @@
 * -------------------------------------------------------- */
 using FlowKit.Common;
 
-namespace FlowKit.Core
+namespace FlowKit
 {
     public partial class FlowKitEngine
     {

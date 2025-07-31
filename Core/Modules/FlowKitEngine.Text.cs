@@ -24,7 +24,7 @@
 using FlowKit.Common;
 using UnityEngine;
 
-namespace FlowKit.Core
+namespace FlowKit
 {
     public partial class FlowKitEngine
     {

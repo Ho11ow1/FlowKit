@@ -213,8 +213,7 @@ namespace FlowKit.UI
             GetStartScale(component, occurrence, out Vector2 startScale);
             Vector2 targetScale;
 
-            if (delay > 0)
-            { yield return new WaitForSeconds(delay); }
+            if (delay > 0) { yield return new WaitForSeconds(delay); }
             targetScale = startScale * scaleAmount;
 
             float elapsedTime = 0f;

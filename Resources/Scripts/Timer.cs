@@ -4,290 +4,293 @@ using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
 
-public class Timer : MonoBehaviour
+namespace FlowKit
 {
-    private TextMeshProUGUI timerText;
-    private bool isRunning = false;
-
-    [SerializeField] private float time = 0f;
-    [SerializeField, Range(0f, 3600f)] private float maxTime = 300f;
-    [Tooltip("If Countdown is selected, timer will ignore the set Time and start from Max Timer")]
-    [SerializeField] TimerMode timerMode = TimerMode.StopWatch; 
-
-    private enum TimerMode
+    public class Timer : MonoBehaviour
     {
-        StopWatch,
-        CountDown
-    }
+        private TextMeshProUGUI timerText;
+        private bool isRunning = false;
 
-    public static event UnityAction TimerStart;
-    public static event UnityAction TimerEnd;
-    public static event UnityAction TimerMaxReached;
+        [SerializeField] private float time = 0f;
+        [SerializeField, Range(0f, 3600f)] private float maxTime = 300f;
+        [Tooltip("If Countdown is selected, timer will ignore the set Time and start from Max Timer")]
+        [SerializeField] TimerMode timerMode = TimerMode.StopWatch;
 
-    void Awake()
-    {
-        timerText = GetComponent<TextMeshProUGUI>();
-        if (timerText == null)
+        private enum TimerMode
         {
-            Debug.LogError("Timer component requires a TextMeshProUGUI component.");
+            StopWatch,
+            CountDown
         }
-        StartTimer();
-    }
 
-    void Update()
-    {
-        if (!isRunning || timerText == null) { return; }
+        public static event UnityAction TimerStart;
+        public static event UnityAction TimerEnd;
+        public static event UnityAction TimerMaxReached;
 
-        UpdateTimerState();
-    }
-
-    //
-    // Comment out time = x; && SetCurrentTime(time); to not reset the timer when the timers finish.
-    //
-    private void UpdateTimerState()
-    {
-        SetCurrentTime(time);
-
-        if (timerMode == TimerMode.StopWatch)
+        void Awake()
         {
-            time += Time.deltaTime;
+            timerText = GetComponent<TextMeshProUGUI>();
+            if (timerText == null)
+            {
+                Debug.LogError("Timer component requires a TextMeshProUGUI component.");
+            }
+            StartTimer();
+        }
 
-            if (maxTime > 0f && time >= maxTime)
+        void Update()
+        {
+            if (!isRunning || timerText == null) { return; }
+
+            UpdateTimerState();
+        }
+
+        //
+        // Comment out time = x; && SetCurrentTime(time); to not reset the timer when the timers finish.
+        //
+        private void UpdateTimerState()
+        {
+            SetCurrentTime(time);
+
+            if (timerMode == TimerMode.StopWatch)
+            {
+                time += Time.deltaTime;
+
+                if (maxTime > 0f && time >= maxTime)
+                {
+                    time = maxTime;
+                    SetCurrentTime(time);
+                    StopTimer();
+                    TimerMaxReached?.Invoke();
+                }
+            }
+            else if (timerMode == TimerMode.CountDown)
+            {
+                time -= Time.deltaTime;
+
+                if (time <= 0f)
+                {
+                    time = 0f;
+                    SetCurrentTime(time);
+                    StopTimer();
+                    TimerEnd?.Invoke();
+                }
+            }
+        }
+
+        private void SetCurrentTime(float setTime)
+        {
+            var hours = Mathf.FloorToInt(setTime / 3600);
+            var minutes = Mathf.FloorToInt((setTime % 3600) / 60);
+            var seconds = Mathf.FloorToInt(setTime % 60);
+
+            if (hours > 0)
+            {
+                timerText.text = $"{hours}:{minutes:D2}:{seconds:D2}";
+            }
+            else
+            {
+                timerText.text = $"{minutes}:{seconds:D2}";
+            }
+        }
+
+        // ----------------------------------------------------- PUBLIC CONDITION METHODS -----------------------------------------------------
+
+        /// <summary>
+        /// Start the timer if it is not already running.
+        /// </summary>
+        public void StartTimer()
+        {
+            if (timerMode == TimerMode.CountDown && maxTime > 0f)
             {
                 time = maxTime;
-                SetCurrentTime(time);
-                StopTimer();
-                TimerMaxReached?.Invoke();
             }
-        }
-        else if (timerMode == TimerMode.CountDown)
-        {
-            time -= Time.deltaTime;
 
-            if (time <= 0f)
-            {
-                time = 0f;
-                SetCurrentTime(time);
-                StopTimer();
-                TimerEnd?.Invoke();
-            }
-        }
-    }
-
-    private void SetCurrentTime(float setTime)
-    {
-        var hours = Mathf.FloorToInt(setTime / 3600);
-        var minutes = Mathf.FloorToInt((setTime % 3600) / 60);
-        var seconds = Mathf.FloorToInt(setTime % 60);
-
-        if (hours > 0)
-        {
-            timerText.text = $"{hours}:{minutes:D2}:{seconds:D2}";
-        }
-        else
-        {
-            timerText.text = $"{minutes}:{seconds:D2}";
-        }
-    }
-
-    // ----------------------------------------------------- PUBLIC CONDITION METHODS -----------------------------------------------------
-
-    /// <summary>
-    /// Start the timer if it is not already running.
-    /// </summary>
-    public void StartTimer()
-    {
-        if (timerMode == TimerMode.CountDown && maxTime > 0f)
-        {
-            time = maxTime;
+            isRunning = true;
+            TimerStart?.Invoke();
         }
 
-        isRunning = true;
-        TimerStart?.Invoke();
-    }
-
-    /// <summary>
-    /// Stops the timer and resets the time to it's initial state.
-    /// </summary>
-    public void StopTimer()
-    {
-        isRunning = false;
-
-        ResetTimer();
-
-        TimerEnd?.Invoke();
-    }
-
-    /// <summary>
-    /// Pauses the timer if it is running.
-    /// </summary>
-    public void PauseTimer()
-    {
-        if (isRunning)
+        /// <summary>
+        /// Stops the timer and resets the time to it's initial state.
+        /// </summary>
+        public void StopTimer()
         {
             isRunning = false;
+
+            ResetTimer();
+
+            TimerEnd?.Invoke();
         }
-    }
 
-    /// <summary>
-    /// Resumes the timer if it is paused.
-    /// </summary>
-    public void ResumeTimer()
-    {
-        if (!isRunning)
+        /// <summary>
+        /// Pauses the timer if it is running.
+        /// </summary>
+        public void PauseTimer()
         {
-            isRunning = true;
+            if (isRunning)
+            {
+                isRunning = false;
+            }
         }
-    }
 
-    /// <summary>
-    /// Resets the timer to its initial state.
-    /// </summary>
-    public void ResetTimer()
-    {
-        if (timerMode == TimerMode.CountDown && maxTime > 0f)
+        /// <summary>
+        /// Resumes the timer if it is paused.
+        /// </summary>
+        public void ResumeTimer()
         {
-            time = maxTime;
+            if (!isRunning)
+            {
+                isRunning = true;
+            }
         }
-        else
+
+        /// <summary>
+        /// Resets the timer to its initial state.
+        /// </summary>
+        public void ResetTimer()
         {
-             time = 0f;
+            if (timerMode == TimerMode.CountDown && maxTime > 0f)
+            {
+                time = maxTime;
+            }
+            else
+            {
+                time = 0f;
+            }
+            SetCurrentTime(time);
         }
-        SetCurrentTime(time);
-    }
 
-    // ----------------------------------------------------- PUBLIC TIME METHODS -----------------------------------------------------
+        // ----------------------------------------------------- PUBLIC TIME METHODS -----------------------------------------------------
 
-    /// <summary>
-    /// Returns the current time in seconds as a float.
-    /// </summary>
-    public float GetTime()
-    {
-        return time;
-    }
-
-    /// <summary>
-    /// Returns the current time in seconds as an integer.
-    /// </summary>
-    public int GetTimeInSeconds()
-    {
-        return Mathf.FloorToInt(time);
-    }
-
-    /// <summary>
-    /// Sets the curremt timer value.
-    /// </summary>
-    /// <param name="time">Specifies the time in seconds</param>
-    public void SetTime(float time)
-    {
-        this.time = Mathf.Max(0f, time);
-        SetCurrentTime(this.time);
-    }
-
-    /// <summary>
-    /// Returns the current time in a HH:MM:SS format if hours are greater than 0, otherwise in MM:SS format.
-    /// </summary>
-    public string GetFormattedTime()
-    {
-        var hours = Mathf.FloorToInt(time / 3600);
-        var minutes = Mathf.FloorToInt((time % 3600) / 60);
-        var seconds = Mathf.FloorToInt(time % 60);
-
-        if (hours > 0)
+        /// <summary>
+        /// Returns the current time in seconds as a float.
+        /// </summary>
+        public float GetTime()
         {
-            return $"{hours}:{minutes:D2}:{seconds:D2}";
+            return time;
         }
-        else
+
+        /// <summary>
+        /// Returns the current time in seconds as an integer.
+        /// </summary>
+        public int GetTimeInSeconds()
         {
-            return $"{minutes}:{seconds:D2}";
+            return Mathf.FloorToInt(time);
         }
-    }
 
-    // ----------------------------------------------------- PUBLIC MAX TIME METHODS -----------------------------------------------------
-
-    /// <summary>
-    /// Returns the maximum time in seconds as a float.
-    /// </summary>
-    public float GetMaxTime()
-    {
-        return maxTime;
-    }
-
-    /// <summary>
-    /// Return the maximum time in seconds as an integer.
-    /// </summary>
-    public int GetMaxTimeInSeconds()
-    {
-        return Mathf.FloorToInt(maxTime);
-    }
-
-    /// <summary>
-    /// Sets the maximum time for the timer.
-    /// </summary>
-    /// <param name="maxTime">Specifies the maximum time in seconds</param>
-    public void SetMaxTime(float maxTime)
-    {
-        this.maxTime = Mathf.Max(0f, maxTime);
-    }
-
-    /// <summary>
-    /// Returns the remaining time in seconds based on the timer mode.
-    /// <list type="bullet">
-    ///     <item>
-    ///         <description><b>CountDown:</b>: Returns the current time</description>
-    ///     </item>
-    ///     <item>
-    ///         <description><b>StopWatch:</b>: Returns maxTime - currentTime, or float.MaxValue if maxTime is less than or equal to 0</description>
-    ///     </item>
-    /// </list>
-    /// </summary>
-    public float GetRemainingTime()
-    {
-        if (timerMode == TimerMode.CountDown)
+        /// <summary>
+        /// Sets the curremt timer value.
+        /// </summary>
+        /// <param name="time">Specifies the time in seconds</param>
+        public void SetTime(float time)
         {
-            return Mathf.Max(0f, time);
+            this.time = Mathf.Max(0f, time);
+            SetCurrentTime(this.time);
         }
-        else
-        {
-            if (maxTime <= 0f) { return float.MaxValue; }
 
-            return Mathf.Max(0f, maxTime - time);
+        /// <summary>
+        /// Returns the current time in a HH:MM:SS format if hours are greater than 0, otherwise in MM:SS format.
+        /// </summary>
+        public string GetFormattedTime()
+        {
+            var hours = Mathf.FloorToInt(time / 3600);
+            var minutes = Mathf.FloorToInt((time % 3600) / 60);
+            var seconds = Mathf.FloorToInt(time % 60);
+
+            if (hours > 0)
+            {
+                return $"{hours}:{minutes:D2}:{seconds:D2}";
+            }
+            else
+            {
+                return $"{minutes}:{seconds:D2}";
+            }
         }
-    }
 
-    /// <summary>
-    /// Returns true if the timer has a maximum time set above 0.
-    /// </summary>
-    public bool MaxTimeExists()
-    {
-        return maxTime > 0f;
-    }
+        // ----------------------------------------------------- PUBLIC MAX TIME METHODS -----------------------------------------------------
 
-    /// <summary>
-    /// Returns the timer progress as a percentage (0-100).
-    /// <list type="bullet">
-    ///     <item>
-    ///         <description><b>CountDown:</b>: Progress from 0% (full time remaining) to 100% (timer finished)</description>
-    ///     </item>
-    ///     <item>
-    ///         <description><b>StopWatch:</b>: Progress from 0% (just started) to 100% (maxTime reached)</description>
-    ///     </item>
-    /// </list>
-    /// Returns 0% if no maxTime is set.
-    /// </summary>
-    public float GetProgressPercentage()
-    {
-        if (timerMode == TimerMode.CountDown)
+        /// <summary>
+        /// Returns the maximum time in seconds as a float.
+        /// </summary>
+        public float GetMaxTime()
         {
-            if (maxTime <= 0f) { return 0f; }
-
-            return Mathf.Clamp01((maxTime - time) / maxTime) * 100f;
+            return maxTime;
         }
-        else
-        {
-            if (maxTime <= 0f) { return 0f; }
 
-            return Mathf.Clamp01(time / maxTime) * 100f;
+        /// <summary>
+        /// Return the maximum time in seconds as an integer.
+        /// </summary>
+        public int GetMaxTimeInSeconds()
+        {
+            return Mathf.FloorToInt(maxTime);
+        }
+
+        /// <summary>
+        /// Sets the maximum time for the timer.
+        /// </summary>
+        /// <param name="maxTime">Specifies the maximum time in seconds</param>
+        public void SetMaxTime(float maxTime)
+        {
+            this.maxTime = Mathf.Max(0f, maxTime);
+        }
+
+        /// <summary>
+        /// Returns the remaining time in seconds based on the timer mode.
+        /// <list type="bullet">
+        ///     <item>
+        ///         <description><b>CountDown:</b>: Returns the current time</description>
+        ///     </item>
+        ///     <item>
+        ///         <description><b>StopWatch:</b>: Returns maxTime - currentTime, or float.MaxValue if maxTime is less than or equal to 0</description>
+        ///     </item>
+        /// </list>
+        /// </summary>
+        public float GetRemainingTime()
+        {
+            if (timerMode == TimerMode.CountDown)
+            {
+                return Mathf.Max(0f, time);
+            }
+            else
+            {
+                if (maxTime <= 0f) { return float.MaxValue; }
+
+                return Mathf.Max(0f, maxTime - time);
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the timer has a maximum time set above 0.
+        /// </summary>
+        public bool MaxTimeExists()
+        {
+            return maxTime > 0f;
+        }
+
+        /// <summary>
+        /// Returns the timer progress as a percentage (0-100).
+        /// <list type="bullet">
+        ///     <item>
+        ///         <description><b>CountDown:</b>: Progress from 0% (full time remaining) to 100% (timer finished)</description>
+        ///     </item>
+        ///     <item>
+        ///         <description><b>StopWatch:</b>: Progress from 0% (just started) to 100% (maxTime reached)</description>
+        ///     </item>
+        /// </list>
+        /// Returns 0% if no maxTime is set.
+        /// </summary>
+        public float GetProgressPercentage()
+        {
+            if (timerMode == TimerMode.CountDown)
+            {
+                if (maxTime <= 0f) { return 0f; }
+
+                return Mathf.Clamp01((maxTime - time) / maxTime) * 100f;
+            }
+            else
+            {
+                if (maxTime <= 0f) { return 0f; }
+
+                return Mathf.Clamp01(time / maxTime) * 100f;
+            }
         }
     }
 }
