@@ -156,7 +156,7 @@ namespace FlowKit
         // ----------------------------------------------------- PUBLIC TIME METHODS -----------------------------------------------------
 
         /// <summary>
-        /// Returns the current time in seconds as a float.
+        /// Returns the current Time in seconds as a float.
         /// </summary>
         public float GetTime()
         {
@@ -164,7 +164,7 @@ namespace FlowKit
         }
 
         /// <summary>
-        /// Returns the current time in seconds as an integer.
+        /// Returns the current Time in seconds as an integer.
         /// </summary>
         public int GetTimeInSeconds()
         {
@@ -174,7 +174,7 @@ namespace FlowKit
         /// <summary>
         /// Sets the curremt timer value.
         /// </summary>
-        /// <param name="time">Specifies the time in seconds</param>
+        /// <param name="time">Specifies the Time in seconds</param>
         public void SetTime(float time)
         {
             this.time = Mathf.Max(0f, time);
@@ -182,7 +182,7 @@ namespace FlowKit
         }
 
         /// <summary>
-        /// Returns the current time in a HH:MM:SS format if hours are greater than 0, otherwise in MM:SS format.
+        /// Returns the current Time in a HH:MM:SS format if hours are greater than 0, otherwise in MM:SS format.
         /// </summary>
         public string GetFormattedTime()
         {
@@ -203,7 +203,7 @@ namespace FlowKit
         // ----------------------------------------------------- PUBLIC MAX TIME METHODS -----------------------------------------------------
 
         /// <summary>
-        /// Returns the maximum time in seconds as a float.
+        /// Returns the maximum Time in seconds as a float.
         /// </summary>
         public float GetMaxTime()
         {
@@ -211,7 +211,7 @@ namespace FlowKit
         }
 
         /// <summary>
-        /// Return the maximum time in seconds as an integer.
+        /// Return the maximum Time in seconds as an integer.
         /// </summary>
         public int GetMaxTimeInSeconds()
         {
@@ -219,19 +219,19 @@ namespace FlowKit
         }
 
         /// <summary>
-        /// Sets the maximum time for the timer.
+        /// Sets the maximum Time for the timer.
         /// </summary>
-        /// <param name="maxTime">Specifies the maximum time in seconds</param>
+        /// <param name="maxTime">Specifies the maximum Time in seconds</param>
         public void SetMaxTime(float maxTime)
         {
             this.maxTime = Mathf.Max(0f, maxTime);
         }
 
         /// <summary>
-        /// Returns the remaining time in seconds based on the timer mode.
+        /// Returns the remaining Time in seconds based on the timer mode.
         /// <list type="bullet">
         ///     <item>
-        ///         <description><b>CountDown:</b>: Returns the current time</description>
+        ///         <description><b>CountDown:</b>: Returns the current Time</description>
         ///     </item>
         ///     <item>
         ///         <description><b>StopWatch:</b>: Returns maxTime - currentTime, or float.MaxValue if maxTime is less than or equal to 0</description>
@@ -253,7 +253,7 @@ namespace FlowKit
         }
 
         /// <summary>
-        /// Returns true if the timer has a maximum time set above 0.
+        /// Returns true if the timer has a maximum Time set above 0.
         /// </summary>
         public bool MaxTimeExists()
         {
@@ -264,7 +264,7 @@ namespace FlowKit
         /// Returns the timer progress as a percentage (0-100).
         /// <list type="bullet">
         ///     <item>
-        ///         <description><b>CountDown:</b>: Progress from 0% (full time remaining) to 100% (timer finished)</description>
+        ///         <description><b>CountDown:</b>: Progress from 0% (full Time remaining) to 100% (timer finished)</description>
         ///     </item>
         ///     <item>
         ///         <description><b>StopWatch:</b>: Progress from 0% (just started) to 100% (maxTime reached)</description>
