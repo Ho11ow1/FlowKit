@@ -94,7 +94,7 @@ namespace FlowKit
                 return;
             }
 
-            totalMinutes = (totalMinutes + minutes) % 1439;
+            totalMinutes = (totalMinutes + minutes) % 1440;
 
             var newTimeOfDay = GetTimeOfDayByHour(Hour);
             if (newTimeOfDay != currentTimeOfDay)
