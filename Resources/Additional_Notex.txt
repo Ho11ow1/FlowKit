@@ -1,0 +1,17 @@
+■ FlowKit Prefab - Additional Documentation
+================================
+
+■ Recommended usage
+--------------
+○ RpgClock
+  ・ Visual Novel / RPG style time management
+○ OnlineClock
+  ・ Specific time events | world bosses / world resets
+○ Timer
+  ・ Time restricted gameplay segments | Puzzles / Survival
+
+■ Licensing
+--------------
+○ Prefab Scripts are not under the Apache 2.0 License
+  ・ Meaning that you're free to do anything you want with them
+  ・ And there's no need for a notice, disclaimer or copyright statement

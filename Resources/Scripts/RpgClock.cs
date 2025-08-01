@@ -9,11 +9,12 @@ namespace FlowKit
     public class RpgClock : MonoBehaviour
     {
         private TextMeshProUGUI timeText;
-        private TimeOfDay currentTimeOfDay;
+        private TimeOfDay currentTimeOfDay = TimeOfDay.Morning;
         public int Hour => totalMinutes / 60;
         public int Minute => totalMinutes % 60;
+        [SerializeField, Tooltip("If set to false, minutes will be ignored.\nCurrent time of day will be displayed instead")]
+        private bool trackTime = false;
         [SerializeField] private TimeFormat timeFormat = TimeFormat.Military;
-        [SerializeField] private bool trackTime = false;
         [SerializeField] private int totalMinutes = 0;
 
         public enum TimeOfDay
@@ -46,11 +47,18 @@ namespace FlowKit
             }
         }
 
+        /*
+         * Comment out Update() if you do not wish to display any time information.
+         */
         void Update()
         {
-            if (timeText != null)
+            if (timeText != null && trackTime)
             {
                 timeText.text = SetFormattedTime();
+            }
+            else if (timeText != null && !trackTime)
+            {
+                timeText.text = currentTimeOfDay.ToString();
             }
         }
 
@@ -77,7 +85,7 @@ namespace FlowKit
         /// Advances the time by a specified number of minutes.
         /// Does nothing if time tracking is disabled.
         /// </summary>
-        /// <param name="minutes">Specifies the amount of minutes to pass the time</param>
+        /// <param name="minutes">Specifies the amount of minutes to pass</param>
         public void AdvanceTime(int minutes)
         {
             if (!trackTime)
@@ -96,6 +104,14 @@ namespace FlowKit
             }
         }
 
+        /// <summary>
+        /// Advances the current TimeOfDay by one step.
+        /// </summary>
+        public void AdvanceTimeOfDay()
+        {
+            currentTimeOfDay = (TimeOfDay)(((int)currentTimeOfDay + 1) % 5);
+        }
+
         // ----------------------------------------------------- MULTI-STYLE RPG GETTERS -----------------------------------------------------
 
 
@@ -111,7 +127,7 @@ namespace FlowKit
         /// Returns the current TimeOfDay based on the tracked hour.
         /// If trackTime is false, it will return the currentTimeOfDay without checking the hour.
         /// </summary>
-        /// <param name="hour">Specifies the tracked hour to base TimeOfDay off of</param>
+        /// <param name="hour">Specifies the tracked hour to base TimeOfDay off of | Range of 0 - 23</param>
         public TimeOfDay GetTimeOfDayByHour(int hour)
         {
             if (!trackTime)
