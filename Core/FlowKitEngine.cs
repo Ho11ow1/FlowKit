@@ -61,9 +61,10 @@ namespace FlowKit
             _texts = GetComponentsInChildren<TextMeshProUGUI>();
 
             var imageList = new List<Image>();
-            foreach (RectTransform child in transform)
+            foreach (Transform childTransform in transform)
             {
-                if (child.TryGetComponent<Image>(out var img))
+                GameObject child = childTransform.gameObject;
+                if (child.TryGetComponent<Image>(out Image img) && child.GetComponent<RectTransform>())
                 {
                     imageList.Add(img);
                 }
