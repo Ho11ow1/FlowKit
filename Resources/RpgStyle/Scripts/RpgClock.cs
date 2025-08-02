@@ -147,10 +147,39 @@ namespace FlowKit.Rpg
 
         /// <summary>
         /// Advances the current TimeOfDay by one step.
+        /// <list type="bullet">
+        ///   <item>
+        ///     <description>Additionaly modifies the time if time tracking is enabled</description>
+        ///   </item>
+        /// </list>
         /// </summary>
         public void AdvanceTimeOfDay()
         {
             currentTimeOfDay = (TimeOfDay)(((int)currentTimeOfDay + 1) % 5);
+
+            if (trackTime)
+            {
+                switch (currentTimeOfDay)
+                {
+                    case TimeOfDay.Morning:
+                        totalMinutes = 6 * 60;
+                        break;
+                    case TimeOfDay.Afternoon:
+                        totalMinutes = 12 * 60;
+                        break;
+                    case TimeOfDay.Evening:
+                        totalMinutes = 18 * 60;
+                        break;
+                    case TimeOfDay.Night:
+                        totalMinutes = 23 * 60;
+                        break;
+                    case TimeOfDay.Midnight:
+                        totalMinutes = 2 * 60;
+                        break;
+                }
+            }
+
+            TimeOfDayTrigger?.Invoke(currentTimeOfDay);
         }
 
         // ----------------------------------------------------- MULTI-STYLE RPG GETTERS -----------------------------------------------------
