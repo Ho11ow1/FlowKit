@@ -8,8 +8,10 @@ namespace FlowKit.Rpg
 {
     public class RpgClock : MonoBehaviour
     {
+        public static RpgClock Instance { get; private set; }
+
         private TextMeshProUGUI timeText;
-        private TimeOfDay currentTimeOfDay = TimeOfDay.Morning;
+        private TimeOfDay currentTimeOfDay;
         /// <summary>
         /// Returns the current Hour.
         /// </summary>
@@ -18,10 +20,11 @@ namespace FlowKit.Rpg
         /// Returns the current minute of the hour.
         /// </summary>
         public int Minute => totalMinutes % 60;
-        [SerializeField, Tooltip("If set to false, minutes will be ignored.\nCurrent time of day will be displayed instead")]
-        private bool trackTime = false;
-        [SerializeField] private TimeFormat timeFormat = TimeFormat.Military;
+
+        [Header("Time related variables")]
         [SerializeField] private int totalMinutes = 0;
+        [SerializeField] private TimeFormat timeFormat = TimeFormat.Military;
+        [SerializeField] private bool trackTime = false;
 
         public enum TimeOfDay
         {
@@ -42,14 +45,28 @@ namespace FlowKit.Rpg
 
         void Awake()
         {
-            if (TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI text))
+            currentTimeOfDay = GetTimeOfDayByHour(Hour);
+
+            if (Instance == null)
             {
-                timeText = text;
-                SetFormattedTime();
+                Instance = this;
+
+                if (TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI text))
+                {
+                    timeText = text;
+                    SetFormattedTime();
+                }
+                else
+                {
+                    Debug.LogWarning("RpgClock requires a TextMeshProUGUI component to display time.\nText is not necessary to work");
+                }
+
+                DontDestroyOnLoad(gameObject);
+                return;
             }
             else
             {
-                Debug.LogWarning("RpgClock requires a TextMeshProUGUI component to display time.\nText is not necessary to work");
+                Destroy(gameObject);
             }
         }
 

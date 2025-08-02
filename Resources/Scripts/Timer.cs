@@ -11,9 +11,9 @@ namespace FlowKit
         private TextMeshProUGUI timerText;
         private bool isRunning = false;
 
+        [Header("Timer Settings")]
         [SerializeField] private float time = 0f;
         [SerializeField, Range(0f, 3600f)] private float maxTime = 300f;
-        [Tooltip("If Countdown is selected, timer will ignore the set Time and start from Max Time")]
         [SerializeField] TimerMode timerMode = TimerMode.StopWatch;
 
         private enum TimerMode

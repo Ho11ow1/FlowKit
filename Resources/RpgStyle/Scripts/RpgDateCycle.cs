@@ -7,6 +7,8 @@ namespace FlowKit.Rpg
 {
     public class RpgDateCycle : MonoBehaviour
     {
+        public static RpgDateCycle Instance { get; private set; }
+
         [Header("Date variables")]
         [SerializeField] private DayOfWeek day = DayOfWeek.Monday;
         [SerializeField] private int week = 0;
@@ -36,6 +38,20 @@ namespace FlowKit.Rpg
 
         public static event UnityAction<DayOfWeek> DayChangeTrigger;
         public static event UnityAction<int> WeekChangeTrigger;
+
+        void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+                return;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
 
         // ----------------------------------------------------- GENERAL-PURPOSE INCREMENT METHODS -----------------------------------------------------
 

@@ -12,8 +12,9 @@ namespace FlowKit
     {
         private TextMeshProUGUI clockText;
         private bool isRunning = false;
+        private double unixTime = 0f;
 
-        [SerializeField] private double unixTime = 0f;
+        [Header("Clock Settings")]
         [SerializeField, Range(0f, 60f)] private float syncInterval = 60f;
         [SerializeField] ClockType clockType = ClockType.UseLocalTime;
         [SerializeField] ClockFormat clockFormat = ClockFormat.Military;
