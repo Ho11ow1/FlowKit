@@ -31,7 +31,9 @@ namespace FlowKit
             timerText = GetComponent<TextMeshProUGUI>();
             if (timerText == null)
             {
+                #if UNITY_EDITOR
                 Debug.LogError("Timer component requires a TextMeshProUGUI component.");
+                #endif
             }
             StartTimer();
         }

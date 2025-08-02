@@ -3,12 +3,15 @@
 
 ■ Recommended usage
 --------------
-○ RpgClock
-  ・ Visual Novel / RPG style time management
+○ RpgClock (Canvas must have DontDestroyOnLoad | Using PersistentCanvas prefab recommended)
+  ・ Visual Novel / RPG style time management with UI display
+○ RpgClockNV (Automatically set to DontDestroyOnLoad)
+  ・ Works exactly the same as RpgClock but without a visual representation
+
 ○ OnlineClock
   ・ Specific time events | world bosses / world resets
 ○ Timer
-  ・ Time restricted gameplay segments | Puzzles / Survival
+  ・ Time-restricted gameplay segments | Puzzles / Survival
 
 ■ Licensing
 --------------

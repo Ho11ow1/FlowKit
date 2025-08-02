@@ -98,7 +98,9 @@ namespace FlowKit.Rpg
         {
             if (days < 0)
             {
+                #if UNITY_EDITOR
                 Debug.LogWarning("Days cannot be negative. Please provide a valid number of days to advance.");
+                #endif
                 return;
             }
 
@@ -134,7 +136,9 @@ namespace FlowKit.Rpg
         {
             if (weeks < 0)
             {
+                #if UNITY_EDITOR
                 Debug.LogWarning("Weeks cannot be negative. Please provide a valid number of weeks to advance.");
+                #endif
                 return;
             }
 
@@ -163,7 +167,9 @@ namespace FlowKit.Rpg
         {
             if (index < 0 || index > 6)
             {
+                #if UNITY_EDITOR
                 Debug.LogWarning("Index out of range. Please use a value between 0 and 6.");
+                #endif
                 return;
             }
 
@@ -205,7 +211,9 @@ namespace FlowKit.Rpg
         {
             if (week < 0)
             {
+                #if UNITY_EDITOR
                 Debug.LogWarning("Week cannot be negative. Please provide a valid week number.");
+                #endif
                 return;
             }
             if (week != this.week)

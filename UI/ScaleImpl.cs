@@ -160,46 +160,46 @@ namespace FlowKit.UI
             switch (target)
             {
                 case AnimationTarget.Panel:
-                    #if UNITY_EDITOR
                     if (!storedScale[FlowKitConstants.PanelIndex][0])
                     {
+                        #if UNITY_EDITOR
                         Debug.LogError($"No saved scale found for Panel: [{gameObject.name}]");
+                        #endif
                         return;
                     }
-                    #endif
 
                     _panelTransform.localScale = originalScale[FlowKitConstants.PanelIndex][0];
                     break;
                 case AnimationTarget.Text:
-                    #if UNITY_EDITOR
                     if (!storedScale[FlowKitConstants.TextIndex][occurrence])
                     {
+                        #if UNITY_EDITOR
                         Debug.LogError($"No saved scale found for Text component child. Panel: [{gameObject.name}]");
+                        #endif
                         return;
                     }
-                    #endif
 
                     _textComponent[occurrence].rectTransform.localScale = originalScale[FlowKitConstants.TextIndex][occurrence];
                     break;
                 case AnimationTarget.Image:
-                    #if UNITY_EDITOR
                     if (!storedScale[FlowKitConstants.ImageIndex][occurrence])
                     {
+                        #if UNITY_EDITOR
                         Debug.LogError($"No saved scale found for Image component child. Panel: [{gameObject.name}]");
+                        #endif
                         return;
                     }
-                    #endif
 
                     _imageComponent[occurrence].rectTransform.localScale = originalScale[FlowKitConstants.ImageIndex][occurrence];
                     break;
                 case AnimationTarget.Button:
-                    #if UNITY_EDITOR
                     if (!storedScale[FlowKitConstants.ButtonIndex][occurrence])
                     {
+                        #if UNITY_EDITOR
                         Debug.LogError($"No saved scale found for Button component child. Panel: [{gameObject.name}]");
+                        #endif
                         return;
                     }
-                    #endif
 
                     ((RectTransform)_buttonComponent[occurrence].transform).localScale = originalScale[FlowKitConstants.ButtonIndex][occurrence];
                     break;

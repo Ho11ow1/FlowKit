@@ -10,6 +10,7 @@ namespace FlowKit.Rpg
     {
         public static RpgClock Instance { get; private set; }
 
+        private bool isVisual;
         private TextMeshProUGUI timeText;
         private TimeOfDay currentTimeOfDay;
         /// <summary>
@@ -45,23 +46,34 @@ namespace FlowKit.Rpg
 
         void Awake()
         {
-            currentTimeOfDay = GetTimeOfDayByHour(Hour);
+            if (trackTime)
+            {
+                currentTimeOfDay = GetTimeOfDayByHour(Hour);
+            }
 
             if (Instance == null)
             {
                 Instance = this;
 
-                if (TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI text))
+                if (gameObject.GetComponent<RectTransform>())
                 {
-                    timeText = text;
-                    SetFormattedTime();
+                    isVisual = true;
+                    if (TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI text))
+                    {
+                        timeText = text;
+                        SetFormattedTime();
+                    }
+                    #if UNITY_EDITOR
+                    else
+                    {
+                        Debug.LogWarning("RpgClock requires a TextMeshProUGUI component to display time.");
+                    }
+                    #endif
                 }
-                else
+                if (!isVisual)
                 {
-                    Debug.LogWarning("RpgClock requires a TextMeshProUGUI component to display time.\nText is not necessary to work");
+                    DontDestroyOnLoad(gameObject);
                 }
-
-                DontDestroyOnLoad(gameObject);
                 return;
             }
             else
@@ -117,7 +129,9 @@ namespace FlowKit.Rpg
         {
             if (!trackTime)
             {
+                #if UNITY_EDITOR
                 Debug.LogWarning("RpgClock is not tracking time.\nPlease enable time tracking to use this method.");
+                #endif
                 return;
             }
 
@@ -163,7 +177,9 @@ namespace FlowKit.Rpg
         {
             if (!trackTime)
             {
+                #if UNITY_EDITOR
                 Debug.LogWarning("RpgClock is not tracking time.\nPlease enable hour tracking to use this method.");
+                #endif
                 return currentTimeOfDay;
             }
             var clampedHour = Mathf.Clamp(hour, 0, 23);
@@ -208,7 +224,9 @@ namespace FlowKit.Rpg
         {
             if (!trackTime)
             {
+                #if UNITY_EDITOR
                 Debug.LogWarning("RpgClock is not tracking time.\nPlease enable hour tracking to use this method.");
+                #endif
                 return;
             }
 

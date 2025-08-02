@@ -47,7 +47,9 @@ namespace FlowKit
             clockText = GetComponent<TextMeshProUGUI>();
             if (clockText == null)
             {
+                #if UNITY_EDITOR
                 Debug.LogError("Clock component requires a TextMeshProUGUI component.");
+                #endif
             }
         }
 
