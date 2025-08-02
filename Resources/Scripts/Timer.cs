@@ -230,12 +230,12 @@ namespace FlowKit
         /// <summary>
         /// Returns the remaining Time in seconds based on the timer mode.
         /// <list type="bullet">
-        ///     <item>
-        ///         <description><b>CountDown:</b>: Returns the current Time</description>
-        ///     </item>
-        ///     <item>
-        ///         <description><b>StopWatch:</b>: Returns maxTime - currentTime, or float.MaxValue if maxTime is less than or equal to 0</description>
-        ///     </item>
+        ///   <item>
+        ///     <description><b>CountDown:</b>: Returns the current Time</description>
+        ///   </item>
+        ///   <item>
+        ///     <description><b>StopWatch:</b>: Returns maxTime - currentTime, or float.MaxValue if maxTime is less than or equal to 0</description>
+        ///   </item>
         /// </list>
         /// </summary>
         public float GetRemainingTime()
@@ -263,12 +263,12 @@ namespace FlowKit
         /// <summary>
         /// Returns the timer progress as a percentage (0-100).
         /// <list type="bullet">
-        ///     <item>
-        ///         <description><b>CountDown:</b>: Progress from 0% (full Time remaining) to 100% (timer finished)</description>
-        ///     </item>
-        ///     <item>
-        ///         <description><b>StopWatch:</b>: Progress from 0% (just started) to 100% (maxTime reached)</description>
-        ///     </item>
+        ///   <item>
+        ///     <description><b>CountDown:</b>: Progress from 0% (full Time remaining) to 100% (timer finished)</description>
+        ///   </item>
+        ///   <item>
+        ///     <description><b>StopWatch:</b>: Progress from 0% (just started) to 100% (maxTime reached)</description>
+        ///   </item>
         /// </list>
         /// Returns 0% if no maxTime is set.
         /// </summary>

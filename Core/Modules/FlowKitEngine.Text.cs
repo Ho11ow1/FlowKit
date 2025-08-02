@@ -42,9 +42,9 @@ namespace FlowKit
             /// <summary>
             /// Applies a typeWriter effect to the TextMeshPro component.
             /// <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
@@ -58,9 +58,9 @@ namespace FlowKit
             /// <summary>
             /// Applies a typeWriter effect to the TextMeshPro component.
             /// <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
@@ -74,12 +74,12 @@ namespace FlowKit
             /// <summary>
             /// Applies a color cycling effect to the TextMeshPro component.
             /// <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
-            ///     <item>
-            ///         <description><b>Note</b>: To create an infinitly looping effect specify <c>duration</c> as 0f</description>
-            ///     </item>
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
+            ///   <item>
+            ///     <description><b>Note</b>: To create an infinitly looping effect specify <c>duration</c> as 0f</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>

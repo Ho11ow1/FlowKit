@@ -40,10 +40,10 @@ namespace FlowKit
 
             /// <summary>
             /// Reverts the target UI elements' scale back to it's original scale | <b>[NOT Animated]</b>
-            ///  <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            /// <list type="bullet">
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to scale (Panel, Text, Image, Button)</param>
@@ -56,10 +56,10 @@ namespace FlowKit
 
             /// <summary>
             /// Sets the scale of a target UI element immediately | <b>[NOT Animated]</b>
-            ///  <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            /// <list type="bullet">
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to scale (Panel, Text, Image, Button)</param>
@@ -74,12 +74,12 @@ namespace FlowKit
             /// <summary>
             /// Scales up the target UI element.
             /// <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: Subsequant calls will start animating from current scale</description>
-            ///     </item>
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            ///   <item>
+            ///     <description><b>Note</b>: Subsequant calls will start animating from current scale</description>
+            ///   </item>
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to scale (Panel, Text, Image, Button)</param>
@@ -97,12 +97,12 @@ namespace FlowKit
             /// <summary>
             /// Scales down the target UI element.
             /// <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: Subsequant calls will start animating from current scale</description>
-            ///     </item>
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            ///   <item>
+            ///     <description><b>Note</b>: Subsequant calls will start animating from current scale</description>
+            ///   </item>
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to scale (Panel, Text, Image, Button)</param>
