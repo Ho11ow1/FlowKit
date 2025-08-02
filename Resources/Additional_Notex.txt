@@ -8,6 +8,9 @@
 ○ RpgClockNV (Automatically set to DontDestroyOnLoad)
   ・ Works exactly the same as RpgClock but without a visual representation
 
+○ PersistentCanvas
+  ・ Simple persistent canvas which will never get destroyed
+
 ○ OnlineClock
   ・ Specific time events | world bosses / world resets
 ○ Timer
