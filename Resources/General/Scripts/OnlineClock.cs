@@ -40,7 +40,7 @@ namespace FlowKit
             None
         }
 
-        public static event UnityAction ClockCycled;
+        public static event UnityAction OnClockCycled;
 
         void Awake()
         {
@@ -127,14 +127,14 @@ namespace FlowKit
                 {
                     if (prevDateTime.Hour != currentDateTime.Hour)
                     {
-                        ClockCycled?.Invoke();
+                        OnClockCycled?.Invoke();
                     }
                 }
                 else if (cycleEventType == CycleEventType.Daily)
                 {
                     if (prevDateTime.Day != currentDateTime.Day)
                     {
-                        ClockCycled?.Invoke();
+                        OnClockCycled?.Invoke();
                     }
                 }
             }

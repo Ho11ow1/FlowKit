@@ -15,6 +15,22 @@ namespace FlowKit
         [SerializeField] private float time = 0f;
         [SerializeField, Range(0f, 3600f)] private float maxTime = 300f;
         [SerializeField] TimerMode timerMode = TimerMode.StopWatch;
+        /// <summary>
+        /// Returns the current time in seconds.
+        /// </summary>
+        public float Time => time;
+        /// <summary>
+        /// Returns the current time in seconds as an integer.
+        /// </summary>
+        public int TimeInSeconds => Mathf.FloorToInt(time);
+        /// <summary>
+        /// Returns the maximum time in seconds.
+        /// </summary>
+        public float MaxTime => maxTime;
+        /// <summary>
+        /// Returns the maximum time in seconds as an integer.
+        /// </summary>
+        public int MaxTimeInSeconds => Mathf.FloorToInt(maxTime);
 
         private enum TimerMode
         {
@@ -22,9 +38,9 @@ namespace FlowKit
             CountDown
         }
 
-        public static event UnityAction TimerStart;
-        public static event UnityAction TimerEnd;
-        public static event UnityAction TimerMaxReached;
+        public static event UnityAction OnTimerStart;
+        public static event UnityAction OnTimerEnd;
+        public static event UnityAction OnTimerReachedMax;
 
         void Awake()
         {
@@ -49,7 +65,7 @@ namespace FlowKit
         {
             if (timerMode == TimerMode.StopWatch)
             {
-                time += Time.deltaTime;
+                time += UnityEngine.Time.deltaTime;
 
                 if (maxTime > 0f && time >= maxTime)
                 {
@@ -59,7 +75,7 @@ namespace FlowKit
             }
             else if (timerMode == TimerMode.CountDown)
             {
-                time -= Time.deltaTime;
+                time -= UnityEngine.Time.deltaTime;
 
                 if (time <= 0f)
                 {
@@ -100,7 +116,7 @@ namespace FlowKit
             }
 
             isRunning = true;
-            TimerStart?.Invoke();
+            OnTimerStart?.Invoke();
         }
 
         /// <summary>
@@ -112,9 +128,9 @@ namespace FlowKit
 
             if (maxTime > 0f && time >= maxTime)
             {
-                TimerMaxReached?.Invoke();
+                OnTimerReachedMax?.Invoke();
             }
-            TimerEnd?.Invoke();
+            OnTimerEnd?.Invoke();
         }
 
         /// <summary>
@@ -158,22 +174,6 @@ namespace FlowKit
         // ----------------------------------------------------- PUBLIC TIME METHODS -----------------------------------------------------
 
         /// <summary>
-        /// Returns the current Time in seconds as a float.
-        /// </summary>
-        public float GetTime()
-        {
-            return time;
-        }
-
-        /// <summary>
-        /// Returns the current Time in seconds as an integer.
-        /// </summary>
-        public int GetTimeInSeconds()
-        {
-            return Mathf.FloorToInt(time);
-        }
-
-        /// <summary>
         /// Sets the curremt timer value.
         /// </summary>
         /// <param name="time">Specifies the Time in seconds</param>
@@ -203,22 +203,6 @@ namespace FlowKit
         }
 
         // ----------------------------------------------------- PUBLIC MAX TIME METHODS -----------------------------------------------------
-
-        /// <summary>
-        /// Returns the maximum Time in seconds as a float.
-        /// </summary>
-        public float GetMaxTime()
-        {
-            return maxTime;
-        }
-
-        /// <summary>
-        /// Return the maximum Time in seconds as an integer.
-        /// </summary>
-        public int GetMaxTimeInSeconds()
-        {
-            return Mathf.FloorToInt(maxTime);
-        }
 
         /// <summary>
         /// Sets the maximum Time for the timer.

@@ -36,8 +36,8 @@ namespace FlowKit.Rpg
             Sunday
         }
 
-        public static event UnityAction<DayOfWeek> DayChangeTrigger;
-        public static event UnityAction<int> WeekChangeTrigger;
+        public static event UnityAction<DayOfWeek> OnDayChange;
+        public static event UnityAction<int> OnWeekChange;
 
         void Awake()
         {
@@ -59,10 +59,10 @@ namespace FlowKit.Rpg
         /// Advances the day by one.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>This will cause a DayChangeTrigger event to occur every time</description>
+        ///     <description>This will cause a OnDayChange event to occur every time</description>
         ///   </item>
         ///   <item>
-        ///     <description>If the day changes from Sunday to Monday a WeekChangeTrigger will occur</description>
+        ///     <description>If the day changes from Sunday to Monday a OnWeekChange will occur</description>
         ///   </item>
         /// </list>
         /// </summary>
@@ -72,24 +72,24 @@ namespace FlowKit.Rpg
             {
                 day = DayOfWeek.Monday;
                 week += 1;
-                WeekChangeTrigger?.Invoke(week);
+                OnWeekChange?.Invoke(week);
             }
             else
             {
                 day += 1;
             }
 
-            DayChangeTrigger?.Invoke(day);
+            OnDayChange?.Invoke(day);
         }
 
         /// <summary>
         /// Advances the day by a specified number of days.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>This will cause a DayChangeTrigger event to occur every time</description>
+        ///     <description>This will cause a OnDayChange event to occur every time</description>
         ///   </item>
         ///   <item>
-        ///     <description>If the day changes from Sunday to Monday a WeekChangeTrigger will occur</description>
+        ///     <description>If the day changes from Sunday to Monday a OnWeekChange will occur</description>
         ///   </item>
         /// </list>
         /// </summary>
@@ -114,20 +114,20 @@ namespace FlowKit.Rpg
         /// Advances the week by one.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>This will cause a WeekChangeTrigger event to occur every time</description>
+        ///     <description>This will cause a OnWeekChange event to occur every time</description>
         ///   </item>
         /// </summary>
         public void AdvanceWeek()
         {
             week += 1;
-            WeekChangeTrigger?.Invoke(week);
+            OnWeekChange?.Invoke(week);
         }
 
         /// <summary>
         /// Advances the week by a specified number of weeks.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>This will cause a WeekChangeTrigger event to occur every time</description>
+        ///     <description>This will cause a OnWeekChange event to occur every time</description>
         ///   </item>
         /// </list>
         /// </summary>
@@ -194,7 +194,7 @@ namespace FlowKit.Rpg
             if (day != this.day)
             {
                 this.day = day;
-                DayChangeTrigger?.Invoke(day);
+                OnDayChange?.Invoke(day);
             }
         }
 
@@ -219,7 +219,7 @@ namespace FlowKit.Rpg
             if (week != this.week)
             {
                 this.week = week;
-                WeekChangeTrigger?.Invoke(week);
+                OnWeekChange?.Invoke(week);
             }
         }
     }

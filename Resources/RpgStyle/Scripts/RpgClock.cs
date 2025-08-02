@@ -12,7 +12,11 @@ namespace FlowKit.Rpg
 
         private bool isVisual;
         private TextMeshProUGUI timeText;
-        private TimeOfDay currentTimeOfDay;
+        private DayPeriod currentDayPeriod;
+        /// <summary>
+        /// Returns the current DayPeriod.
+        /// </summary>
+        public DayPeriod CurrentDayPeriod => currentDayPeriod;
         /// <summary>
         /// Returns the current Hour.
         /// </summary>
@@ -27,7 +31,7 @@ namespace FlowKit.Rpg
         [SerializeField] private TimeFormat timeFormat = TimeFormat.Military;
         [SerializeField] private bool trackTime = false;
 
-        public enum TimeOfDay
+        public enum DayPeriod
         {
             Morning,
             Afternoon,
@@ -36,19 +40,19 @@ namespace FlowKit.Rpg
             Midnight
         }
 
-        public enum TimeFormat
+        private enum TimeFormat
         {
             Military,
             Meridian
         }
 
-        public static event UnityAction<TimeOfDay> TimeOfDayTrigger;
+        public static event UnityAction<DayPeriod> OnDayPeriodChange;
 
         void Awake()
         {
             if (trackTime)
             {
-                currentTimeOfDay = GetTimeOfDayByHour(Hour);
+                currentDayPeriod = GetDayPeriodByHour(Hour);
             }
 
             if (Instance == null)
@@ -87,16 +91,17 @@ namespace FlowKit.Rpg
          */
         void Update()
         {
+            if (!isVisual) { return; }
+
             if (timeText != null && trackTime)
             {
                 timeText.text = SetFormattedTime();
             }
             else if (timeText != null && !trackTime)
             {
-                timeText.text = currentTimeOfDay.ToString();
+                timeText.text = currentDayPeriod.ToString();
             }
         }
-
 
         private string SetFormattedTime()
         {
@@ -137,119 +142,110 @@ namespace FlowKit.Rpg
 
             totalMinutes = (totalMinutes + minutes) % 1440;
 
-            var newTimeOfDay = GetTimeOfDayByHour(Hour);
-            if (newTimeOfDay != currentTimeOfDay)
+            var newdayPeriod = GetDayPeriodByHour(Hour);
+            if (newdayPeriod != currentDayPeriod)
             {
-                currentTimeOfDay = newTimeOfDay;
-                TimeOfDayTrigger?.Invoke(currentTimeOfDay);
+                currentDayPeriod = newdayPeriod;
+                OnDayPeriodChange?.Invoke(currentDayPeriod);
             }
         }
 
         /// <summary>
-        /// Advances the current TimeOfDay by one step.
+        /// Advances the current DayPeriod by one step.
         /// <list type="bullet">
         ///   <item>
         ///     <description>Additionaly modifies the time if time tracking is enabled</description>
         ///   </item>
         /// </list>
         /// </summary>
-        public void AdvanceTimeOfDay()
+        public void AdvanceDayPeriod()
         {
-            currentTimeOfDay = (TimeOfDay)(((int)currentTimeOfDay + 1) % 5);
+            currentDayPeriod = (DayPeriod)(((int)currentDayPeriod + 1) % 5);
 
             if (trackTime)
             {
-                switch (currentTimeOfDay)
+                switch (currentDayPeriod)
                 {
-                    case TimeOfDay.Morning:
+                    case DayPeriod.Morning:
                         totalMinutes = 6 * 60;
                         break;
-                    case TimeOfDay.Afternoon:
+                    case DayPeriod.Afternoon:
                         totalMinutes = 12 * 60;
                         break;
-                    case TimeOfDay.Evening:
+                    case DayPeriod.Evening:
                         totalMinutes = 18 * 60;
                         break;
-                    case TimeOfDay.Night:
+                    case DayPeriod.Night:
                         totalMinutes = 23 * 60;
                         break;
-                    case TimeOfDay.Midnight:
+                    case DayPeriod.Midnight:
                         totalMinutes = 2 * 60;
                         break;
                 }
             }
 
-            TimeOfDayTrigger?.Invoke(currentTimeOfDay);
+            OnDayPeriodChange?.Invoke(currentDayPeriod);
         }
 
         // ----------------------------------------------------- MULTI-STYLE RPG GETTERS -----------------------------------------------------
 
-
         /// <summary>
-        /// Return the current TimeOfDay.
-        /// </summary>
-        public TimeOfDay GetCurrentTimeOfDay()
-        {
-            return currentTimeOfDay;
-        }
-
-        /// <summary>
-        /// Returns the current TimeOfDay based on the tracked hour.
+        /// Returns the current DayPeriod based on the tracked hour.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>If trackTime is false, it will return the currentTimeOfDay without checking the hour.</description>
+        ///     <description>If trackTime is false, it will return the currentDayPeriod without checking the hour.</description>
         ///   </item>
         /// </list>
         /// </summary>
-        /// <param name="hour">Specifies the tracked hour to base TimeOfDay off of | Range of 0 - 23</param>
-        public TimeOfDay GetTimeOfDayByHour(int hour)
+        /// <param name="hour">Specifies the tracked hour to base DayPeriod off of | Range of 0 - 23</param>
+        public DayPeriod GetDayPeriodByHour(int hour)
         {
             if (!trackTime)
             {
                 #if UNITY_EDITOR
                 Debug.LogWarning("RpgClock is not tracking time.\nPlease enable hour tracking to use this method.");
                 #endif
-                return currentTimeOfDay;
+                return currentDayPeriod;
             }
             var clampedHour = Mathf.Clamp(hour, 0, 23);
 
             if (clampedHour >= 2 && clampedHour <= 5)
             {
-                return TimeOfDay.Midnight;
+                return DayPeriod.Midnight;
             }
             else if (clampedHour >= 6 && clampedHour <= 11)
             {
-                return TimeOfDay.Morning;
+                return DayPeriod.Morning;
             }
             else if (clampedHour >= 12 && clampedHour <= 17)
             {
-                return TimeOfDay.Afternoon;
+                return DayPeriod.Afternoon;
             }
             else if (clampedHour >= 18 && clampedHour <= 22)
             {
-                return TimeOfDay.Evening;
+                return DayPeriod.Evening;
             }
             else
             {
-                return TimeOfDay.Night;
+                return DayPeriod.Night;
             }
         }
 
         // ----------------------------------------------------- MULTI-STYLE RPG SETTERS -----------------------------------------------------
 
         /// <summary>
-        /// Sets the TimeOfDay based on the current hour.
+        /// Sets the DayPeriod based on the current hour.
         /// <list type="bullet">
         ///   <item>
         ///     <description>Does nothing if time tracking is false.</description>
         ///   </item>
         ///   <item>
-        ///     <description>Does nothing if the TimeOfDay does not change.</description>
+        ///     <description>Does nothing if the DayPeriod does not change.</description>
         ///   </item>
         /// </list>
         /// </summary>
         /// <param name="hour">Specifies the hour to set the time to | Range of 0 - 23</param>
-        public void SetTimeOfDayByHour(int hour)
+        public void SetDayPeriodByHour(int hour)
         {
             if (!trackTime)
             {
@@ -261,30 +257,30 @@ namespace FlowKit.Rpg
 
             var clampedHour = Mathf.Clamp(hour, 0, 23);
 
-            var timeOfDay = GetTimeOfDayByHour(clampedHour);
-            if (timeOfDay != currentTimeOfDay)
+            var dayPeriod = GetDayPeriodByHour(clampedHour);
+            if (dayPeriod != currentDayPeriod)
             {
-                currentTimeOfDay = timeOfDay;
+                currentDayPeriod = dayPeriod;
                 totalMinutes = clampedHour * 60;
-                TimeOfDayTrigger?.Invoke(currentTimeOfDay);
+                OnDayPeriodChange?.Invoke(currentDayPeriod);
             }
         }
 
         /// <summary>
-        /// Sets the TimeOfDay directly.
+        /// Sets the DayPeriod directly.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>Does nothing if the TimeOfDay does not change.</description>
+        ///     <description>Does nothing if the DayPeriod does not change.</description>
         ///   </item>
         /// </list>
         /// </summary>
-        /// <param name="timeOfDay">Specifies the TimeOfDay to be set</param>
-        public void SetTimeOfDay(TimeOfDay timeOfDay)
+        /// <param name="dayPeriod">Specifies the DayPeriod to be set</param>
+        public void SetDayPeriod(DayPeriod dayPeriod)
         {
-            if (timeOfDay == currentTimeOfDay) { return; }
+            if (dayPeriod == currentDayPeriod) { return; }
 
-            currentTimeOfDay = timeOfDay;
-            TimeOfDayTrigger?.Invoke(currentTimeOfDay);
+            currentDayPeriod = dayPeriod;
+            OnDayPeriodChange?.Invoke(currentDayPeriod);
         }
     }
 }
