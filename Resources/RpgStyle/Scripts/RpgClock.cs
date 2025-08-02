@@ -4,13 +4,19 @@ using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
 
-namespace FlowKit
+namespace FlowKit.Rpg
 {
     public class RpgClock : MonoBehaviour
     {
         private TextMeshProUGUI timeText;
         private TimeOfDay currentTimeOfDay = TimeOfDay.Morning;
+        /// <summary>
+        /// Returns the current Hour.
+        /// </summary>
         public int Hour => totalMinutes / 60;
+        /// <summary>
+        /// Returns the current minute of the hour.
+        /// </summary>
         public int Minute => totalMinutes % 60;
         [SerializeField, Tooltip("If set to false, minutes will be ignored.\nCurrent time of day will be displayed instead")]
         private bool trackTime = false;
@@ -48,7 +54,7 @@ namespace FlowKit
         }
 
         /*
-         * Comment out Update() if you do not wish to display any time information.
+         * Comment out Update() if you do not wish to display any time information in any way.
          */
         void Update()
         {
@@ -79,11 +85,15 @@ namespace FlowKit
             }
         }
 
-        // ----------------------------------------------------- GENERAL-PURPOSE RPG GETTERS -----------------------------------------------------
+        // ----------------------------------------------------- GENERAL-PURPOSE INCREMENT METHODS -----------------------------------------------------
 
         /// <summary>
         /// Advances the time by a specified number of minutes.
-        /// Does nothing if time tracking is disabled.
+        /// <list type="bullet">
+        ///   <item>
+        ///     <description>Does nothing if time tracking is disabled.</description>
+        ///   </item>
+        /// </list>
         /// </summary>
         /// <param name="minutes">Specifies the amount of minutes to pass</param>
         public void AdvanceTime(int minutes)
@@ -116,7 +126,7 @@ namespace FlowKit
 
 
         /// <summary>
-        /// Return the current TimeOfDay;
+        /// Return the current TimeOfDay.
         /// </summary>
         public TimeOfDay GetCurrentTimeOfDay()
         {
@@ -125,7 +135,11 @@ namespace FlowKit
 
         /// <summary>
         /// Returns the current TimeOfDay based on the tracked hour.
-        /// If trackTime is false, it will return the currentTimeOfDay without checking the hour.
+        /// <list type="bullet">
+        ///   <item>
+        ///     <description>If trackTime is false, it will return the currentTimeOfDay without checking the hour.</description>
+        ///   </item>
+        /// </list>
         /// </summary>
         /// <param name="hour">Specifies the tracked hour to base TimeOfDay off of | Range of 0 - 23</param>
         public TimeOfDay GetTimeOfDayByHour(int hour)
@@ -163,7 +177,14 @@ namespace FlowKit
 
         /// <summary>
         /// Sets the TimeOfDay based on the current hour.
-        /// Does nothing if time tracking is false or if the TimeOfDay does not change.
+        /// <list type="bullet">
+        ///   <item>
+        ///     <description>Does nothing if time tracking is false.</description>
+        ///   </item>
+        ///   <item>
+        ///     <description>Does nothing if the TimeOfDay does not change.</description>
+        ///   </item>
+        /// </list>
         /// </summary>
         /// <param name="hour">Specifies the hour to set the time to | Range of 0 - 23</param>
         public void SetTimeOfDayByHour(int hour)
@@ -187,7 +208,11 @@ namespace FlowKit
 
         /// <summary>
         /// Sets the TimeOfDay directly.
-        /// Does nothing if the TimeOfDay does not change.
+        /// <list type="bullet">
+        ///   <item>
+        ///     <description>Does nothing if the TimeOfDay does not change.</description>
+        ///   </item>
+        /// </list>
         /// </summary>
         /// <param name="timeOfDay">Specifies the TimeOfDay to be set</param>
         public void SetTimeOfDay(TimeOfDay timeOfDay)

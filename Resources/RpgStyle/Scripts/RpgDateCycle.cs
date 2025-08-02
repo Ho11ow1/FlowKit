@@ -1,0 +1,202 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
+
+namespace FlowKit.Rpg
+{
+    public class RpgDateCycle : MonoBehaviour
+    {
+        [Header("Date variables")]
+        [SerializeField] private DayOfWeek day = DayOfWeek.Monday;
+        [SerializeField] private int week = 0;
+        /// <summary>
+        /// Returns the current day of the week.
+        /// </summary>
+        public DayOfWeek Day => day;
+        /// <summary>
+        /// Returns the index of the current day of the week.
+        /// </summary>
+        public int DayIndex => (int)day;
+        /// <summary>
+        /// Returns the current week number.
+        /// </summary>
+        public int Week => week;
+
+        public enum DayOfWeek
+        {
+            Monday,
+            Tuesday,
+            Wednesday,
+            Thursday,
+            Friday,
+            Saturday,
+            Sunday
+        }
+
+        public static event UnityAction<DayOfWeek> DayChangeTrigger;
+        public static event UnityAction<int> WeekChangeTrigger;
+
+        // ----------------------------------------------------- GENERAL-PURPOSE INCREMENT METHODS -----------------------------------------------------
+
+        /// <summary>
+        /// Advances the day by one.
+        /// <list type="bullet">
+        ///   <item>
+        ///     <description>This will cause a DayChangeTrigger event to occur every time</description>
+        ///   </item>
+        ///   <item>
+        ///     <description>If the day changes from Sunday to Monday a WeekChangeTrigger will occur</description>
+        ///   </item>
+        /// </list>
+        /// </summary>
+        public void AdvanceDay()
+        {
+            if (day == DayOfWeek.Sunday)
+            {
+                day = DayOfWeek.Monday;
+                week += 1;
+                WeekChangeTrigger?.Invoke(week);
+            }
+            else
+            {
+                day += 1;
+            }
+
+            DayChangeTrigger?.Invoke(day);
+        }
+
+        /// <summary>
+        /// Advances the day by a specified number of days.
+        /// <list type="bullet">
+        ///   <item>
+        ///     <description>This will cause a DayChangeTrigger event to occur every time</description>
+        ///   </item>
+        ///   <item>
+        ///     <description>If the day changes from Sunday to Monday a WeekChangeTrigger will occur</description>
+        ///   </item>
+        /// </list>
+        /// </summary>
+        /// <param name="days">Specifies the amount of days to advance by</param>
+        public void AdvanceDays(int days)
+        {
+            if (days < 0)
+            {
+                Debug.LogWarning("Days cannot be negative. Please provide a valid number of days to advance.");
+                return;
+            }
+
+            for (int i = 0; i < days; i++)
+            {
+                AdvanceDay();
+            }
+        }
+
+        /// <summary>
+        /// Advances the week by one.
+        /// <list type="bullet">
+        ///   <item>
+        ///     <description>This will cause a WeekChangeTrigger event to occur every time</description>
+        ///   </item>
+        /// </summary>
+        public void AdvanceWeek()
+        {
+            week += 1;
+            WeekChangeTrigger?.Invoke(week);
+        }
+
+        /// <summary>
+        /// Advances the week by a specified number of weeks.
+        /// <list type="bullet">
+        ///   <item>
+        ///     <description>This will cause a WeekChangeTrigger event to occur every time</description>
+        ///   </item>
+        /// </list>
+        /// </summary>
+        /// <param name="weeks">Specifies the amount of weeks to advance by</param>
+        public void AdvanceWeeks(int weeks)
+        {
+            if (weeks < 0)
+            {
+                Debug.LogWarning("Weeks cannot be negative. Please provide a valid number of weeks to advance.");
+                return;
+            }
+
+            for (int i = 0; i < weeks; i++)
+            {
+                AdvanceWeek();
+            }
+        }
+
+
+        // ----------------------------------------------------- GENERAL-PURPOSE SETTERS -----------------------------------------------------
+
+        /// <summary>
+        /// Sets the day of the week based on the provided index.
+        /// <list type="bullet">
+        ///   <item>
+        ///     <description>Does not change the week counter.</description>
+        ///   </item>
+        ///   <item>
+        ///     <description>Does nothing if the provided index is the same as the current one.</description>
+        ///   </item>
+        /// </list>
+        /// </summary>
+        /// <param name="index">Specifies the day index to set the current day to</param>
+        public void SetDayByIndex(int index)
+        {
+            if (index < 0 || index > 6)
+            {
+                Debug.LogWarning("Index out of range. Please use a value between 0 and 6.");
+                return;
+            }
+
+            DayOfWeek newDay = (DayOfWeek)index;
+            SetDay(newDay);
+        }
+
+        /// <summary>
+        /// Sets the day of the week based on the provided DayOfWeek enum.
+        /// <list type="bullet">
+        ///   <item>
+        ///     <description>Does not change the week counter.</description>
+        ///   </item>
+        ///   <item>
+        ///     <description>Does nothing if the provided day is the same as the current one.</description>
+        ///   </item>
+        /// </list>
+        /// </summary>
+        /// <param name="day">Specifies the day to be set</param>
+        public void SetDay(DayOfWeek day)
+        {
+            if (day != this.day)
+            {
+                this.day = day;
+                DayChangeTrigger?.Invoke(day);
+            }
+        }
+
+        /// <summary>
+        /// Sets the week number.
+        /// <list type="bullet">
+        ///   <item>
+        ///     <description>Does nothing if the provided week is the same as the current one.</description>
+        ///   </item>
+        /// </list>
+        /// </summary>
+        /// <param name="week">Specifies the week to be set</param>
+        public void SetWeek(int week)
+        {
+            if (week < 0)
+            {
+                Debug.LogWarning("Week cannot be negative. Please provide a valid week number.");
+                return;
+            }
+            if (week != this.week)
+            {
+                this.week = week;
+                WeekChangeTrigger?.Invoke(week);
+            }
+        }
+    }
+}
