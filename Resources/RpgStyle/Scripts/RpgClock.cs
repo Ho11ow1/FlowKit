@@ -234,13 +234,10 @@ namespace FlowKit.Rpg
         // ----------------------------------------------------- MULTI-STYLE RPG SETTERS -----------------------------------------------------
 
         /// <summary>
-        /// Sets the DayPeriod based on the current hour.
+        /// Sets the DayPeriod based on the current hour and updates the current hour.
         /// <list type="bullet">
         ///   <item>
         ///     <description>Does nothing if time tracking is false.</description>
-        ///   </item>
-        ///   <item>
-        ///     <description>Does nothing if the DayPeriod does not change.</description>
         ///   </item>
         /// </list>
         /// </summary>
@@ -258,27 +255,17 @@ namespace FlowKit.Rpg
             var clampedHour = Mathf.Clamp(hour, 0, 23);
 
             var dayPeriod = GetDayPeriodByHour(clampedHour);
-            if (dayPeriod != currentDayPeriod)
-            {
-                currentDayPeriod = dayPeriod;
-                totalMinutes = clampedHour * 60;
-                OnDayPeriodChange?.Invoke(currentDayPeriod);
-            }
+            currentDayPeriod = dayPeriod;
+            totalMinutes = clampedHour * 60;
+            OnDayPeriodChange?.Invoke(currentDayPeriod);
         }
 
         /// <summary>
         /// Sets the DayPeriod directly.
-        /// <list type="bullet">
-        ///   <item>
-        ///     <description>Does nothing if the DayPeriod does not change.</description>
-        ///   </item>
-        /// </list>
         /// </summary>
         /// <param name="dayPeriod">Specifies the DayPeriod to be set</param>
         public void SetDayPeriod(DayPeriod dayPeriod)
         {
-            if (dayPeriod == currentDayPeriod) { return; }
-
             currentDayPeriod = dayPeriod;
             OnDayPeriodChange?.Invoke(currentDayPeriod);
         }

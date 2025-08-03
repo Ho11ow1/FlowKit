@@ -183,28 +183,17 @@ namespace FlowKit.Rpg
         ///   <item>
         ///     <description>Does not change the week counter.</description>
         ///   </item>
-        ///   <item>
-        ///     <description>Does nothing if the provided day is the same as the current one.</description>
-        ///   </item>
         /// </list>
         /// </summary>
         /// <param name="day">Specifies the day to be set</param>
         public void SetDay(DayOfWeek day)
         {
-            if (day != this.day)
-            {
-                this.day = day;
-                OnDayChange?.Invoke(day);
-            }
+            this.day = day;
+            OnDayChange?.Invoke(day);
         }
 
         /// <summary>
         /// Sets the week number.
-        /// <list type="bullet">
-        ///   <item>
-        ///     <description>Does nothing if the provided week is the same as the current one.</description>
-        ///   </item>
-        /// </list>
         /// </summary>
         /// <param name="week">Specifies the week to be set</param>
         public void SetWeek(int week)
@@ -216,11 +205,9 @@ namespace FlowKit.Rpg
                 #endif
                 return;
             }
-            if (week != this.week)
-            {
-                this.week = week;
-                OnWeekChange?.Invoke(week);
-            }
+
+            this.week = week;
+            OnWeekChange?.Invoke(week);
         }
     }
 }
