@@ -123,10 +123,20 @@ namespace FlowKit.Core
             }
         }
     }
+}
+
+namespace FlowKit
+{
     public class AnimationStep
     {
-        public UnityAction action { get; }
-        public float delay { get; }
+        public UnityAction action
+        {
+            get;
+        }
+        public float delay
+        {
+            get;
+        }
 
         public AnimationStep(UnityAction action, float delay = 0f)
         {

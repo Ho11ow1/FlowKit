@@ -23,7 +23,7 @@
 * -------------------------------------------------------- */
 using FlowKit.Common;
 
-namespace FlowKit.Core
+namespace FlowKit
 {
     public partial class FlowKitEngine
     {
@@ -40,10 +40,10 @@ namespace FlowKit.Core
 
             /// <summary>
             /// Reverts the target UI elements' alpha value back to it's original value | <b>[NOT Animated]</b>
-            ///  <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            /// <list type="bullet">
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
@@ -56,10 +56,10 @@ namespace FlowKit.Core
 
             /// <summary>
             /// Immediately sets the UI panel visibility | <b>[NOT Animated]</b>
-            ///  <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            /// <list type="bullet">
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="visible">Sets the panel visibility condition</param>
@@ -83,9 +83,9 @@ namespace FlowKit.Core
             /// <summary>
             /// Fades in the UI element from transparent to fully opaque
             /// <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to fade (Panel, Text, Image, Button)</param>
@@ -101,9 +101,9 @@ namespace FlowKit.Core
             /// <summary>
             /// Fades out the UI element from fully opaque to transparent
             /// <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to fade (Panel, Text, Image, Button)</param>
@@ -119,9 +119,9 @@ namespace FlowKit.Core
             /// <summary>
             /// Fades the target UI element to a specified alpha value between 0-1
             /// <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to fade (Panel, Text, Image, Button)</param>

@@ -197,7 +197,7 @@ namespace FlowKit.Editor
             {
                 if (obj.layer == LayerMask.NameToLayer("UI"))
                 {
-                    if (obj.GetComponent<RectTransform>() && obj.GetComponent<Core.FlowKitEngine>())
+                    if (obj.GetComponent<RectTransform>() && obj.GetComponent<FlowKitEngine>())
                     {
                         _parentChildMap.Add(obj, new List<GameObject>());
                         SaveTransform(obj);

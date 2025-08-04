@@ -23,7 +23,7 @@
 * -------------------------------------------------------- */
 using FlowKit.Common;
 
-namespace FlowKit.Core
+namespace FlowKit
 {
     public partial class FlowKitEngine
     {
@@ -40,10 +40,10 @@ namespace FlowKit.Core
 
             /// <summary>
             /// Reverts the target UI elements' rotation back to it's original rotation | <b>[NOT Animated]</b>
-            ///  <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            /// <list type="bullet">
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to rotate (Panel, Text, Image, Button)</param>
@@ -56,10 +56,10 @@ namespace FlowKit.Core
 
             /// <summary>
             /// Immediately sets the rotation of the target UI element to the specified degrees | <b>[NOT Animated]</b>
-            ///  <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            /// <list type="bullet">
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///    </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to rotate (Panel, Text, Image, Button)</param>
@@ -74,12 +74,12 @@ namespace FlowKit.Core
             /// <summary>
             /// Rotates the target UI element.
             /// <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: Subsequent calls will start animationg from the current rotation</description>
-            ///     </item>
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            ///   <item>
+            ///     <description><b>Note</b>: Subsequent calls will start animationg from the current rotation</description>
+            ///   </item>
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to rotate (Panel, Text, Image, Button)</param>

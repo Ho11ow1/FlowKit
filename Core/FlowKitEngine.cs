@@ -26,12 +26,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-namespace FlowKit.Core
+namespace FlowKit
 {
     public partial class FlowKitEngine : MonoBehaviour
     {
         // Class variables
-        private FlowKitQueue queueComponent;
+        private Core.FlowKitQueue queueComponent;
         private UI.VisibilityImpl visibilityImpl;
         private UI.TransitionImpl transitionImpl;
         private UI.RotateImpl rotateImpl;
@@ -51,6 +51,7 @@ namespace FlowKit.Core
             InitComponents();
             InitModules();
         }
+
         // ----------------------------------------------------- PRIVATE INITALIZERS -----------------------------------------------------
 
         private void InitVariables()
@@ -60,9 +61,10 @@ namespace FlowKit.Core
             _texts = GetComponentsInChildren<TextMeshProUGUI>();
 
             var imageList = new List<Image>();
-            foreach (RectTransform child in transform)
+            foreach (Transform childTransform in transform)
             {
-                if (child.TryGetComponent<Image>(out var img))
+                GameObject child = childTransform.gameObject;
+                if (child.TryGetComponent<Image>(out Image img) && child.GetComponent<RectTransform>())
                 {
                     imageList.Add(img);
                 }
@@ -84,7 +86,7 @@ namespace FlowKit.Core
 
         private void InitComponents()
         {
-            queueComponent = new FlowKitQueue(this);
+            queueComponent = new Core.FlowKitQueue(this);
             visibilityImpl = new UI.VisibilityImpl(_texts, _images, _buttons, _cg, this);
             transitionImpl = new UI.TransitionImpl(_texts, _images, _buttons, _panel, this);
             rotateImpl = new UI.RotateImpl(_texts, _images, _buttons, _panel, this);

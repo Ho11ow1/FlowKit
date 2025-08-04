@@ -25,7 +25,7 @@ using UnityEngine;
 
 using FlowKit.Common;
 
-namespace FlowKit.Core
+namespace FlowKit
 {
     public partial class FlowKitEngine
     {
@@ -42,10 +42,10 @@ namespace FlowKit.Core
 
             /// <summary>
             /// Reverts the target UI elements' position back to it's original position | <b>[NOT Animated]</b>
-            ///  <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            /// <list type="bullet">
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
@@ -58,10 +58,10 @@ namespace FlowKit.Core
 
             /// <summary>
             /// Immediately sets the target UI element's position to the specified position | <b>[NOT Animated]</b>
-            ///  <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            /// <list type="bullet">
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
@@ -76,12 +76,12 @@ namespace FlowKit.Core
             /// <summary>
             /// Transitions the UI element from a position offset upward back to its starting position
             /// <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
-            ///     </item>
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            ///   <item>
+            ///     <description><b>Note</b>: Animation always starts from the element's current position</description>
+            ///   </item>
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
@@ -99,12 +99,12 @@ namespace FlowKit.Core
             /// <summary>
             /// Transitions the UI element from a position offset downward back to its starting position
             /// <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
-            ///     </item>
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            ///   <item>
+            ///     <description><b>Note</b>: Animation always starts from the element's current position</description>
+            ///   </item>
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
@@ -122,12 +122,12 @@ namespace FlowKit.Core
             /// <summary>
             /// Transitions the UI element from a position offset to the left back to its starting position
             /// <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
-            ///     </item>
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            ///   <item>
+            ///     <description><b>Note</b>: Animation always starts from the element's current position</description>
+            ///   </item>
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
@@ -145,12 +145,12 @@ namespace FlowKit.Core
             /// <summary>
             /// Transitions the UI element from a position offset to the right back to its starting position
             /// <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
-            ///     </item>
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            ///   <item>
+            ///     <description><b>Note</b>: Animation always starts from the element's current position</description>
+            ///   </item>
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
@@ -168,12 +168,12 @@ namespace FlowKit.Core
             /// <summary>
             /// Transitions the UI element from an offset position on both axes back to its starting position
             /// <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
-            ///     </item>
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            ///   <item>
+            ///     <description><b>Note</b>: Animation always starts from the element's current position</description>
+            ///   </item>
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
@@ -191,12 +191,12 @@ namespace FlowKit.Core
             /// <summary>
             /// Transitions the UI element from its starting position to a position offset upward
             /// <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
-            ///     </item>
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            ///   <item>
+            ///     <description><b>Note</b>: Animation always starts from the element's current position</description>
+            ///   </item>
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
@@ -214,12 +214,12 @@ namespace FlowKit.Core
             /// <summary>
             /// Transitions the UI element from its starting position to a position offset downward
             /// <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
-            ///     </item>
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            ///   <item>
+            ///     <description><b>Note</b>: Animation always starts from the element's current position</description>
+            ///   </item>
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
@@ -237,12 +237,12 @@ namespace FlowKit.Core
             /// <summary>
             /// Transitions the UI element from its starting position to a position offset to the left
             /// <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
-            ///     </item>
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            ///   <item>
+            ///     <description><b>Note</b>: Animation always starts from the element's current position</description>
+            ///   </item>
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
@@ -260,12 +260,12 @@ namespace FlowKit.Core
             /// <summary>
             /// Transitions the UI element from its starting position to a position offset to the right
             /// <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
-            ///     </item>
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            ///   <item>
+            ///     <description><b>Note</b>: Animation always starts from the element's current position</description>
+            ///   </item>
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
@@ -283,12 +283,12 @@ namespace FlowKit.Core
             /// <summary>
             /// Transitions the UI element from its starting position to an offset position
             /// <list type="bullet">
-            ///     <item>
-            ///         <description><b>Note</b>: Animation always starts from the element's current position</description>
-            ///     </item>
-            ///     <item>
-            ///         <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
-            ///     </item>
+            ///   <item>
+            ///     <description><b>Note</b>: Animation always starts from the element's current position</description>
+            ///   </item>
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
             /// </list>
             /// </summary>
             /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>

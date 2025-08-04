@@ -1,0 +1,23 @@
+■ FlowKit Prefab - Additional Documentation
+================================
+
+■ Recommended usage
+--------------
+○ SandboxClock (Canvas must have DontDestroyOnLoad | Using PersistentCanvas prefab recommended)
+  ・ Sandbox / Visual novel style time management with UI display
+○ SandboxClockNV (Automatically set to DontDestroyOnLoad)
+  ・ Works exactly the same as SandboxClock but without a visual representation
+
+○ PersistentCanvas
+  ・ Simple persistent canvas which will never get destroyed
+
+○ OnlineClock
+  ・ Specific time events | world bosses / world resets
+○ Timer
+  ・ Time-restricted gameplay segments | Puzzles / Survival
+
+■ Licensing
+--------------
+○ Prefab Scripts are not under the Apache 2.0 License
+  ・ Meaning that you're free to do anything you want with them
+  ・ And there's no need for a notice, disclaimer or copyright statement
