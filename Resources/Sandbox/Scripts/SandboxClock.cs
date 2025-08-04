@@ -4,11 +4,11 @@ using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
 
-namespace FlowKit.Rpg
+namespace FlowKit.Sandbox
 {
-    public class RpgClock : MonoBehaviour
+    public class SandboxClock : MonoBehaviour
     {
-        public static RpgClock Instance { get; private set; }
+        public static SandboxClock Instance { get; private set; }
 
         private bool isVisual;
         private TextMeshProUGUI timeText;
@@ -70,7 +70,7 @@ namespace FlowKit.Rpg
                     #if UNITY_EDITOR
                     else
                     {
-                        Debug.LogWarning("RpgClock requires a TextMeshProUGUI component to display time.");
+                        Debug.LogWarning("SandboxClock requires a TextMeshProUGUI component to display time.");
                     }
                     #endif
                 }
@@ -135,7 +135,7 @@ namespace FlowKit.Rpg
             if (!trackTime)
             {
                 #if UNITY_EDITOR
-                Debug.LogWarning("RpgClock is not tracking time.\nPlease enable time tracking to use this method.");
+                Debug.LogWarning("SandboxClock is not tracking time.\nPlease enable time tracking to use this method.");
                 #endif
                 return;
             }
@@ -187,13 +187,16 @@ namespace FlowKit.Rpg
             OnDayPeriodChange?.Invoke(currentDayPeriod);
         }
 
-        // ----------------------------------------------------- MULTI-STYLE RPG GETTERS -----------------------------------------------------
+        // ----------------------------------------------------- MULTI-STYLE GETTERS -----------------------------------------------------
 
         /// <summary>
         /// Returns the current DayPeriod based on the tracked hour.
         /// <list type="bullet">
         ///   <item>
         ///     <description>If trackTime is false, it will return the currentDayPeriod without checking the hour.</description>
+        ///   </item>
+        ///   <item>
+        ///     <description>Hour is clamped between 0 and 23</description>
         ///   </item>
         /// </list>
         /// </summary>
@@ -203,7 +206,7 @@ namespace FlowKit.Rpg
             if (!trackTime)
             {
                 #if UNITY_EDITOR
-                Debug.LogWarning("RpgClock is not tracking time.\nPlease enable hour tracking to use this method.");
+                Debug.LogWarning("SandboxClock is not tracking time.\nPlease enable time tracking to use this method.");
                 #endif
                 return currentDayPeriod;
             }
@@ -231,13 +234,16 @@ namespace FlowKit.Rpg
             }
         }
 
-        // ----------------------------------------------------- MULTI-STYLE RPG SETTERS -----------------------------------------------------
+        // ----------------------------------------------------- MULTI-STYLE SETTERS -----------------------------------------------------
 
         /// <summary>
         /// Sets the DayPeriod based on the current hour and updates the current hour.
         /// <list type="bullet">
         ///   <item>
         ///     <description>Does nothing if time tracking is false.</description>
+        ///   </item>
+        ///   <item>
+        ///     <description>Hour is clamped between 0 and 23.</description>
         ///   </item>
         /// </list>
         /// </summary>
@@ -247,7 +253,7 @@ namespace FlowKit.Rpg
             if (!trackTime)
             {
                 #if UNITY_EDITOR
-                Debug.LogWarning("RpgClock is not tracking time.\nPlease enable hour tracking to use this method.");
+                Debug.LogWarning("SandboxClock is not tracking time.\nPlease enable hour tracking to use this method.");
                 #endif
                 return;
             }

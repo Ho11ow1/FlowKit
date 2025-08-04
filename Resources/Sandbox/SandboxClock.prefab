@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7041214911091029695}
   - component: {fileID: 2995394171031356402}
   m_Layer: 5
-  m_Name: RpgClock
+  m_Name: SandboxClock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

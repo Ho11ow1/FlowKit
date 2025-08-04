@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5411748331915193317}
   - component: {fileID: -3891589896034568734}
   m_Layer: 0
-  m_Name: RpgDateCycle
+  m_Name: SandboxDateCycle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

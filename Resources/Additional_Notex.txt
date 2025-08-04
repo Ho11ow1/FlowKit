@@ -3,10 +3,10 @@
 
 ■ Recommended usage
 --------------
-○ RpgClock (Canvas must have DontDestroyOnLoad | Using PersistentCanvas prefab recommended)
-  ・ Visual Novel / RPG style time management with UI display
-○ RpgClockNV (Automatically set to DontDestroyOnLoad)
-  ・ Works exactly the same as RpgClock but without a visual representation
+○ SandboxClock (Canvas must have DontDestroyOnLoad | Using PersistentCanvas prefab recommended)
+  ・ Sandbox / Visual novel style time management with UI display
+○ SandboxClockNV (Automatically set to DontDestroyOnLoad)
+  ・ Works exactly the same as SandboxClock but without a visual representation
 
 ○ PersistentCanvas
   ・ Simple persistent canvas which will never get destroyed

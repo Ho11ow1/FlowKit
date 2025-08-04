@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace FlowKit.Rpg
+namespace FlowKit.Sandbox
 {
-    public class RpgDateCycle : MonoBehaviour
+    public class SandboxDateCycle : MonoBehaviour
     {
-        public static RpgDateCycle Instance { get; private set; }
+        public static SandboxDateCycle Instance { get; private set; }
 
         [Header("Date variables")]
         [SerializeField] private DayOfWeek day = DayOfWeek.Monday;
@@ -59,9 +59,6 @@ namespace FlowKit.Rpg
         /// Advances the day by one.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>This will cause a OnDayChange event to occur every time</description>
-        ///   </item>
-        ///   <item>
         ///     <description>If the day changes from Sunday to Monday a OnWeekChange will occur</description>
         ///   </item>
         /// </list>
@@ -86,9 +83,6 @@ namespace FlowKit.Rpg
         /// Advances the day by a specified number of days.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>This will cause a OnDayChange event to occur every time</description>
-        ///   </item>
-        ///   <item>
         ///     <description>If the day changes from Sunday to Monday a OnWeekChange will occur</description>
         ///   </item>
         /// </list>
@@ -112,10 +106,6 @@ namespace FlowKit.Rpg
 
         /// <summary>
         /// Advances the week by one.
-        /// <list type="bullet">
-        ///   <item>
-        ///     <description>This will cause a OnWeekChange event to occur every time</description>
-        ///   </item>
         /// </summary>
         public void AdvanceWeek()
         {
@@ -125,11 +115,6 @@ namespace FlowKit.Rpg
 
         /// <summary>
         /// Advances the week by a specified number of weeks.
-        /// <list type="bullet">
-        ///   <item>
-        ///     <description>This will cause a OnWeekChange event to occur every time</description>
-        ///   </item>
-        /// </list>
         /// </summary>
         /// <param name="weeks">Specifies the amount of weeks to advance by</param>
         public void AdvanceWeeks(int weeks)
@@ -156,9 +141,6 @@ namespace FlowKit.Rpg
         /// <list type="bullet">
         ///   <item>
         ///     <description>Does not change the week counter.</description>
-        ///   </item>
-        ///   <item>
-        ///     <description>Does nothing if the provided index is the same as the current one.</description>
         ///   </item>
         /// </list>
         /// </summary>
