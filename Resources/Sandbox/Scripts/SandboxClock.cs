@@ -47,6 +47,7 @@ namespace FlowKit.Sandbox
         }
 
         public static event UnityAction<DayPeriod> OnDayPeriodChange;
+        public static event UnityAction OnTimeChange;
 
         void Awake()
         {
@@ -65,7 +66,7 @@ namespace FlowKit.Sandbox
                     if (TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI text))
                     {
                         timeText = text;
-                        SetFormattedTime();
+                        timeText.text = GetFormattedTime();
                     }
                     #if UNITY_EDITOR
                     else
@@ -78,7 +79,8 @@ namespace FlowKit.Sandbox
                 {
                     DontDestroyOnLoad(gameObject);
                 }
-                return;
+
+                OnTimeChange += UpdateTimeDisplay;
             }
             else
             {
@@ -86,24 +88,29 @@ namespace FlowKit.Sandbox
             }
         }
 
-        /*
-         * Comment out Update() if you do not wish to display any time information in any way.
-         */
-        void Update()
+        void OnDestroy()
         {
-            if (!isVisual) { return; }
-
-            if (timeText != null && trackTime)
+            if (Instance == this)
             {
-                timeText.text = SetFormattedTime();
+                OnTimeChange -= UpdateTimeDisplay;
             }
-            else if (timeText != null && !trackTime)
+        }
+
+        private void UpdateTimeDisplay()
+        {
+            if (timeText == null || !isVisual) { return; }
+
+            if (trackTime)
+            {
+                timeText.text = GetFormattedTime();
+            }
+            else
             {
                 timeText.text = currentDayPeriod.ToString();
             }
         }
 
-        private string SetFormattedTime()
+        private string GetFormattedTime()
         {
             switch (timeFormat)
             {
@@ -116,6 +123,31 @@ namespace FlowKit.Sandbox
                     return $"{displayHours:D2}:{Minute:D2}{period.ToUpper()}";
                 default:
                     return "00:00";
+            }
+        }
+
+        private void SetTimeOnDayPeriod()
+        {
+            if (trackTime)
+            {
+                switch (currentDayPeriod)
+                {
+                    case DayPeriod.Morning:
+                        totalMinutes = 6 * 60;
+                        break;
+                    case DayPeriod.Afternoon:
+                        totalMinutes = 12 * 60;
+                        break;
+                    case DayPeriod.Evening:
+                        totalMinutes = 18 * 60;
+                        break;
+                    case DayPeriod.Night:
+                        totalMinutes = 23 * 60;
+                        break;
+                    case DayPeriod.Midnight:
+                        totalMinutes = 2 * 60;
+                        break;
+                }
             }
         }
 
@@ -148,6 +180,8 @@ namespace FlowKit.Sandbox
                 currentDayPeriod = newdayPeriod;
                 OnDayPeriodChange?.Invoke(currentDayPeriod);
             }
+
+            OnTimeChange?.Invoke();
         }
 
         /// <summary>
@@ -162,29 +196,10 @@ namespace FlowKit.Sandbox
         {
             currentDayPeriod = (DayPeriod)(((int)currentDayPeriod + 1) % 5);
 
-            if (trackTime)
-            {
-                switch (currentDayPeriod)
-                {
-                    case DayPeriod.Morning:
-                        totalMinutes = 6 * 60;
-                        break;
-                    case DayPeriod.Afternoon:
-                        totalMinutes = 12 * 60;
-                        break;
-                    case DayPeriod.Evening:
-                        totalMinutes = 18 * 60;
-                        break;
-                    case DayPeriod.Night:
-                        totalMinutes = 23 * 60;
-                        break;
-                    case DayPeriod.Midnight:
-                        totalMinutes = 2 * 60;
-                        break;
-                }
-            }
+            SetTimeOnDayPeriod();
 
             OnDayPeriodChange?.Invoke(currentDayPeriod);
+            OnTimeChange?.Invoke();
         }
 
         // ----------------------------------------------------- MULTI-STYLE GETTERS -----------------------------------------------------
@@ -264,6 +279,7 @@ namespace FlowKit.Sandbox
             currentDayPeriod = dayPeriod;
             totalMinutes = clampedHour * 60;
             OnDayPeriodChange?.Invoke(currentDayPeriod);
+            OnTimeChange?.Invoke();
         }
 
         /// <summary>
@@ -273,7 +289,9 @@ namespace FlowKit.Sandbox
         public void SetDayPeriod(DayPeriod dayPeriod)
         {
             currentDayPeriod = dayPeriod;
+            SetTimeOnDayPeriod();
             OnDayPeriodChange?.Invoke(currentDayPeriod);
+            OnTimeChange?.Invoke();
         }
     }
 }
