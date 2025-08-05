@@ -6,7 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.Networking;
 using TMPro;
 
-namespace FlowKit
+namespace FlowKit.Prefabs
 {
     public class OnlineClock : MonoBehaviour
     {

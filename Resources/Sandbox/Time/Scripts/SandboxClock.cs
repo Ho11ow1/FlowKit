@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
 
-namespace FlowKit.Sandbox
+namespace FlowKit.Prefabs
 {
     public class SandboxClock : MonoBehaviour
     {

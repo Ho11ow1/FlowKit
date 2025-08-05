@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace FlowKit.Sandbox
+namespace FlowKit.Prefabs
 {
     public class SandboxDateCycle : MonoBehaviour
     {

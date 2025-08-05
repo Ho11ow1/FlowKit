@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
 
-namespace FlowKit
+namespace FlowKit.Prefabs
 {
     public class Timer : MonoBehaviour
     {
