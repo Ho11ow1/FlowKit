@@ -161,7 +161,7 @@ namespace FlowKit.Prefabs
         ///   </item>
         /// </list>
         /// </summary>
-        /// <param name="minutes">Specifies the amount of minutes to pass</param>
+        /// <param Name="minutes">Specifies the amount of minutes to pass</param>
         public void AdvanceTime(int minutes)
         {
             if (!trackTime)
@@ -215,7 +215,7 @@ namespace FlowKit.Prefabs
         ///   </item>
         /// </list>
         /// </summary>
-        /// <param name="hour">Specifies the tracked hour to base DayPeriod off of | Range of 0 - 23</param>
+        /// <param Name="hour">Specifies the tracked hour to base DayPeriod off of | Range of 0 - 23</param>
         public DayPeriod GetDayPeriodByHour(int hour)
         {
             if (!trackTime)
@@ -262,7 +262,7 @@ namespace FlowKit.Prefabs
         ///   </item>
         /// </list>
         /// </summary>
-        /// <param name="hour">Specifies the hour to set the time to | Range of 0 - 23</param>
+        /// <param Name="hour">Specifies the hour to set the time to | Range of 0 - 23</param>
         public void SetDayPeriodByHour(int hour)
         {
             if (!trackTime)
@@ -285,7 +285,7 @@ namespace FlowKit.Prefabs
         /// <summary>
         /// Sets the DayPeriod directly.
         /// </summary>
-        /// <param name="dayPeriod">Specifies the DayPeriod to be set</param>
+        /// <param Name="dayPeriod">Specifies the DayPeriod to be set</param>
         public void SetDayPeriod(DayPeriod dayPeriod)
         {
             currentDayPeriod = dayPeriod;

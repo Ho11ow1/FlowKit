@@ -176,7 +176,7 @@ namespace FlowKit.Prefabs
         /// <summary>
         /// Sets the curremt timer value.
         /// </summary>
-        /// <param name="time">Specifies the Time in seconds</param>
+        /// <param Name="time">Specifies the Time in seconds</param>
         public void SetTime(float time)
         {
             this.time = Mathf.Max(0f, time);
@@ -207,7 +207,7 @@ namespace FlowKit.Prefabs
         /// <summary>
         /// Sets the maximum Time for the timer.
         /// </summary>
-        /// <param name="maxTime">Specifies the maximum Time in seconds</param>
+        /// <param Name="maxTime">Specifies the maximum Time in seconds</param>
         public void SetMaxTime(float maxTime)
         {
             this.maxTime = Mathf.Max(0f, maxTime);

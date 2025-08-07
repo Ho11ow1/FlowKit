@@ -87,7 +87,7 @@ namespace FlowKit.Prefabs
         ///   </item>
         /// </list>
         /// </summary>
-        /// <param name="days">Specifies the amount of days to advance by</param>
+        /// <param Name="days">Specifies the amount of days to advance by</param>
         public void AdvanceDays(int days)
         {
             if (days < 0)
@@ -116,7 +116,7 @@ namespace FlowKit.Prefabs
         /// <summary>
         /// Advances the week by a specified number of weeks.
         /// </summary>
-        /// <param name="weeks">Specifies the amount of weeks to advance by</param>
+        /// <param Name="weeks">Specifies the amount of weeks to advance by</param>
         public void AdvanceWeeks(int weeks)
         {
             if (weeks < 0)
@@ -144,7 +144,7 @@ namespace FlowKit.Prefabs
         ///   </item>
         /// </list>
         /// </summary>
-        /// <param name="index">Specifies the day index to set the current day to</param>
+        /// <param Name="index">Specifies the day index to set the current day to</param>
         public void SetDayByIndex(int index)
         {
             if (index < 0 || index > 6)
@@ -167,7 +167,7 @@ namespace FlowKit.Prefabs
         ///   </item>
         /// </list>
         /// </summary>
-        /// <param name="day">Specifies the day to be set</param>
+        /// <param Name="day">Specifies the day to be set</param>
         public void SetDay(DayOfWeek day)
         {
             this.day = day;
@@ -177,7 +177,7 @@ namespace FlowKit.Prefabs
         /// <summary>
         /// Sets the week number.
         /// </summary>
-        /// <param name="week">Specifies the week to be set</param>
+        /// <param Name="week">Specifies the week to be set</param>
         public void SetWeek(int week)
         {
             if (week < 0)
