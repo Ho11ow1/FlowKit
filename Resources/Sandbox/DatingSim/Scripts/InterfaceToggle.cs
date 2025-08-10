@@ -16,7 +16,7 @@ namespace FlowKit
 
         private void ToggleInterface()
         {
-            DatingInterface.SetActive(!DatingInterface.activeSelf);
+            DatingInterface.SetActive(!DatingInterface.activeInHierarchy);
         }
     }
 }
