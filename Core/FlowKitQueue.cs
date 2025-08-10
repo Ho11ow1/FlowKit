@@ -102,12 +102,12 @@ namespace FlowKit.Core
                 if (!_namedQueues.ContainsKey(name)) { break; }
 
                 var step = queue.Dequeue();
-                if (step.delay > 0f) 
+                if (step.Delay > 0f) 
                 { 
-                    yield return new WaitForSeconds(step.delay); 
+                    yield return new WaitForSeconds(step.Delay); 
                 }
 
-                step.action?.Invoke();
+                step.Action?.Invoke();
             }
 
             _runningQueues.Remove(name);
@@ -129,19 +129,13 @@ namespace FlowKit
 {
     public class AnimationStep
     {
-        public UnityAction action
-        {
-            get;
-        }
-        public float delay
-        {
-            get;
-        }
+        public UnityAction Action { get; private set; }
+        public float Delay { get; private set;}
 
         public AnimationStep(UnityAction action, float delay = 0f)
         {
-            this.action = action;
-            this.delay = delay;
+            Action = action;
+            Delay = delay;
         }
 
         /// <summary>

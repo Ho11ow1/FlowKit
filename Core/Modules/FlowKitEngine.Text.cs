@@ -48,7 +48,7 @@ namespace FlowKit
             /// </list>
             /// </summary>
             /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
-            /// <param name="delay">Time in seconds for the delay per character</param>
+            /// <param name="delay">Time in seconds for the Delay per character</param>
             public void TypeWriteWithDelay(int occurrence, float delay = FlowKitConstants.TypeWriter.PerCharacterDelay)
             {
                 occurrence -= 1;
