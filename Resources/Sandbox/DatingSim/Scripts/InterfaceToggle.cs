@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace FlowKit.Prefabs
+namespace FlowKit
 {
     public class InterfaceToggle : MonoBehaviour
     {
@@ -16,7 +16,7 @@ namespace FlowKit.Prefabs
 
         private void ToggleInterface()
         {
-            DatingInterface.SetActive(!DatingInterface.activeInHierarchy);
+            DatingInterface.SetActive(!DatingInterface.activeSelf);
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace FlowKit.Prefabs
+namespace FlowKit
 {
     [System.Serializable]
     public class CharacterData
@@ -18,7 +18,8 @@ namespace FlowKit.Prefabs
         public bool IsFavourite { get; private set; } = false;
         private int[] levelsArr = null;
         private int[] stageCounterArr = null;
-        public Dictionary<string, Quest> questDictionary = new Dictionary<string, Quest>();
+        public Dictionary<string, Quest> QuestMap { get; private set; } = new Dictionary<string, Quest>();
+        public Dictionary<string, GalleryItem> GalleryMap { get; private set; } = new Dictionary<string, GalleryItem>();
 
         private static event UnityAction OnLevelChange;
 
@@ -49,56 +50,111 @@ namespace FlowKit.Prefabs
 
             for (int i = 0; i < levelsArr.Length; i++)
             {
-                if (RelationshipLevel != levelsArr[i])
+                if (RelationshipLevel == levelsArr[i])
                 {
-                    continue;
+                    MaxRelationshipStage = stageCounterArr[i];
+                    return;
                 }
-                MaxRelationshipStage = stageCounterArr[i];
-                return;
             }
+
+            MaxRelationshipStage = 4; // Back to default if no match is found
         }
 
         // ----------------------------------------------------- QUEST METHODS -----------------------------------------------------
 
+        /// <summary>
+        /// Adds a quest to the quest map.
+        /// </summary>
+        /// <param name="quest">Specifies the quest to add</param>
         public void AddQuest(Quest quest)
         {
-            if (questDictionary.ContainsKey(quest.title))
+            if (QuestMap.ContainsKey(quest.Title))
             {
                 #if UNITY_EDITOR
-                Debug.LogWarning($"Quest '{quest.title}' already exists for character '{Name}'. It will not be added again.");
+                Debug.LogWarning($"Quest '{quest.Title}' already exists for character '{Name}'. It will not be added again.");
                 #endif
                 return;
             }
-            questDictionary.Add(quest.title, quest);
+            QuestMap.Add(quest.Title, quest);
         }
 
+        /// <summary>
+        /// Completes a quest identified by it's title
+        /// </summary>
+        /// <param name="questTitle">Specifies the title of the quest to complete</param>
         public void CompleteQuest(string questTitle)
         {
-            if (!questDictionary.ContainsKey(questTitle))
+            if (!QuestMap.ContainsKey(questTitle))
             {
                 #if UNITY_EDITOR
-                Debug.LogWarning($"Quest '{questTitle}' does not exist. It will not be completed");
+                Debug.LogWarning($"Quest '{questTitle}' does not exist for character {Name}. It will not be completed");
                 #endif
                 return;
             }
-            questDictionary[questTitle].isCompleted = true;
-            questDictionary[questTitle].isActive = false;
+            QuestMap[questTitle].IsCompleted = true;
+            QuestMap[questTitle].IsActive = false;
         }
 
+        /// <summary>
+        /// Activates a quest identified by it's title.
+        /// </summary>
+        /// <param name="questTitle">Specifies the title of the quest to activate</param>
         public void ActivateQuest(string questTitle)
         {
-            if (!questDictionary.ContainsKey(questTitle))
+            if (!QuestMap.ContainsKey(questTitle))
             {
                 #if UNITY_EDITOR
-                Debug.LogWarning($"Quest '{questTitle}' does not exist. It will not be activated");
+                Debug.LogWarning($"Quest '{questTitle}' does not exist for character {Name}. It will not be activated");
                 #endif
                 return;
             }
-            questDictionary[questTitle].isActive = true;
+            QuestMap[questTitle].IsActive = true;
+        }
+
+        // ----------------------------------------------------- GALLERY METHODS -----------------------------------------------------
+
+        /// <summary>
+        /// Adds a gallery item to the gallery.
+        /// </summary>
+        /// <param name="item">Specifies the gallery item to add</param>
+        public void AddGalleryItem(GalleryItem item)
+        {
+            if (GalleryMap.ContainsKey(item.Name))
+            {
+                #if UNITY_EDITOR
+                Debug.LogWarning($"Gallery Item '{item.Name}' already exists for character '{Name}'. It will not be added again.");
+                #endif
+                return;
+            }
+            GalleryMap.Add(item.Name, item);
+        }
+
+        /// <summary>
+        /// Unlocks a gallery item identified by it's name.
+        /// </summary>
+        /// <param name="itemName">Specifies the gallery item to be unlocked</param>
+        public void UnlockGalleryItem(string itemName)
+        {
+            if (!GalleryMap.ContainsKey(itemName))
+            {
+                #if UNITY_EDITOR
+                Debug.LogWarning($"Gallery Item '{itemName}' does not exist for character {Name}. It will not be unlocked");
+                #endif
+                return;
+            }
+            GalleryMap[itemName].IsUnlocked = true;
         }
 
         // ----------------------------------------------------- ADVANCE VALUE METHODS -----------------------------------------------------
 
+        /// <summary>
+        /// Advances the relationship stage by a specified number of stages.
+        /// <list type="bullet">"
+        ///     <item>
+        ///         <description>If relationship stage exceeds the max stage, advances level</description>
+        ///     </item>
+        /// </summary>
+        /// <param name="stages">Specifies the amount of stage to advance by</param>
         public void AdvanceStage(int stages)
         {
             if (stages <= 0)
@@ -111,18 +167,22 @@ namespace FlowKit.Prefabs
 
             RelationshipStage += stages;
 
-            while (RelationshipStage > MaxRelationshipStage)
+            while (RelationshipStage >= MaxRelationshipStage)
             {
+                int oldMaxStage = MaxRelationshipStage;
                 AdvanceLevel(1);
-                RelationshipStage -= MaxRelationshipStage;
+                RelationshipStage -= oldMaxStage;
             }
 
-            RelationshipStage += stages;
             #if UNITY_EDITOR
             Debug.Log($"Advanced relationship stage for {Name} by {stages}. New stage: {RelationshipStage}");
             #endif
         }
 
+        /// <summary>
+        /// Advances the relationship level by a specified number of levels.
+        /// </summary>
+        /// <param name="levels">Specifies the amount of levels to advance by</param>
         public void AdvanceLevel(int levels)
         {
             if (levels <= 0)
@@ -135,7 +195,7 @@ namespace FlowKit.Prefabs
 
             RelationshipLevel += levels;
             OnLevelChange?.Invoke();
-            if (RelationshipLevel > MaxRelationshipLevel)
+            if (RelationshipLevel >= MaxRelationshipLevel)
             {
                 RelationshipLevel = MaxRelationshipLevel;
                 #if UNITY_EDITOR
@@ -150,11 +210,19 @@ namespace FlowKit.Prefabs
 
         // ----------------------------------------------------- PERSONAL VALUE METHODS -----------------------------------------------------
 
+        /// <summary>
+        /// Toggles the IsFavourite flag.
+        /// </summary>
         public void ToggleFavourite()
         {
             IsFavourite = !IsFavourite;
         }
 
+        /// <summary>
+        /// Specifies the maximum relationship stage based on the provided levels and stages.
+        /// </summary>
+        /// <param name="levels">Specifies the levels at which stage amount should change</param>
+        /// <param name="stages">Specifies the amount of stages equivelant to the level</param>
         public void SetMaxStageBasedOnLevel(int[] levels, int[] stages)
         {
             if (levels == null || stages == null)
@@ -182,16 +250,30 @@ namespace FlowKit.Prefabs
     [System.Serializable]
     public class Quest
     {
-        public string title;
-        public string description;
-        public bool isCompleted;
-        public bool isActive;
+        public string Title;
+        public string Description;
+        public bool IsActive;
+        public bool IsCompleted = false;
+
         public Quest(string title, string description, bool isActive)
         {
-            this.title = title;
-            this.description = description;
-            this.isActive = isActive;
-            isCompleted = false;
+            Title = title;
+            Description = description;
+            IsActive = isActive;
+        }
+    }
+
+    [System.Serializable]
+    public class GalleryItem
+    {
+        public string Name;
+        public Sprite Sprite;
+        public bool IsUnlocked = false;
+
+        public GalleryItem(string name, Sprite sprite)
+        {
+            Name = name;
+            Sprite = sprite;
         }
     }
 }
