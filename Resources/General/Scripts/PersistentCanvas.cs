@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace FlowKit.Prefabs
+namespace FlowKit
 {
     public class PersistentCanvas : MonoBehaviour
     {
