@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
 
-namespace FlowKit.Prefabs
+namespace FlowKit
 {
     public class SandboxClock : MonoBehaviour
     {
@@ -157,7 +157,7 @@ namespace FlowKit.Prefabs
         /// Advances the time by a specified number of minutes.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>Does nothing if time tracking is disabled.</description>
+        ///     <Description>Does nothing if time tracking is disabled.</Description>
         ///   </item>
         /// </list>
         /// </summary>
@@ -188,7 +188,7 @@ namespace FlowKit.Prefabs
         /// Advances the current DayPeriod by one step.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>Additionaly modifies the time if time tracking is enabled</description>
+        ///     <Description>Additionaly modifies the time if time tracking is enabled</Description>
         ///   </item>
         /// </list>
         /// </summary>
@@ -208,10 +208,10 @@ namespace FlowKit.Prefabs
         /// Returns the current DayPeriod based on the tracked hour.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>If trackTime is false, it will return the currentDayPeriod without checking the hour.</description>
+        ///     <Description>If trackTime is false, it will return the currentDayPeriod without checking the hour.</Description>
         ///   </item>
         ///   <item>
-        ///     <description>Hour is clamped between 0 and 23</description>
+        ///     <Description>Hour is clamped between 0 and 23</Description>
         ///   </item>
         /// </list>
         /// </summary>
@@ -255,10 +255,10 @@ namespace FlowKit.Prefabs
         /// Sets the DayPeriod based on the current hour and updates the current hour.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>Does nothing if time tracking is false.</description>
+        ///     <Description>Does nothing if time tracking is false.</Description>
         ///   </item>
         ///   <item>
-        ///     <description>Hour is clamped between 0 and 23.</description>
+        ///     <Description>Hour is clamped between 0 and 23.</Description>
         ///   </item>
         /// </list>
         /// </summary>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace FlowKit.Prefabs
+namespace FlowKit
 {
     public class SandboxDateCycle : MonoBehaviour
     {
@@ -59,7 +59,7 @@ namespace FlowKit.Prefabs
         /// Advances the day by one.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>If the day changes from Sunday to Monday a OnWeekChange will occur</description>
+        ///     <Description>If the day changes from Sunday to Monday a OnWeekChange will occur</Description>
         ///   </item>
         /// </list>
         /// </summary>
@@ -83,7 +83,7 @@ namespace FlowKit.Prefabs
         /// Advances the day by a specified number of days.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>If the day changes from Sunday to Monday a OnWeekChange will occur</description>
+        ///     <Description>If the day changes from Sunday to Monday a OnWeekChange will occur</Description>
         ///   </item>
         /// </list>
         /// </summary>
@@ -140,7 +140,7 @@ namespace FlowKit.Prefabs
         /// Sets the day of the week based on the provided index.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>Does not change the week counter.</description>
+        ///     <Description>Does not change the week counter.</Description>
         ///   </item>
         /// </list>
         /// </summary>
@@ -163,7 +163,7 @@ namespace FlowKit.Prefabs
         /// Sets the day of the week based on the provided DayOfWeek enum.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>Does not change the week counter.</description>
+        ///     <Description>Does not change the week counter.</Description>
         ///   </item>
         /// </list>
         /// </summary>
