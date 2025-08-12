@@ -484,7 +484,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   contentTabController: {fileID: 7953711346502078722}
-  characterButtonPrefab: {fileID: 5416048296198906697, guid: f9a4f86fafcf06e46b987f4f83dfb992, type: 3}
+  characterButtonPrefab: {fileID: 7453074236199445105, guid: e3629993fc9ce424fa1c08d82744d928, type: 3}
   nameText: {fileID: 1094812252984454399}
   quoteText: {fileID: 3027179316518897854}
   relationshipLevelText: {fileID: 1260532954631041331}
@@ -4781,7 +4781,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcdaa6a9ca6a72f4d99322dc197aef54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  galleryItemPrefab: {fileID: 1216126037753326927, guid: 4a429f9deb2194b46b4f0da669d64e77, type: 3}
+  galleryItemPrefab: {fileID: 2331348780381058738, guid: 4a429f9deb2194b46b4f0da669d64e77, type: 3}
   QuestPanel: {fileID: 4833966301517000614}
   GalleryPanel: {fileID: 4081525387324605111}
   TipsPanel: {fileID: 7323189230192978092}
