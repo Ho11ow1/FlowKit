@@ -3,18 +3,29 @@
 
 ■ Recommended usage
 --------------
-○ SandboxClock (Canvas must have DontDestroyOnLoad | Using PersistentCanvas prefab recommended)
-  ・ Sandbox / Visual novel style time management with UI display
-○ SandboxClockNV (Automatically set to DontDestroyOnLoad)
-  ・ Works exactly the same as SandboxClock but without a visual representation
+○ General
+  ・ PersistentCanvas
+    ・ Simple persistent canvas which will never get destroyed
+  ・ Timer
+    ・ Time-restricted gameplay segments | Puzzles / Survival segments
+  ・ OnlineClock
+    ・ Specific time events | world bosses / world resets
 
-○ PersistentCanvas
-  ・ Simple persistent canvas which will never get destroyed
-
-○ OnlineClock
-  ・ Specific time events | world bosses / world resets
-○ Timer
-  ・ Time-restricted gameplay segments | Puzzles / Survival
+○ Sandbox
+  ○ DatingSim
+    ・ SandboxDatingInterface
+      ・ Interface to display character data (Character data can be inherited and expanded)
+    ・ SandboxDatingToggle
+      ・ Provides a simple toggle button for displaying the SandboxDatingInterface or your own
+    ・ SandboxDatingInterfaceSystem
+      ・ Combines the Interface and Toggle for ease of use
+  ○ Time
+    ・ SandboxClock
+      ・ Time management with UI display
+    ・ SandboxClockNV
+      ・ Works exactly the same as SandboxClock but without a visual representation
+    ・ SandboxDateCycle
+      ・ Day / Week time managament (Best combined with a SandboxClock for time managed events)
 
 ■ Licensing
 --------------
