@@ -176,7 +176,7 @@ namespace FlowKit
         /// <summary>
         /// Sets the curremt timer value.
         /// </summary>
-        /// <param name="time">Specifies the Time in seconds</param>
+        /// <param Name="time">Specifies the Time in seconds</param>
         public void SetTime(float time)
         {
             this.time = Mathf.Max(0f, time);
@@ -207,7 +207,7 @@ namespace FlowKit
         /// <summary>
         /// Sets the maximum Time for the timer.
         /// </summary>
-        /// <param name="maxTime">Specifies the maximum Time in seconds</param>
+        /// <param Name="maxTime">Specifies the maximum Time in seconds</param>
         public void SetMaxTime(float maxTime)
         {
             this.maxTime = Mathf.Max(0f, maxTime);
@@ -217,10 +217,10 @@ namespace FlowKit
         /// Returns the remaining Time in seconds based on the timer mode.
         /// <list type="bullet">
         ///   <item>
-        ///     <description><b>CountDown:</b>: Returns the current Time</description>
+        ///     <Description><b>CountDown:</b>: Returns the current Time</Description>
         ///   </item>
         ///   <item>
-        ///     <description><b>StopWatch:</b>: Returns maxTime - currentTime, or float.MaxValue if maxTime is less than or equal to 0</description>
+        ///     <Description><b>StopWatch:</b>: Returns maxTime - currentTime, or float.MaxValue if maxTime is less than or equal to 0</Description>
         ///   </item>
         /// </list>
         /// </summary>
@@ -250,10 +250,10 @@ namespace FlowKit
         /// Returns the timer progress as a percentage (0-100).
         /// <list type="bullet">
         ///   <item>
-        ///     <description><b>CountDown:</b>: Progress from 0% (full Time remaining) to 100% (timer finished)</description>
+        ///     <Description><b>CountDown:</b>: Progress from 0% (full Time remaining) to 100% (timer finished)</Description>
         ///   </item>
         ///   <item>
-        ///     <description><b>StopWatch:</b>: Progress from 0% (just started) to 100% (maxTime reached)</description>
+        ///     <Description><b>StopWatch:</b>: Progress from 0% (just started) to 100% (maxTime reached)</Description>
         ///   </item>
         /// </list>
         /// Returns 0% if no maxTime is set.

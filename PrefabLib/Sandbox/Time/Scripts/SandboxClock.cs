@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
 
-namespace FlowKit.Sandbox
+namespace FlowKit
 {
     public class SandboxClock : MonoBehaviour
     {
@@ -157,11 +157,11 @@ namespace FlowKit.Sandbox
         /// Advances the time by a specified number of minutes.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>Does nothing if time tracking is disabled.</description>
+        ///     <Description>Does nothing if time tracking is disabled.</Description>
         ///   </item>
         /// </list>
         /// </summary>
-        /// <param name="minutes">Specifies the amount of minutes to pass</param>
+        /// <param Name="minutes">Specifies the amount of minutes to pass</param>
         public void AdvanceTime(int minutes)
         {
             if (!trackTime)
@@ -188,7 +188,7 @@ namespace FlowKit.Sandbox
         /// Advances the current DayPeriod by one step.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>Additionaly modifies the time if time tracking is enabled</description>
+        ///     <Description>Additionaly modifies the time if time tracking is enabled</Description>
         ///   </item>
         /// </list>
         /// </summary>
@@ -208,14 +208,14 @@ namespace FlowKit.Sandbox
         /// Returns the current DayPeriod based on the tracked hour.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>If trackTime is false, it will return the currentDayPeriod without checking the hour.</description>
+        ///     <Description>If trackTime is false, it will return the currentDayPeriod without checking the hour.</Description>
         ///   </item>
         ///   <item>
-        ///     <description>Hour is clamped between 0 and 23</description>
+        ///     <Description>Hour is clamped between 0 and 23</Description>
         ///   </item>
         /// </list>
         /// </summary>
-        /// <param name="hour">Specifies the tracked hour to base DayPeriod off of | Range of 0 - 23</param>
+        /// <param Name="hour">Specifies the tracked hour to base DayPeriod off of | Range of 0 - 23</param>
         public DayPeriod GetDayPeriodByHour(int hour)
         {
             if (!trackTime)
@@ -255,14 +255,14 @@ namespace FlowKit.Sandbox
         /// Sets the DayPeriod based on the current hour and updates the current hour.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>Does nothing if time tracking is false.</description>
+        ///     <Description>Does nothing if time tracking is false.</Description>
         ///   </item>
         ///   <item>
-        ///     <description>Hour is clamped between 0 and 23.</description>
+        ///     <Description>Hour is clamped between 0 and 23.</Description>
         ///   </item>
         /// </list>
         /// </summary>
-        /// <param name="hour">Specifies the hour to set the time to | Range of 0 - 23</param>
+        /// <param Name="hour">Specifies the hour to set the time to | Range of 0 - 23</param>
         public void SetDayPeriodByHour(int hour)
         {
             if (!trackTime)
@@ -285,7 +285,7 @@ namespace FlowKit.Sandbox
         /// <summary>
         /// Sets the DayPeriod directly.
         /// </summary>
-        /// <param name="dayPeriod">Specifies the DayPeriod to be set</param>
+        /// <param Name="dayPeriod">Specifies the DayPeriod to be set</param>
         public void SetDayPeriod(DayPeriod dayPeriod)
         {
             currentDayPeriod = dayPeriod;

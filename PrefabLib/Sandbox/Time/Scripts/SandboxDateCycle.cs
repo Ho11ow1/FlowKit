@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace FlowKit.Sandbox
+namespace FlowKit
 {
     public class SandboxDateCycle : MonoBehaviour
     {
@@ -59,7 +59,7 @@ namespace FlowKit.Sandbox
         /// Advances the day by one.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>If the day changes from Sunday to Monday a OnWeekChange will occur</description>
+        ///     <Description>If the day changes from Sunday to Monday a OnWeekChange will occur</Description>
         ///   </item>
         /// </list>
         /// </summary>
@@ -83,11 +83,11 @@ namespace FlowKit.Sandbox
         /// Advances the day by a specified number of days.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>If the day changes from Sunday to Monday a OnWeekChange will occur</description>
+        ///     <Description>If the day changes from Sunday to Monday a OnWeekChange will occur</Description>
         ///   </item>
         /// </list>
         /// </summary>
-        /// <param name="days">Specifies the amount of days to advance by</param>
+        /// <param Name="days">Specifies the amount of days to advance by</param>
         public void AdvanceDays(int days)
         {
             if (days < 0)
@@ -116,7 +116,7 @@ namespace FlowKit.Sandbox
         /// <summary>
         /// Advances the week by a specified number of weeks.
         /// </summary>
-        /// <param name="weeks">Specifies the amount of weeks to advance by</param>
+        /// <param Name="weeks">Specifies the amount of weeks to advance by</param>
         public void AdvanceWeeks(int weeks)
         {
             if (weeks < 0)
@@ -140,11 +140,11 @@ namespace FlowKit.Sandbox
         /// Sets the day of the week based on the provided index.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>Does not change the week counter.</description>
+        ///     <Description>Does not change the week counter.</Description>
         ///   </item>
         /// </list>
         /// </summary>
-        /// <param name="index">Specifies the day index to set the current day to</param>
+        /// <param Name="index">Specifies the day index to set the current day to</param>
         public void SetDayByIndex(int index)
         {
             if (index < 0 || index > 6)
@@ -163,11 +163,11 @@ namespace FlowKit.Sandbox
         /// Sets the day of the week based on the provided DayOfWeek enum.
         /// <list type="bullet">
         ///   <item>
-        ///     <description>Does not change the week counter.</description>
+        ///     <Description>Does not change the week counter.</Description>
         ///   </item>
         /// </list>
         /// </summary>
-        /// <param name="day">Specifies the day to be set</param>
+        /// <param Name="day">Specifies the day to be set</param>
         public void SetDay(DayOfWeek day)
         {
             this.day = day;
@@ -177,7 +177,7 @@ namespace FlowKit.Sandbox
         /// <summary>
         /// Sets the week number.
         /// </summary>
-        /// <param name="week">Specifies the week to be set</param>
+        /// <param Name="week">Specifies the week to be set</param>
         public void SetWeek(int week)
         {
             if (week < 0)
