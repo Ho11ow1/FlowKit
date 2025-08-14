@@ -88,7 +88,7 @@ namespace FlowKit
             /// <param name="easing">Specifies the easing method the scaling should use</param>
             /// <param name="duration">Time in seconds the scaling animation should take</param>
             /// <param name="delay">Time in seconds to wait before starting the scaling</param>
-            public void Up(AnimationTarget target, int occurrence, float multiplier, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+            public void ScaleUp(AnimationTarget target, int occurrence, float multiplier, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
             {
                 occurrence -= 1;
                 _engine.scalingImpl.ScaleUp(target, occurrence, multiplier, easing, duration, delay);
@@ -111,7 +111,7 @@ namespace FlowKit
             /// <param name="easing">Specifies the easing method the scaling should use</param>
             /// <param name="duration">Time in seconds the scaling animation should take</param>
             /// <param name="delay">Time in seconds to wait before starting the scaling</param>
-            public void Down(AnimationTarget target, int occurrence, float multiplier, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+            public void ScaleDown(AnimationTarget target, int occurrence, float multiplier, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
             {
                 occurrence -= 1;
                 _engine.scalingImpl.ScaleDown(target, occurrence, multiplier, easing, duration, delay);

@@ -12,7 +12,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * --------------------------------------------------------
-* FlowKit - Transition API Property
+* FlowKit - Movement API Property
 * Created by Hollow1
 * 
 * Provides a single location for all position specific operations.
@@ -29,7 +29,7 @@ namespace FlowKit
 {
     public partial class FlowKitEngine
     {
-        public TransitionModule Transition { get; private set; }
+        public TransitionModule Movement { get; private set; }
 
         public class TransitionModule
         {
@@ -90,7 +90,7 @@ namespace FlowKit
             /// <param name="easing">Specifies the easing method the transition should use</param>
             /// <param name="duration">Time in seconds for the transition duration</param>
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
-            public void FromTop(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+            public void MoveFromTop(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
             {
                 occurrence -= 1;
                 _engine.transitionImpl.TransitionFromTop(target, occurrence, offset, easing, duration, delay);
@@ -113,7 +113,7 @@ namespace FlowKit
             /// <param name="easing">Specifies the easing method the transition should use</param>
             /// <param name="duration">Time in seconds for the transition duration</param>
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
-            public void FromBottom(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+            public void MoveFromBottom(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
             {
                 occurrence -= 1;
                 _engine.transitionImpl.TransitionFromBottom(target, occurrence, offset, easing, duration, delay);
@@ -136,7 +136,7 @@ namespace FlowKit
             /// <param name="easing">Specifies the easing method the transition should use</param>
             /// <param name="duration">Time in seconds for the transition duration</param>
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
-            public void FromLeft(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+            public void MoveFromLeft(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
             {
                 occurrence -= 1;
                 _engine.transitionImpl.TransitionFromLeft(target, occurrence, offset, easing, duration, delay);
@@ -159,7 +159,7 @@ namespace FlowKit
             /// <param name="easing">Specifies the easing method the transition should use</param>
             /// <param name="duration">Time in seconds for the transition duration</param>
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
-            public void FromRight(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+            public void MoveFromRight(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
             {
                 occurrence -= 1;
                 _engine.transitionImpl.TransitionFromRight(target, occurrence, offset, easing, duration, delay);
@@ -182,7 +182,7 @@ namespace FlowKit
             /// <param name="easing">Specifies the easing method the transition should use</param>
             /// <param name="duration">Time in seconds for the transition duration</param>
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
-            public void FromPosition(AnimationTarget target, int occurrence, Vector2 offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+            public void MoveFromPosition(AnimationTarget target, int occurrence, Vector2 offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
             {
                 occurrence -= 1;
                 _engine.transitionImpl.TransitionFromPosition(target, occurrence, offset, easing, duration, delay);
@@ -205,7 +205,7 @@ namespace FlowKit
             /// <param name="easing">Specifies the easing method the transition should use</param>
             /// <param name="duration">Time in seconds for the transition duration</param>
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
-            public void ToTop(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+            public void MoveToTop(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
             {
                 occurrence -= 1;
                 _engine.transitionImpl.TransitionToTop(target, occurrence, offset, easing, duration, delay);
@@ -228,7 +228,7 @@ namespace FlowKit
             /// <param name="easing">Specifies the easing method the transition should use</param>
             /// <param name="duration">Time in seconds for the transition duration</param>
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
-            public void ToBottom(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+            public void MoveToBottom(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
             {
                 occurrence -= 1;
                 _engine.transitionImpl.TransitionToBottom(target, occurrence, offset, easing, duration, delay);
@@ -251,7 +251,7 @@ namespace FlowKit
             /// <param name="easing">Specifies the easing method the transition should use</param>
             /// <param name="duration">Time in seconds for the transition duration</param>
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
-            public void ToLeft(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+            public void MoveToLeft(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
             {
                 occurrence -= 1;
                 _engine.transitionImpl.TransitionToLeft(target, occurrence, offset, easing, duration, delay);
@@ -274,7 +274,7 @@ namespace FlowKit
             /// <param name="easing">Specifies the easing method the transition should use</param>
             /// <param name="duration">Time in seconds for the transition duration</param>
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
-            public void ToRight(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+            public void MoveToRight(AnimationTarget target, int occurrence, float offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
             {
                 occurrence -= 1;
                 _engine.transitionImpl.TransitionToRight(target, occurrence, offset, easing, duration, delay);
@@ -297,7 +297,7 @@ namespace FlowKit
             /// <param name="easing">Specifies the easing method the transition should use</param>
             /// <param name="duration">Time in seconds for the transition duration</param>
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
-            public void ToPosition(AnimationTarget target, int occurrence, Vector2 offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+            public void MoveToPosition(AnimationTarget target, int occurrence, Vector2 offset, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
             {
                 occurrence -= 1;
                 _engine.transitionImpl.TransitionToPosition(target, occurrence, offset, easing, duration, delay);

@@ -27,7 +27,7 @@ namespace FlowKit
 {
     public partial class FlowKitEngine
     {
-        public RotateModule Rotate { get; private set; }
+        public RotateModule Rotation { get; private set; }
 
         public class RotateModule
         {
