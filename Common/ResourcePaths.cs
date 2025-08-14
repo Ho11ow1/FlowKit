@@ -23,13 +23,12 @@ namespace FlowKit.Common
 
         public static class Portraits
         {
-            public const string Willow1 = "Sprites/Portraits/Willow/Willow1";
+            
         }
 
         public static class Gallery
         {
             public const string Locked = "Sprites/Gallery/Locked";
-            public const string Willow1 = "Sprites/Gallery/Willow/Willow1";
         }
     }
 }
