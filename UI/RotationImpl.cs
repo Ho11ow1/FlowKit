@@ -129,6 +129,33 @@ namespace FlowKit.UI
             }
         }
 
+        public void RotationForever(AnimationTarget target, int occurrence, float dps, float delay)
+        {
+            switch (target)
+            {
+                case AnimationTarget.Panel:
+                    if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
+
+                    _monoBehaviour.StartCoroutine(RotateUiForever(_panelTransform, dps, delay));
+                    break;
+                case AnimationTarget.Text:
+                    if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
+
+                    _monoBehaviour.StartCoroutine(RotateUiForever(_textComponent[occurrence].rectTransform, dps, delay));
+                    break;
+                case AnimationTarget.Image:
+                    if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
+
+                    _monoBehaviour.StartCoroutine(RotateUiForever(_imageComponent[occurrence].rectTransform, dps, delay));
+                    break;
+                case AnimationTarget.Button:
+                    if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
+
+                    _monoBehaviour.StartCoroutine(RotateUiForever((RectTransform)_buttonComponent[occurrence].transform, dps, delay));
+                    break;
+            }
+        }
+
         public void Reset(AnimationTarget target, int occurrence, GameObject gameObject)
         {
             switch (target)
@@ -206,6 +233,21 @@ namespace FlowKit.UI
 
             component.localRotation = targetRotation;
             FlowKitEvents.InvokeRotateEnd();
+        }
+
+        private IEnumerator RotateUiForever(RectTransform component, float dps, float delay)
+        {
+            if (delay > 0) { yield return new WaitForSeconds(delay); }
+
+            FlowKitEvents.InvokeRotateStart();
+
+            float angle = 0f;
+            while (true)
+            {
+                angle += dps * Time.deltaTime;
+                component.localRotation = Quaternion.Euler(0, 0, angle);
+                yield return null;
+            }
         }
 
         // ----------------------------------------------------- PRIVATE UTILITIES -----------------------------------------------------

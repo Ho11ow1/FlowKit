@@ -93,6 +93,24 @@ namespace FlowKit
                 occurrence -= 1;
                 _engine.rotateImpl.Rotation(target, occurrence, degrees, easing, duration, delay);
             }
+
+            /// <summary>
+            /// Rotates the target UI element forever.
+            /// <list type="bullet">
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
+            /// </list>
+            /// </summary>
+            /// <param name="target">Target component to rotate (Panel, Text, Image, Button)</param>
+            /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
+            /// <param name="degreesPerSecond">Degrees the rotation should rotate every second, positive values go counter-clockwise, negative clockwise</param>
+            /// <param name="delay">Time in seconds to wait before starting the transition</param>
+            public void RotateForever(AnimationTarget target, int occurrence, float degreesPerSecond, float delay = 0f)
+            {
+                occurrence -= 1;
+                _engine.rotateImpl.RotationForever(target, occurrence, degreesPerSecond, delay);
+            }
         }
     }
 }
