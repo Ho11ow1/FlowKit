@@ -34,13 +34,13 @@ namespace FlowKit.UI
     [AddComponentMenu("")]
     internal class RotationImpl
     {
+        private readonly MonoBehaviour _monoBehaviour;
+        private readonly RectTransform _panelTransform;
         private readonly TextMeshProUGUI[] _textComponent;
         private readonly Image[] _imageComponent;
         private readonly Button[] _buttonComponent;
-        private readonly RectTransform _panelTransform;
-        private readonly MonoBehaviour _monoBehaviour;
 
-        private readonly List<Utils.AutoIncreaseList<Quaternion>> originalRotation = new List<Utils.AutoIncreaseList<Quaternion>>()
+        private readonly List<Utils.AutoIncreaseList<Quaternion>> _originalRotation = new List<Utils.AutoIncreaseList<Quaternion>>()
         {
             new Utils.AutoIncreaseList<Quaternion>(),
             new Utils.AutoIncreaseList<Quaternion>(),
@@ -48,7 +48,7 @@ namespace FlowKit.UI
             new Utils.AutoIncreaseList<Quaternion>()
         };
 
-        private readonly List<Utils.AutoIncreaseList<bool>> storedRotation = new List<Utils.AutoIncreaseList<bool>>()
+        private readonly List<Utils.AutoIncreaseList<bool>> _storedRotation = new List<Utils.AutoIncreaseList<bool>>()
         {
             new Utils.AutoIncreaseList<bool>(),
             new Utils.AutoIncreaseList<bool>(),
@@ -102,29 +102,80 @@ namespace FlowKit.UI
             }
         }
 
-        public void Rotation(AnimationTarget target, int occurrence, float degrees, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+        public void Reset(AnimationTarget target, int occurrence, GameObject gameObject)
+        {
+            switch (target)
+            {
+                case AnimationTarget.Panel:
+                    if (!_storedRotation[FlowKitConstants.PanelIndex][0])
+                    {
+                        #if UNITY_EDITOR
+                        Debug.LogError($"No saved rotation found for Panel: [{gameObject.name}]");
+                        #endif
+                        return;
+                    }
+
+                    _panelTransform.localRotation = _originalRotation[FlowKitConstants.PanelIndex][0];
+                    break;
+                case AnimationTarget.Text:
+                    if (!_storedRotation[FlowKitConstants.TextIndex][occurrence])
+                    {
+                        #if UNITY_EDITOR
+                        Debug.LogError($"No saved rotation found for Text component child. Panel: [{gameObject.name}]");
+                        #endif
+                        return;
+                    }
+
+                    _textComponent[occurrence].rectTransform.localRotation = _originalRotation[FlowKitConstants.TextIndex][occurrence];
+                    break;
+                case AnimationTarget.Image:
+                    if (!_storedRotation[FlowKitConstants.ImageIndex][occurrence])
+                    {
+                        #if UNITY_EDITOR
+                        Debug.LogError($"No saved rotation found for Image component child. Panel: [{gameObject.name}]");
+                        #endif
+                        return;
+                    }
+
+                    _imageComponent[occurrence].rectTransform.localRotation = _originalRotation[FlowKitConstants.ImageIndex][occurrence];
+                    break;
+                case AnimationTarget.Button:
+                    if (!_storedRotation[FlowKitConstants.ButtonIndex][occurrence])
+                    {
+                        #if UNITY_EDITOR
+                        Debug.LogError($"No saved rotation found for Button component child. Panel: [{gameObject.name}]");
+                        #endif
+                        return;
+                    }
+
+                    ((RectTransform)_buttonComponent[occurrence].transform).localRotation = _originalRotation[FlowKitConstants.ButtonIndex][occurrence];
+                    break;
+            }
+        }
+
+        public void Rotation(AnimationTarget target, int occurrence, float degrees, float duration, EasingType easing, float delay = 0f)
         {
             switch (target)
             {
                 case AnimationTarget.Panel:
                     if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
 
-                    _monoBehaviour.StartCoroutine(RotateUi(_panelTransform, occurrence, degrees, duration, delay, easing));
+                    _monoBehaviour.StartCoroutine(RotateUi(_panelTransform, occurrence, degrees, duration, easing, delay));
                     break;
                 case AnimationTarget.Text:
                     if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(RotateUi(_textComponent[occurrence].rectTransform, occurrence, degrees, duration, delay, easing));
+                    _monoBehaviour.StartCoroutine(RotateUi(_textComponent[occurrence].rectTransform, occurrence, degrees, duration, easing, delay));
                     break;
                 case AnimationTarget.Image:
                     if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(RotateUi(_imageComponent[occurrence].rectTransform, occurrence, degrees, duration, delay, easing));
+                    _monoBehaviour.StartCoroutine(RotateUi(_imageComponent[occurrence].rectTransform, occurrence, degrees, duration, easing, delay));
                     break;
                 case AnimationTarget.Button:
                     if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(RotateUi((RectTransform)_buttonComponent[occurrence].transform, occurrence, degrees, duration, delay, easing));
+                    _monoBehaviour.StartCoroutine(RotateUi((RectTransform)_buttonComponent[occurrence].transform, occurrence, degrees, duration, easing, delay));
                     break;
             }
         }
@@ -156,60 +207,9 @@ namespace FlowKit.UI
             }
         }
 
-        public void Reset(AnimationTarget target, int occurrence, GameObject gameObject)
-        {
-            switch (target)
-            {
-                case AnimationTarget.Panel:
-                    if (!storedRotation[FlowKitConstants.PanelIndex][0]) 
-                    {
-                        #if UNITY_EDITOR
-                        Debug.LogError($"No saved rotation found for Panel: [{gameObject.name}]");
-                        #endif
-                        return;
-                    }
-
-                    _panelTransform.localRotation = originalRotation[FlowKitConstants.PanelIndex][0];
-                    break;
-                case AnimationTarget.Text:
-                    if (!storedRotation[FlowKitConstants.TextIndex][occurrence]) 
-                    { 
-                        #if UNITY_EDITOR
-                        Debug.LogError($"No saved rotation found for Text component child. Panel: [{gameObject.name}]");
-                        #endif
-                        return;
-                    }
-
-                    _textComponent[occurrence].rectTransform.localRotation = originalRotation[FlowKitConstants.TextIndex][occurrence];
-                    break;
-                case AnimationTarget.Image:
-                    if (!storedRotation[FlowKitConstants.ImageIndex][occurrence]) 
-                    { 
-                        #if UNITY_EDITOR
-                        Debug.LogError($"No saved rotation found for Image component child. Panel: [{gameObject.name}]");
-                        #endif
-                        return;
-                    }
-
-                    _imageComponent[occurrence].rectTransform.localRotation = originalRotation[FlowKitConstants.ImageIndex][occurrence];
-                    break;
-                case AnimationTarget.Button:
-                    if (!storedRotation[FlowKitConstants.ButtonIndex][occurrence]) 
-                    { 
-                        #if UNITY_EDITOR
-                        Debug.LogError($"No saved rotation found for Button component child. Panel: [{gameObject.name}]");
-                        #endif
-                        return;
-                    }
-
-                    ((RectTransform)_buttonComponent[occurrence].transform).localRotation = originalRotation[FlowKitConstants.ButtonIndex][occurrence];
-                    break;
-            }
-        }
-
         // ----------------------------------------------------- ROTATE ANIMATION -----------------------------------------------------
 
-        private IEnumerator RotateUi(RectTransform component, int occurrence, float degrees, float duration, float delay, EasingType easing)
+        private IEnumerator RotateUi(RectTransform component, int occurrence, float degrees, float duration, EasingType easing, float delay)
         {
             GetStartRotation(component, occurrence, out Quaternion startRotation); 
             Quaternion targetRotation;
@@ -273,37 +273,37 @@ namespace FlowKit.UI
         {
             if (component == _panelTransform.gameObject)
             {
-                if (!storedRotation[FlowKitConstants.PanelIndex][0])
+                if (!_storedRotation[FlowKitConstants.PanelIndex][0])
                 {
-                    originalRotation[FlowKitConstants.PanelIndex][0] = _panelTransform.localRotation;
-                    storedRotation[FlowKitConstants.PanelIndex][0] = true;
+                    _originalRotation[FlowKitConstants.PanelIndex][0] = _panelTransform.localRotation;
+                    _storedRotation[FlowKitConstants.PanelIndex][0] = true;
                 }
                 return;
             }
             else if (component == _textComponent[occurrence].gameObject)
             {
-                if (!storedRotation[FlowKitConstants.TextIndex][occurrence])
+                if (!_storedRotation[FlowKitConstants.TextIndex][occurrence])
                 {
-                    originalRotation[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].rectTransform.localRotation;
-                    storedRotation[FlowKitConstants.TextIndex][occurrence] = true;
+                    _originalRotation[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].rectTransform.localRotation;
+                    _storedRotation[FlowKitConstants.TextIndex][occurrence] = true;
                 }
                 return;
             }
             else if (component == _imageComponent[occurrence].gameObject)
             {
-                if (!storedRotation[FlowKitConstants.ImageIndex][occurrence])
+                if (!_storedRotation[FlowKitConstants.ImageIndex][occurrence])
                 {
-                    originalRotation[FlowKitConstants.ImageIndex][occurrence] = _imageComponent[occurrence].rectTransform.localRotation;
-                    storedRotation[FlowKitConstants.ImageIndex][occurrence] = true;
+                    _originalRotation[FlowKitConstants.ImageIndex][occurrence] = _imageComponent[occurrence].rectTransform.localRotation;
+                    _storedRotation[FlowKitConstants.ImageIndex][occurrence] = true;
                 }
                 return;
             }
             else if (component == _buttonComponent[occurrence].gameObject)
             {
-                if (!storedRotation[FlowKitConstants.ButtonIndex][occurrence])
+                if (!_storedRotation[FlowKitConstants.ButtonIndex][occurrence])
                 {
-                    originalRotation[FlowKitConstants.ButtonIndex][occurrence] = ((RectTransform)_buttonComponent[occurrence].transform).localRotation;
-                    storedRotation[FlowKitConstants.ButtonIndex][occurrence] = true;
+                    _originalRotation[FlowKitConstants.ButtonIndex][occurrence] = ((RectTransform)_buttonComponent[occurrence].transform).localRotation;
+                    _storedRotation[FlowKitConstants.ButtonIndex][occurrence] = true;
                 }
                 return;
             }
@@ -315,7 +315,7 @@ namespace FlowKit.UI
 
             if (component == _panelTransform)
             {
-                if (!storedRotation[FlowKitConstants.PanelIndex][0])
+                if (!_storedRotation[FlowKitConstants.PanelIndex][0])
                 {
                     SaveRotation(_panelTransform.gameObject, 0);
                 }
@@ -323,7 +323,7 @@ namespace FlowKit.UI
             }
             else if (component == _textComponent[occurrence].rectTransform)
             {
-                if (!storedRotation[FlowKitConstants.TextIndex][occurrence])
+                if (!_storedRotation[FlowKitConstants.TextIndex][occurrence])
                 {
                     SaveRotation(_textComponent[occurrence].gameObject, occurrence);
                 }
@@ -331,7 +331,7 @@ namespace FlowKit.UI
             }
             else if (component == _imageComponent[occurrence].rectTransform)
             {
-                if (!storedRotation[FlowKitConstants.ImageIndex][occurrence])
+                if (!_storedRotation[FlowKitConstants.ImageIndex][occurrence])
                 {
                     SaveRotation(_imageComponent[occurrence].gameObject, occurrence);
                 }
@@ -339,7 +339,7 @@ namespace FlowKit.UI
             }
             else if (component == (RectTransform)_buttonComponent[occurrence].transform)
             {
-                if (!storedRotation[FlowKitConstants.ButtonIndex][occurrence])
+                if (!_storedRotation[FlowKitConstants.ButtonIndex][occurrence])
                 {
                     SaveRotation(_buttonComponent[occurrence].gameObject, occurrence);
                 }

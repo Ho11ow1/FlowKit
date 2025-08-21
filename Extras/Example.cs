@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Introduces the core Animation functionality and Queue system
-using FlowKit.Core;
+using FlowKit;
 // Introduces common tweening types and utilities
 using FlowKit.Common;
 
@@ -44,7 +44,7 @@ namespace FlowKit.Extras
         private void OptionsQueue()
         {
             // No need for a seperate function here since these are simple animations
-            _titleFK.Movement.MoveFromTop(AnimationTarget.Text, 1, 650, EasingType.EaseIn, 2f);
+            _titleFK.Movement.MoveFromTop(AnimationTarget.Text, 1, 650, 2f, EasingType.EaseIn);
             _disclaimerFK.Text.TypeWriteWithDuration(1, 3f);
 
             _optionsFK.Queue(new AnimationStep[]
@@ -60,29 +60,29 @@ namespace FlowKit.Extras
                 AnimationStep.Call(() => _optionsFK.Visibility.SetVisibility(AnimationTarget.Text, 4, false)),
                 AnimationStep.Wait(0.5f),
 
-                // Start transitioning in the buttons and make them visible
-                AnimationStep.Call(() => _optionsFK.Movement.MoveFromLeft(AnimationTarget.Button, 1, 650, EasingType.EaseIn, 2f)),
+                // Start transitioning in the ButtonsArr and make them visible
+                AnimationStep.Call(() => _optionsFK.Movement.MoveFromLeft(AnimationTarget.Button, 1, 650, 2f, EasingType.EaseIn)),
                 AnimationStep.Call(() => _optionsFK.Visibility.SetVisibility(AnimationTarget.Button, 1, true)),
                 AnimationStep.Call(() => _optionsFK.Visibility.SetVisibility(AnimationTarget.Text, 1, true)),
                 // Delay before animating the next button
                 AnimationStep.Wait(1.5f),
 
                 // Alternate direction for visual interest
-                AnimationStep.Call(() => _optionsFK.Movement.MoveFromRight(AnimationTarget.Button, 2, 650, EasingType.EaseIn, 2f)),
+                AnimationStep.Call(() => _optionsFK.Movement.MoveFromRight(AnimationTarget.Button, 2, 650, 2f, EasingType.EaseIn)),
                 AnimationStep.Call(() => _optionsFK.Visibility.SetVisibility(AnimationTarget.Button, 2, true)),
                 AnimationStep.Call(() => _optionsFK.Visibility.SetVisibility(AnimationTarget.Text, 2, true)),
                 // Delay before animating the next button
                 AnimationStep.Wait(1.5f),
 
                 // Revert back to left transition
-                AnimationStep.Call(() => _optionsFK.Movement.MoveFromLeft(AnimationTarget.Button, 3, 650, EasingType.EaseIn, 2f)),
+                AnimationStep.Call(() => _optionsFK.Movement.MoveFromLeft(AnimationTarget.Button, 3, 650, 2f, EasingType.EaseIn)),
                 AnimationStep.Call(() => _optionsFK.Visibility.SetVisibility(AnimationTarget.Button, 3, true)),
                 AnimationStep.Call(() => _optionsFK.Visibility.SetVisibility(AnimationTarget.Text, 3, true)),
                 // Delay before animating the next button
                 AnimationStep.Wait(1.5f),
 
                 // Alternate direction for visual interest
-                AnimationStep.Call(() => _optionsFK.Movement.MoveFromRight(AnimationTarget.Button, 4, 650, EasingType.EaseIn, 2f)),
+                AnimationStep.Call(() => _optionsFK.Movement.MoveFromRight(AnimationTarget.Button, 4, 650, 2f, EasingType.EaseIn)),
                 AnimationStep.Call(() => _optionsFK.Visibility.SetVisibility(AnimationTarget.Button, 4, true)),
                 AnimationStep.Call(() => _optionsFK.Visibility.SetVisibility(AnimationTarget.Text, 4, true)),
             },
@@ -94,14 +94,14 @@ namespace FlowKit.Extras
         // ----------------------------------------------------- TWEEN EXAMPLE -----------------------------------------------------
         /*
          * Standard API + Coroutines - Best for group operations:
-         * - Fading in a set of menu buttons with staggered timing
+         * - Fading in a set of menu ButtonsArr with staggered timing
          * - Animating a grid of inventory slots
          * - Any repetitive pattern across multiple elements
          */
         private void OptionsTween()
         {
             // No need for a coroutine here since these are simple animations
-            _titleFK.Movement.MoveFromTop(AnimationTarget.Text, 1, 650, EasingType.EaseIn, 2f);
+            _titleFK.Movement.MoveFromTop(AnimationTarget.Text, 1, 650, 2f, EasingType.EaseIn);
             _disclaimerFK.Text.TypeWriteWithDuration(1, 3f);
 
             StartCoroutine(TweenRoutine());
@@ -119,17 +119,17 @@ namespace FlowKit.Extras
             // Slight delay before starting the animation
             yield return new WaitForSeconds(0.5f);
 
-            // Start transitioning in the buttons and make them visible
+            // Start transitioning in the ButtonsArr and make them visible
             for (int i = 1; i <= 4; i++)
             {
                 // Alternate direction for visual interest
                 if (i % 2 == 0)
                 {
-                    _optionsFK.Movement.MoveFromRight(AnimationTarget.Button, i, 1000f, EasingType.EaseIn, 2f);
+                    _optionsFK.Movement.MoveFromRight(AnimationTarget.Button, i, 1000f, 2f, EasingType.EaseIn);
                 }
                 else
                 {
-                    _optionsFK.Movement.MoveFromLeft(AnimationTarget.Button, i, 1000f, EasingType.EaseIn, 2f);
+                    _optionsFK.Movement.MoveFromLeft(AnimationTarget.Button, i, 1000f, 2f, EasingType.EaseIn);
                 }
 
                 // SetVisibility Button & Button text visibility to visible instantly

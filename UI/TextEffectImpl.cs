@@ -22,22 +22,21 @@
 * License: Apache License 2.0
 * -------------------------------------------------------- */
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
 using FlowKit.Common;
-using System.Collections.Generic;
 
 namespace FlowKit.UI
 {
     [AddComponentMenu("")]
     internal class TextEffectImpl
     {
-        private readonly TextMeshProUGUI[] _textComponent;
         private readonly MonoBehaviour _monoBehaviour;
+        private readonly TextMeshProUGUI[] _textComponent;
 
         private readonly Utils.StringAutoIncreaseList _targetString = new Utils.StringAutoIncreaseList();
-        private int _length;
 
         public TextEffectImpl(TextMeshProUGUI[] tmp, MonoBehaviour runner)
         {
@@ -52,7 +51,6 @@ namespace FlowKit.UI
             if (!IndexNullChecksPass(occurrence)) { return; }
 
             _targetString[occurrence] = _textComponent[occurrence].text;
-            _length = _targetString[occurrence].Length;
             _monoBehaviour.StartCoroutine(DelayWriter(occurrence, delay));
         }
 
@@ -61,7 +59,6 @@ namespace FlowKit.UI
             if (!IndexNullChecksPass(occurrence)) { return; }
 
             _targetString[occurrence] = _textComponent[occurrence].text;
-            _length = _targetString[occurrence].Length;
             _monoBehaviour.StartCoroutine(DurationWriter(occurrence, duration));
         }
 
@@ -76,6 +73,7 @@ namespace FlowKit.UI
         public void ColorCycleMulti(int occurrence, float duration, float delay, Color32[] colors)
         {
             if (!IndexNullChecksPass(occurrence)) { return; }
+            if (colors == null || colors.Length == 0) { return; }
 
             Color32 originalColor = (Color32)(_textComponent[occurrence].color);
             _monoBehaviour.StartCoroutine(ColorCyclerMulti(occurrence, duration, delay, originalColor, colors));
@@ -87,17 +85,18 @@ namespace FlowKit.UI
         private IEnumerator DurationWriter(int occurrence, float duration)
         {
             FlowKitEvents.InvokeTypeWriteStart();
+            int length = _targetString[occurrence].Length;
             _textComponent[occurrence].text = "";
             string currentText = "";
 
-            float delay = 0f;
-            if (duration > 0 && _length > 0) { delay = duration / _length; }
+            float delayPerCharacter = 0f;
+            if (duration > 0 && length > 0) { delayPerCharacter = duration / length; }
 
             foreach (char c in _targetString[occurrence])
             {
                 currentText += c;
                 _textComponent[occurrence].text = currentText;
-                yield return new WaitForSeconds(delay);
+                yield return new WaitForSeconds(delayPerCharacter);
             }
 
             if (_textComponent[occurrence].text != _targetString[occurrence]) { _textComponent[occurrence].text = _targetString[occurrence]; }
@@ -143,8 +142,6 @@ namespace FlowKit.UI
 
         private IEnumerator ColorCyclerMulti(int occurrence, float duration, float delay, Color32 originalColor, Color32[] colors)
         {
-            if (colors == null || colors.Length == 0) { yield break; }
-
             FlowKitEvents.InvokeColorCycleStart();
 
             float elapsedTime = 0f;

@@ -21,25 +21,26 @@
 * GitHub: https://github.com/Ho11ow1/FlowKit
 * License: Apache License 2.0
 * -------------------------------------------------------- */
-using FlowKit.Common;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+
+using FlowKit.Common;
 
 namespace FlowKit.UI
 {
     [AddComponentMenu("")]
     internal class ScaleImpl
     {
+        private readonly MonoBehaviour _monoBehaviour;
+        private readonly RectTransform _panelTransform;
         private readonly TextMeshProUGUI[] _textComponent;
         private readonly Image[] _imageComponent;
         private readonly Button[] _buttonComponent;
-        private readonly RectTransform _panelTransform;
-        private readonly MonoBehaviour _monoBehaviour;
 
-        private readonly List<Utils.AutoIncreaseList<Vector2>> originalScale = new List<Utils.AutoIncreaseList<Vector2>>()
+        private readonly List<Utils.AutoIncreaseList<Vector2>> _originalScale = new List<Utils.AutoIncreaseList<Vector2>>()
         {
             new Utils.AutoIncreaseList<Vector2>(),
             new Utils.AutoIncreaseList<Vector2>(),
@@ -47,7 +48,7 @@ namespace FlowKit.UI
             new Utils.AutoIncreaseList<Vector2>()
         };
 
-        private readonly List<Utils.AutoIncreaseList<bool>> storedScale = new List<Utils.AutoIncreaseList<bool>>()
+        private readonly List<Utils.AutoIncreaseList<bool>> _storedScale = new List<Utils.AutoIncreaseList<bool>>()
         {
             new Utils.AutoIncreaseList<bool>(),
             new Utils.AutoIncreaseList<bool>(),
@@ -101,66 +102,12 @@ namespace FlowKit.UI
             }
         }
 
-        public void ScaleUp(AnimationTarget target, int occurrence, float multiplier, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
-        {
-            switch (target)
-            {
-                case AnimationTarget.Panel:
-                    if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
-
-                    _monoBehaviour.StartCoroutine(ScaleUi(_panelTransform, occurrence, multiplier, duration, delay, easing));
-                    break;
-                case AnimationTarget.Text:
-                    if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
-
-                    _monoBehaviour.StartCoroutine(ScaleUi(_textComponent[occurrence].rectTransform, occurrence, multiplier, duration, delay, easing));
-                    break;
-                case AnimationTarget.Image:
-                    if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
-
-                    _monoBehaviour.StartCoroutine(ScaleUi(_imageComponent[occurrence].rectTransform, occurrence, multiplier, duration, delay, easing));
-                    break;
-                case AnimationTarget.Button:
-                    if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
-
-                    _monoBehaviour.StartCoroutine(ScaleUi((RectTransform)_buttonComponent[occurrence].transform, occurrence, multiplier, duration, delay, easing));
-                    break;
-            }
-        }
-
-        public void ScaleDown(AnimationTarget target, int occurrence, float multiplier, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
-        {
-            switch (target)
-            {
-                case AnimationTarget.Panel:
-                    if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
-
-                    _monoBehaviour.StartCoroutine(ScaleUi(_panelTransform, occurrence, 1 / multiplier, duration, delay, easing));
-                    break;
-                case AnimationTarget.Text:
-                    if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
-
-                    _monoBehaviour.StartCoroutine(ScaleUi(_textComponent[occurrence].rectTransform, occurrence, 1 / multiplier, duration, delay, easing));
-                    break;
-                case AnimationTarget.Image:
-                    if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
-
-                    _monoBehaviour.StartCoroutine(ScaleUi(_imageComponent[occurrence].rectTransform, occurrence, 1 / multiplier, duration, delay, easing));
-                    break;
-                case AnimationTarget.Button:
-                    if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
-
-                    _monoBehaviour.StartCoroutine(ScaleUi((RectTransform)_buttonComponent[occurrence].transform, occurrence, 1 / multiplier, duration, delay, easing));
-                    break;
-            }
-        }
-
         public void Reset(AnimationTarget target, int occurrence, GameObject gameObject)
         {
             switch (target)
             {
                 case AnimationTarget.Panel:
-                    if (!storedScale[FlowKitConstants.PanelIndex][0])
+                    if (!_storedScale[FlowKitConstants.PanelIndex][0])
                     {
                         #if UNITY_EDITOR
                         Debug.LogError($"No saved scale found for Panel: [{gameObject.name}]");
@@ -168,10 +115,10 @@ namespace FlowKit.UI
                         return;
                     }
 
-                    _panelTransform.localScale = originalScale[FlowKitConstants.PanelIndex][0];
+                    _panelTransform.localScale = _originalScale[FlowKitConstants.PanelIndex][0];
                     break;
                 case AnimationTarget.Text:
-                    if (!storedScale[FlowKitConstants.TextIndex][occurrence])
+                    if (!_storedScale[FlowKitConstants.TextIndex][occurrence])
                     {
                         #if UNITY_EDITOR
                         Debug.LogError($"No saved scale found for Text component child. Panel: [{gameObject.name}]");
@@ -179,10 +126,10 @@ namespace FlowKit.UI
                         return;
                     }
 
-                    _textComponent[occurrence].rectTransform.localScale = originalScale[FlowKitConstants.TextIndex][occurrence];
+                    _textComponent[occurrence].rectTransform.localScale = _originalScale[FlowKitConstants.TextIndex][occurrence];
                     break;
                 case AnimationTarget.Image:
-                    if (!storedScale[FlowKitConstants.ImageIndex][occurrence])
+                    if (!_storedScale[FlowKitConstants.ImageIndex][occurrence])
                     {
                         #if UNITY_EDITOR
                         Debug.LogError($"No saved scale found for Image component child. Panel: [{gameObject.name}]");
@@ -190,10 +137,10 @@ namespace FlowKit.UI
                         return;
                     }
 
-                    _imageComponent[occurrence].rectTransform.localScale = originalScale[FlowKitConstants.ImageIndex][occurrence];
+                    _imageComponent[occurrence].rectTransform.localScale = _originalScale[FlowKitConstants.ImageIndex][occurrence];
                     break;
                 case AnimationTarget.Button:
-                    if (!storedScale[FlowKitConstants.ButtonIndex][occurrence])
+                    if (!_storedScale[FlowKitConstants.ButtonIndex][occurrence])
                     {
                         #if UNITY_EDITOR
                         Debug.LogError($"No saved scale found for Button component child. Panel: [{gameObject.name}]");
@@ -201,20 +148,126 @@ namespace FlowKit.UI
                         return;
                     }
 
-                    ((RectTransform)_buttonComponent[occurrence].transform).localScale = originalScale[FlowKitConstants.ButtonIndex][occurrence];
+                    ((RectTransform)_buttonComponent[occurrence].transform).localScale = _originalScale[FlowKitConstants.ButtonIndex][occurrence];
+                    break;
+            }
+        }
+
+        public void ScaleUp(AnimationTarget target, int occurrence, float multiplier, float duration, EasingType easing, float delay = 0f)
+        {
+            switch (target)
+            {
+                case AnimationTarget.Panel:
+                    if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
+
+                    _monoBehaviour.StartCoroutine(ScaleUi(_panelTransform, occurrence, multiplier, duration, easing, delay));
+                    break;
+                case AnimationTarget.Text:
+                    if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
+
+                    _monoBehaviour.StartCoroutine(ScaleUi(_textComponent[occurrence].rectTransform, occurrence, multiplier, duration, easing, delay));
+                    break;
+                case AnimationTarget.Image:
+                    if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
+
+                    _monoBehaviour.StartCoroutine(ScaleUi(_imageComponent[occurrence].rectTransform, occurrence, multiplier, duration, easing, delay));
+                    break;
+                case AnimationTarget.Button:
+                    if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
+
+                    _monoBehaviour.StartCoroutine(ScaleUi((RectTransform)_buttonComponent[occurrence].transform, occurrence, multiplier, duration, easing, delay));
+                    break;
+            }
+        }
+
+        public void ScaleDown(AnimationTarget target, int occurrence, float multiplier, float duration, EasingType easing, float delay = 0f)
+        {
+            switch (target)
+            {
+                case AnimationTarget.Panel:
+                    if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
+
+                    _monoBehaviour.StartCoroutine(ScaleUi(_panelTransform, occurrence, 1 / multiplier, duration, easing, delay));
+                    break;
+                case AnimationTarget.Text:
+                    if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
+
+                    _monoBehaviour.StartCoroutine(ScaleUi(_textComponent[occurrence].rectTransform, occurrence, 1 / multiplier, duration, easing, delay));
+                    break;
+                case AnimationTarget.Image:
+                    if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
+
+                    _monoBehaviour.StartCoroutine(ScaleUi(_imageComponent[occurrence].rectTransform, occurrence, 1 / multiplier, duration, easing, delay));
+                    break;
+                case AnimationTarget.Button:
+                    if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
+
+                    _monoBehaviour.StartCoroutine(ScaleUi((RectTransform)_buttonComponent[occurrence].transform, occurrence, 1 / multiplier, duration, easing, delay));
+                    break;
+            }
+        }
+
+        public void ScaleFromTo(AnimationTarget target, int occurrence, float fromScale, float toScale, float duration, EasingType easing, float delay = 0f)
+        {
+            switch (target)
+            {
+                case AnimationTarget.Panel:
+                    if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
+
+                    _monoBehaviour.StartCoroutine(ScaleFromToUi(_panelTransform, occurrence, fromScale, toScale, duration, easing, delay));
+                    break;
+                case AnimationTarget.Text:
+                    if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
+
+                    _monoBehaviour.StartCoroutine(ScaleFromToUi(_textComponent[occurrence].rectTransform, occurrence, fromScale, toScale, duration, easing, delay));
+                    break;
+                case AnimationTarget.Image:
+                    if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
+
+                    _monoBehaviour.StartCoroutine(ScaleFromToUi(_imageComponent[occurrence].rectTransform, occurrence, fromScale, toScale, duration, easing, delay));
+                    break;
+                case AnimationTarget.Button:
+                    if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
+
+                    _monoBehaviour.StartCoroutine(ScaleFromToUi((RectTransform)_buttonComponent[occurrence].transform, occurrence, fromScale, toScale, duration, easing, delay));
                     break;
             }
         }
 
         // ----------------------------------------------------- SCALE ANIMATION -----------------------------------------------------
 
-        private IEnumerator ScaleUi(RectTransform component, int occurrence, float scaleAmount, float duration, float delay, EasingType easing)
+        private IEnumerator ScaleUi(RectTransform component, int occurrence, float scaleAmount, float duration, EasingType easing, float delay)
         {
             GetStartScale(component, occurrence, out Vector2 startScale);
             Vector2 targetScale;
 
             if (delay > 0) { yield return new WaitForSeconds(delay); }
             targetScale = startScale * scaleAmount;
+
+            float elapsedTime = 0f;
+            FlowKitEvents.InvokeScaleStart();
+
+            while (elapsedTime < duration)
+            {
+                float time = elapsedTime / duration;
+                float easedTime = Utils.Easing.SetEasingFunction(time, easing);
+
+                component.localScale = Vector2.Lerp(startScale, targetScale, easedTime);
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+
+            component.localScale = targetScale;
+            FlowKitEvents.InvokeScaleEnd();
+        }
+
+        private IEnumerator ScaleFromToUi(RectTransform component, int occurrence, float fromScale, float toScale, float duration, EasingType easing, float delay)
+        {
+            GetStartScale(component, occurrence,out _);
+
+            if (delay > 0) { yield return new WaitForSeconds(delay); }
+            Vector2 startScale = component.localScale * fromScale;
+            Vector2 targetScale = component.localScale * toScale;
 
             float elapsedTime = 0f;
             FlowKitEvents.InvokeScaleStart();
@@ -256,37 +309,37 @@ namespace FlowKit.UI
         {
             if (component == _panelTransform.gameObject)
             {
-                if (!storedScale[FlowKitConstants.PanelIndex][0])
+                if (!_storedScale[FlowKitConstants.PanelIndex][0])
                 {
-                    originalScale[FlowKitConstants.PanelIndex][0] = _panelTransform.localScale;
-                    storedScale[FlowKitConstants.PanelIndex][0] = true;
+                    _originalScale[FlowKitConstants.PanelIndex][0] = _panelTransform.localScale;
+                    _storedScale[FlowKitConstants.PanelIndex][0] = true;
                 }
                 return;
             }
             else if (component == _textComponent[occurrence].gameObject)
             {
-                if (!storedScale[FlowKitConstants.TextIndex][occurrence])
+                if (!_storedScale[FlowKitConstants.TextIndex][occurrence])
                 {
-                    originalScale[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].rectTransform.localScale;
-                    storedScale[FlowKitConstants.TextIndex][occurrence] = true;
+                    _originalScale[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].rectTransform.localScale;
+                    _storedScale[FlowKitConstants.TextIndex][occurrence] = true;
                 }
                 return;
             }
             else if (component == _imageComponent[occurrence].gameObject)
             {
-                if (!storedScale[FlowKitConstants.ImageIndex][occurrence])
+                if (!_storedScale[FlowKitConstants.ImageIndex][occurrence])
                 {
-                    originalScale[FlowKitConstants.ImageIndex][occurrence] = _imageComponent[occurrence].rectTransform.localScale;
-                    storedScale[FlowKitConstants.ImageIndex][occurrence] = true;
+                    _originalScale[FlowKitConstants.ImageIndex][occurrence] = _imageComponent[occurrence].rectTransform.localScale;
+                    _storedScale[FlowKitConstants.ImageIndex][occurrence] = true;
                 }
                 return;
             }
             else if (component == _buttonComponent[occurrence].gameObject)
             {
-                if (!storedScale[FlowKitConstants.ButtonIndex][occurrence])
+                if (!_storedScale[FlowKitConstants.ButtonIndex][occurrence])
                 {
-                    originalScale[FlowKitConstants.ButtonIndex][occurrence] = ((RectTransform)_buttonComponent[occurrence].transform).localScale;
-                    storedScale[FlowKitConstants.ButtonIndex][occurrence] = true;
+                    _originalScale[FlowKitConstants.ButtonIndex][occurrence] = ((RectTransform)_buttonComponent[occurrence].transform).localScale;
+                    _storedScale[FlowKitConstants.ButtonIndex][occurrence] = true;
                 }
                 return;
             }
@@ -298,7 +351,7 @@ namespace FlowKit.UI
 
             if (component == _panelTransform)
             {
-                if (!storedScale[FlowKitConstants.PanelIndex][0])
+                if (!_storedScale[FlowKitConstants.PanelIndex][0])
                 {
                     SaveScale(_panelTransform.gameObject, 0);
                 }
@@ -306,7 +359,7 @@ namespace FlowKit.UI
             }
             else if (component == _textComponent[occurrence].rectTransform)
             {
-                if (!storedScale[FlowKitConstants.TextIndex][occurrence])
+                if (!_storedScale[FlowKitConstants.TextIndex][occurrence])
                 {
                     SaveScale(_panelTransform.gameObject, occurrence);
                 }
@@ -314,7 +367,7 @@ namespace FlowKit.UI
             }
             else if (component == _imageComponent[occurrence].rectTransform)
             {
-                if (!storedScale[FlowKitConstants.ImageIndex][occurrence])
+                if (!_storedScale[FlowKitConstants.ImageIndex][occurrence])
                 {
                     SaveScale(_panelTransform.gameObject, occurrence);
                 }
@@ -322,7 +375,7 @@ namespace FlowKit.UI
             }
             else if (component == (RectTransform)_buttonComponent[occurrence].transform)
             {
-                if (!storedScale[FlowKitConstants.ButtonIndex][occurrence])
+                if (!_storedScale[FlowKitConstants.ButtonIndex][occurrence])
                 {
                     SaveScale(_panelTransform.gameObject, occurrence);
                 }

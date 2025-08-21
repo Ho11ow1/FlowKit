@@ -34,13 +34,13 @@ namespace FlowKit.UI
     [AddComponentMenu("")]
     internal class VisibilityImpl
     {
+        private readonly MonoBehaviour _monoBehaviour;
+        private readonly CanvasGroup _panelAlpha;
         private readonly TextMeshProUGUI[] _textComponent;
         private readonly Image[] _imageComponent;
         private readonly Button[] _buttonComponent;
-        private readonly CanvasGroup _panelAlpha;
-        private readonly MonoBehaviour _monoBehaviour;
 
-        private readonly List<Utils.AutoIncreaseList<float>> originalAlpha= new List<Utils.AutoIncreaseList<float>>()
+        private readonly List<Utils.AutoIncreaseList<float>> _originalAlpha= new List<Utils.AutoIncreaseList<float>>()
         {
             new Utils.AutoIncreaseList<float>(),
             new Utils.AutoIncreaseList<float>(),
@@ -48,7 +48,7 @@ namespace FlowKit.UI
             new Utils.AutoIncreaseList<float>()
         };
 
-        private readonly List<Utils.AutoIncreaseList<bool>> storedAlpha = new List<Utils.AutoIncreaseList<bool>>()
+        private readonly List<Utils.AutoIncreaseList<bool>> _storedAlpha = new List<Utils.AutoIncreaseList<bool>>()
         {
             new Utils.AutoIncreaseList<bool>(),
             new Utils.AutoIncreaseList<bool>(),
@@ -101,6 +101,61 @@ namespace FlowKit.UI
 
                     Color btnColor = _buttonComponent[occurrence].image.color;
                     btnColor.a = visibility ? FlowKitConstants.OpaqueAlpha : FlowKitConstants.TransparentAlpha;
+                    _buttonComponent[occurrence].image.color = btnColor;
+                    break;
+            }
+        }
+
+        public void Reset(AnimationTarget target, int occurrence, GameObject gameObject)
+        {
+            switch (target)
+            {
+                case AnimationTarget.Panel:
+                    if (!_storedAlpha[FlowKitConstants.PanelIndex][0])
+                    {
+                        #if UNITY_EDITOR
+                        Debug.LogError($"No saved alpha value found for Panel: [{gameObject.name}]");
+                        #endif
+                        return;
+                    }
+
+                    _panelAlpha.alpha = _originalAlpha[FlowKitConstants.PanelIndex][0];
+                    break;
+                case AnimationTarget.Text:
+                    if (!_storedAlpha[FlowKitConstants.TextIndex][occurrence])
+                    {
+                        #if UNITY_EDITOR
+                        Debug.LogError($"No saved alpha value found for Text component child. Panel: [{gameObject.name}]");
+                        #endif
+                        return;
+                    }
+
+                    _textComponent[occurrence].alpha = _originalAlpha[FlowKitConstants.TextIndex][occurrence];
+                    break;
+                case AnimationTarget.Image:
+                    if (!_storedAlpha[FlowKitConstants.ImageIndex][occurrence])
+                    {
+                        #if UNITY_EDITOR
+                        Debug.LogError($"No saved alpha value found for Image component child. Panel: [{gameObject.name}]");
+                        #endif
+                        return;
+                    }
+
+                    Color imgColor = _imageComponent[occurrence].color;
+                    imgColor.a = _originalAlpha[FlowKitConstants.ImageIndex][occurrence];
+                    _imageComponent[occurrence].color = imgColor;
+                    break;
+                case AnimationTarget.Button:
+                    if (!_storedAlpha[FlowKitConstants.ButtonIndex][occurrence])
+                    {
+                        #if UNITY_EDITOR
+                        Debug.LogError($"No saved alpha value found for Button component child. Panel: [{gameObject.name}]");
+                        #endif
+                        return;
+                    }
+
+                    Color btnColor = _buttonComponent[occurrence].image.color;
+                    btnColor.a = _originalAlpha[FlowKitConstants.ButtonIndex][occurrence];
                     _buttonComponent[occurrence].image.color = btnColor;
                     break;
             }
@@ -183,61 +238,6 @@ namespace FlowKit.UI
                     if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
 
                     _monoBehaviour.StartCoroutine(FadeUiTo(_buttonComponent[occurrence].gameObject, occurrence, alpha, duration, delay));
-                    break;
-            }
-        }
-
-        public void Reset(AnimationTarget target, int occurrence, GameObject gameObject)
-        {
-            switch (target)
-            {
-                case AnimationTarget.Panel:
-                    if (!storedAlpha[FlowKitConstants.PanelIndex][0])
-                    {
-                        #if UNITY_EDITOR
-                        Debug.LogError($"No saved alpha value found for Panel: [{gameObject.name}]");
-                        #endif
-                        return;
-                    }
-
-                    _panelAlpha.alpha= originalAlpha[FlowKitConstants.PanelIndex][0];
-                    break;
-                case AnimationTarget.Text:
-                    if (!storedAlpha[FlowKitConstants.TextIndex][occurrence])
-                    {
-                        #if UNITY_EDITOR
-                        Debug.LogError($"No saved alpha value found for Text component child. Panel: [{gameObject.name}]");
-                        #endif
-                        return;
-                    }
-
-                    _textComponent[occurrence].alpha = originalAlpha[FlowKitConstants.TextIndex][occurrence];
-                    break;
-                case AnimationTarget.Image:
-                    if (!storedAlpha[FlowKitConstants.ImageIndex][occurrence])
-                    {
-                        #if UNITY_EDITOR
-                        Debug.LogError($"No saved alpha value found for Image component child. Panel: [{gameObject.name}]");
-                        #endif
-                        return;
-                    }
-
-                    Color imgColor = _imageComponent[occurrence].color;
-                    imgColor.a = originalAlpha[FlowKitConstants.ImageIndex][occurrence];
-                    _imageComponent[occurrence].color = imgColor;
-                    break;
-                case AnimationTarget.Button:
-                    if (!storedAlpha[FlowKitConstants.ButtonIndex][occurrence])
-                    {
-                        #if UNITY_EDITOR
-                        Debug.LogError($"No saved alpha value found for Button component child. Panel: [{gameObject.name}]");
-                        #endif
-                        return;
-                    }
-
-                    Color btnColor = _buttonComponent[occurrence].image.color;
-                    btnColor.a = originalAlpha[FlowKitConstants.ButtonIndex][occurrence];
-                    _buttonComponent[occurrence].image.color = btnColor;
                     break;
             }
         }
@@ -418,37 +418,37 @@ namespace FlowKit.UI
         {
             if (component == _panelAlpha.gameObject)
             {
-                if (!storedAlpha[FlowKitConstants.PanelIndex][0])
+                if (!_storedAlpha[FlowKitConstants.PanelIndex][0])
                 {
-                    originalAlpha[FlowKitConstants.PanelIndex][0] = _panelAlpha.alpha;
-                    storedAlpha[FlowKitConstants.PanelIndex][0] = true;
+                    _originalAlpha[FlowKitConstants.PanelIndex][0] = _panelAlpha.alpha;
+                    _storedAlpha[FlowKitConstants.PanelIndex][0] = true;
                 }
                 return;
             }
             else if (component == _textComponent[occurrence].gameObject)
             {
-                if (!storedAlpha[FlowKitConstants.TextIndex][occurrence])
+                if (!_storedAlpha[FlowKitConstants.TextIndex][occurrence])
                 {
-                    originalAlpha[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].alpha;
-                    storedAlpha[FlowKitConstants.TextIndex][occurrence] = true;
+                    _originalAlpha[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].alpha;
+                    _storedAlpha[FlowKitConstants.TextIndex][occurrence] = true;
                 }
                 return;
             }
             else if (component == _imageComponent[occurrence].gameObject)
             {
-                if (!storedAlpha[FlowKitConstants.ImageIndex][occurrence])
+                if (!_storedAlpha[FlowKitConstants.ImageIndex][occurrence])
                 {
-                    originalAlpha[FlowKitConstants.ImageIndex][occurrence] = _imageComponent[occurrence].color.a;
-                    storedAlpha[FlowKitConstants.ImageIndex][occurrence] = true;
+                    _originalAlpha[FlowKitConstants.ImageIndex][occurrence] = _imageComponent[occurrence].color.a;
+                    _storedAlpha[FlowKitConstants.ImageIndex][occurrence] = true;
                 }
                 return;
             }
             else if (component == _buttonComponent[occurrence].gameObject)
             {
-                if (!storedAlpha[FlowKitConstants.ButtonIndex][occurrence])
+                if (!_storedAlpha[FlowKitConstants.ButtonIndex][occurrence])
                 {
-                    originalAlpha[FlowKitConstants.ButtonIndex][occurrence] = _buttonComponent[occurrence].image.color.a;
-                    storedAlpha[FlowKitConstants.ButtonIndex][occurrence] = true;
+                    _originalAlpha[FlowKitConstants.ButtonIndex][occurrence] = _buttonComponent[occurrence].image.color.a;
+                    _storedAlpha[FlowKitConstants.ButtonIndex][occurrence] = true;
                 }
                 return;
             }
