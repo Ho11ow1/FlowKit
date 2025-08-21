@@ -153,61 +153,7 @@ namespace FlowKit.UI
             }
         }
 
-        public void ScaleUp(AnimationTarget target, int occurrence, float multiplier, float duration, EasingType easing, float delay = 0f)
-        {
-            switch (target)
-            {
-                case AnimationTarget.Panel:
-                    if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
-
-                    _monoBehaviour.StartCoroutine(ScaleUi(_panelTransform, occurrence, multiplier, duration, easing, delay));
-                    break;
-                case AnimationTarget.Text:
-                    if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
-
-                    _monoBehaviour.StartCoroutine(ScaleUi(_textComponent[occurrence].rectTransform, occurrence, multiplier, duration, easing, delay));
-                    break;
-                case AnimationTarget.Image:
-                    if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
-
-                    _monoBehaviour.StartCoroutine(ScaleUi(_imageComponent[occurrence].rectTransform, occurrence, multiplier, duration, easing, delay));
-                    break;
-                case AnimationTarget.Button:
-                    if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
-
-                    _monoBehaviour.StartCoroutine(ScaleUi((RectTransform)_buttonComponent[occurrence].transform, occurrence, multiplier, duration, easing, delay));
-                    break;
-            }
-        }
-
-        public void ScaleDown(AnimationTarget target, int occurrence, float multiplier, float duration, EasingType easing, float delay = 0f)
-        {
-            switch (target)
-            {
-                case AnimationTarget.Panel:
-                    if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
-
-                    _monoBehaviour.StartCoroutine(ScaleUi(_panelTransform, occurrence, 1 / multiplier, duration, easing, delay));
-                    break;
-                case AnimationTarget.Text:
-                    if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
-
-                    _monoBehaviour.StartCoroutine(ScaleUi(_textComponent[occurrence].rectTransform, occurrence, 1 / multiplier, duration, easing, delay));
-                    break;
-                case AnimationTarget.Image:
-                    if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
-
-                    _monoBehaviour.StartCoroutine(ScaleUi(_imageComponent[occurrence].rectTransform, occurrence, 1 / multiplier, duration, easing, delay));
-                    break;
-                case AnimationTarget.Button:
-                    if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
-
-                    _monoBehaviour.StartCoroutine(ScaleUi((RectTransform)_buttonComponent[occurrence].transform, occurrence, 1 / multiplier, duration, easing, delay));
-                    break;
-            }
-        }
-
-        public void ScaleFromTo(AnimationTarget target, int occurrence, float fromScale, float toScale, float duration, EasingType easing, float delay = 0f)
+        public void ScaleFromTo(AnimationTarget target, int occurrence, float? fromScale, float? toScale, float duration, EasingType easing, float delay)
         {
             switch (target)
             {
@@ -236,13 +182,13 @@ namespace FlowKit.UI
 
         // ----------------------------------------------------- SCALE ANIMATION -----------------------------------------------------
 
-        private IEnumerator ScaleUi(RectTransform component, int occurrence, float scaleAmount, float duration, EasingType easing, float delay)
+        private IEnumerator ScaleFromToUi(RectTransform component, int occurrence, float? fromScale, float? toScale, float duration, EasingType easing, float delay)
         {
             GetStartScale(component, occurrence, out Vector2 startScale);
-            Vector2 targetScale;
 
             if (delay > 0) { yield return new WaitForSeconds(delay); }
-            targetScale = startScale * scaleAmount;
+            CorrectScaleBasedOnValues(ref startScale, in fromScale, in toScale, out Vector2 endScale);
+            component.localScale = startScale;
 
             float elapsedTime = 0f;
             FlowKitEvents.InvokeScaleStart();
@@ -252,41 +198,34 @@ namespace FlowKit.UI
                 float time = elapsedTime / duration;
                 float easedTime = Utils.Easing.SetEasingFunction(time, easing);
 
-                component.localScale = Vector2.Lerp(startScale, targetScale, easedTime);
+                component.localScale = Vector2.Lerp(startScale, endScale, easedTime);
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
 
-            component.localScale = targetScale;
-            FlowKitEvents.InvokeScaleEnd();
-        }
-
-        private IEnumerator ScaleFromToUi(RectTransform component, int occurrence, float fromScale, float toScale, float duration, EasingType easing, float delay)
-        {
-            GetStartScale(component, occurrence,out _);
-
-            if (delay > 0) { yield return new WaitForSeconds(delay); }
-            Vector2 startScale = component.localScale * fromScale;
-            Vector2 targetScale = component.localScale * toScale;
-
-            float elapsedTime = 0f;
-            FlowKitEvents.InvokeScaleStart();
-
-            while (elapsedTime < duration)
-            {
-                float time = elapsedTime / duration;
-                float easedTime = Utils.Easing.SetEasingFunction(time, easing);
-
-                component.localScale = Vector2.Lerp(startScale, targetScale, easedTime);
-                elapsedTime += Time.deltaTime;
-                yield return null;
-            }
-
-            component.localScale = targetScale;
+            component.localScale = endScale;
             FlowKitEvents.InvokeScaleEnd();
         }
 
         // ----------------------------------------------------- PRIVATE UTILITIES -----------------------------------------------------
+
+        private void CorrectScaleBasedOnValues(ref Vector2 startScale, in float? fromScale, in float? toScale, out Vector2 endScale)
+        {
+            endScale = startScale;
+            if (fromScale.HasValue && toScale.HasValue)
+            {
+                startScale *= fromScale.Value;
+                endScale *= toScale.Value;
+            }
+            else if (fromScale.HasValue && !toScale.HasValue)
+            {
+                startScale *= fromScale.Value;
+            }
+            else if (!fromScale.HasValue && toScale.HasValue)
+            {
+                endScale *= toScale.Value;
+            }
+        }
 
         private bool IndexNullChecksPass(AnimationTarget target, int occurrence)
         {

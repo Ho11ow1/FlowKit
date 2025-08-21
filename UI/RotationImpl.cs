@@ -153,7 +153,7 @@ namespace FlowKit.UI
             }
         }
 
-        public void Rotation(AnimationTarget target, int occurrence, float degrees, float duration, EasingType easing, float delay = 0f)
+        public void Rotation(AnimationTarget target, int occurrence, float degrees, float duration, EasingType easing, float delay)
         {
             switch (target)
             {

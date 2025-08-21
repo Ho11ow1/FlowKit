@@ -21,8 +21,9 @@
 * GitHub: https://github.com/Ho11ow1/FlowKit
 * License: Apache License 2.0
 * -------------------------------------------------------- */
-using FlowKit.Common;
 using UnityEngine;
+
+using FlowKit.Common;
 
 namespace FlowKit
 {

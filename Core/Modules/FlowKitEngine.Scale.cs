@@ -88,7 +88,7 @@ namespace FlowKit
             public void ScaleUp(AnimationTarget target, int occurrence, float multiplier, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
                 occurrence -= 1;
-                _engine.scalingImpl.ScaleUp(target, occurrence, multiplier, duration, easing, delay);
+                _engine.scalingImpl.ScaleFromTo(target, occurrence, null, multiplier, duration, easing, delay);
             }
 
             /// <summary>
@@ -108,7 +108,27 @@ namespace FlowKit
             public void ScaleDown(AnimationTarget target, int occurrence, float multiplier, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
                 occurrence -= 1;
-                _engine.scalingImpl.ScaleDown(target, occurrence, multiplier, duration, easing, delay);
+                _engine.scalingImpl.ScaleFromTo(target, occurrence, null, 1 / multiplier, duration, easing, delay);
+            }
+
+            /// <summary>
+            /// Scales the target UI element from a specified scale to it's original scale
+            /// <list type="bullet">
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
+            /// </list>
+            /// </summary>
+            /// <param name="target">Target component to scale (Panel, Text, Image, Button)</param>
+            /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
+            /// <param name="fromScale">Specifies the starting scale of the element</param>
+            /// <param name="duration">Time in seconds the scaling animation should take</param>
+            /// <param name="easing">Specifies the easing method the scaling should use</param>
+            /// <param name="delay">Time in seconds to wait before starting the scaling</param>
+            public void ScaleFrom(AnimationTarget target, int occurrence, float fromScale, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
+            {
+                occurrence -= 1;
+                _engine.scalingImpl.ScaleFromTo(target, occurrence, fromScale, null, duration, easing, delay);
             }
 
             /// <summary>

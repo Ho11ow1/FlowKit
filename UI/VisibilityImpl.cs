@@ -161,113 +161,38 @@ namespace FlowKit.UI
             }
         }
 
-        public void FadeIn(AnimationTarget target, int occurrence, float duration, EasingType easing, float delay)
+        public void FadeFromTo(AnimationTarget target, int occurrence, float? fromAlpha, float? toAlpha, float duration, EasingType easing, float delay)
         {
             switch (target)
             {
                 case AnimationTarget.Panel:
                     if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
 
-                    _monoBehaviour.StartCoroutine(FadeInOut(_panelAlpha.gameObject, occurrence, duration, easing, delay, true));
+                    _monoBehaviour.StartCoroutine(FadeFromToUi(_panelAlpha.gameObject, occurrence, fromAlpha, toAlpha, duration, easing, delay));
                     break;
                 case AnimationTarget.Text:
                     if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(FadeInOut(_textComponent[occurrence].gameObject, occurrence, duration, easing, delay, true));
+                    _monoBehaviour.StartCoroutine(FadeFromToUi(_textComponent[occurrence].gameObject, occurrence, fromAlpha, toAlpha, duration, easing, delay));
                     break;
                 case AnimationTarget.Image:
                     if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(FadeInOut(_imageComponent[occurrence].gameObject, occurrence, duration, easing, delay, true));
+                    _monoBehaviour.StartCoroutine(FadeFromToUi(_imageComponent[occurrence].gameObject, occurrence, fromAlpha, toAlpha, duration, easing, delay));
                     break;
                 case AnimationTarget.Button:
                     if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(FadeInOut(_buttonComponent[occurrence].gameObject, occurrence, duration, easing, delay, true));
-                    break;
-            }
-        }
-
-        public void FadeOut(AnimationTarget target, int occurrence, float duration, EasingType easing, float delay)
-        {
-            switch (target)
-            {
-                case AnimationTarget.Panel:
-                    if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
-
-                    _monoBehaviour.StartCoroutine(FadeInOut(_panelAlpha.gameObject, occurrence, duration, easing, delay, false));
-                    break;
-                case AnimationTarget.Text:
-                    if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
-
-                    _monoBehaviour.StartCoroutine(FadeInOut(_textComponent[occurrence].gameObject, occurrence, duration, easing, delay, false));
-                    break;
-                case AnimationTarget.Image:
-                    if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
-
-                    _monoBehaviour.StartCoroutine(FadeInOut(_imageComponent[occurrence].gameObject, occurrence, duration, easing, delay, false));
-                    break;
-                case AnimationTarget.Button:
-                    if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
-
-                    _monoBehaviour.StartCoroutine(FadeInOut(_buttonComponent[occurrence].gameObject, occurrence, duration, easing, delay, false));
-                    break;
-            }
-        }
-
-        public void FadeTo(AnimationTarget target, int occurrence, float alpha, float duration, EasingType easing, float delay)
-        {
-            switch (target)
-            {
-                case AnimationTarget.Panel:
-                    if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
-
-                    _monoBehaviour.StartCoroutine(FadeUiTo(_panelAlpha.gameObject, occurrence, alpha, duration, easing, delay));
-                    break;
-                case AnimationTarget.Text:
-                    if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
-
-                    _monoBehaviour.StartCoroutine(FadeUiTo(_textComponent[occurrence].gameObject, occurrence, alpha, duration, easing, delay));
-                    break;
-                case AnimationTarget.Image:
-                    if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
-
-                    _monoBehaviour.StartCoroutine(FadeUiTo(_imageComponent[occurrence].gameObject, occurrence, alpha, duration, easing, delay));
-                    break;
-                case AnimationTarget.Button:
-                    if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
-
-                    _monoBehaviour.StartCoroutine(FadeUiTo(_buttonComponent[occurrence].gameObject, occurrence, alpha, duration, easing, delay));
+                    _monoBehaviour.StartCoroutine(FadeFromToUi(_buttonComponent[occurrence].gameObject, occurrence, fromAlpha, toAlpha, duration, easing, delay));
                     break;
             }
         }
 
         // ----------------------------------------------------- FADE ANIMATIONS -----------------------------------------------------
 
-        private IEnumerator FadeInOut(GameObject component, int occurrence, float duration, EasingType easing, float delay, bool fadeIn)
+        private IEnumerator FadeFromToUi(GameObject component, int occurrence, float? fromAlpha, float? toAlpha, float duration, EasingType easing, float delay)
         {
             SaveAlpha(component, occurrence);
-
-            if (component == _panelAlpha.gameObject)
-            {
-                _panelAlpha.alpha = fadeIn ? FlowKitConstants.TransparentAlpha : FlowKitConstants.OpaqueAlpha;
-            }
-            else if (component == _textComponent[occurrence].gameObject)
-            {
-                _textComponent[occurrence].alpha = fadeIn ? FlowKitConstants.TransparentAlpha : FlowKitConstants.OpaqueAlpha;
-            }
-            else if (component == _imageComponent[occurrence].gameObject)
-            {
-                Color imgColor = _imageComponent[occurrence].color;
-                imgColor.a = fadeIn ? FlowKitConstants.TransparentAlpha : FlowKitConstants.OpaqueAlpha;
-                _imageComponent[occurrence].color = imgColor;
-            }
-            else if (component == _buttonComponent[occurrence].gameObject)
-            {
-                Color btnColor = _buttonComponent[occurrence].image.color;
-                btnColor.a = fadeIn ? FlowKitConstants.TransparentAlpha : FlowKitConstants.OpaqueAlpha;
-                _buttonComponent[occurrence].image.color = btnColor;
-            }
 
             if (delay > 0) { yield return new WaitForSeconds(delay); }
 
@@ -278,10 +203,7 @@ namespace FlowKit.UI
             {
                 float time = elapsedTime / duration;
                 float easedTime = Utils.Easing.SetEasingFunction(time, easing);
-                float animationAlpha = fadeIn ? 
-                    Mathf.Lerp(FlowKitConstants.TransparentAlpha, FlowKitConstants.OpaqueAlpha, easedTime) 
-                    : 
-                    Mathf.Lerp(FlowKitConstants.OpaqueAlpha, FlowKitConstants.TransparentAlpha, easedTime);
+                GetAlphaLerping(component, occurrence, fromAlpha, toAlpha, easedTime, out float animationAlpha);
 
                 if (component == _panelAlpha.gameObject)
                 {
@@ -308,24 +230,30 @@ namespace FlowKit.UI
                 yield return null;
             }
 
-            float endAlpha = fadeIn ? FlowKitConstants.OpaqueAlpha : FlowKitConstants.TransparentAlpha;
-
             if (component == _panelAlpha.gameObject)
             {
+                var endAlpha = (float)(toAlpha.HasValue ? toAlpha : _originalAlpha[FlowKitConstants.PanelIndex][0]);
+
                 _panelAlpha.alpha = endAlpha;
             }
             else if (component == _textComponent[occurrence].gameObject)
             {
+                var endAlpha = (float)(toAlpha.HasValue ? toAlpha : _originalAlpha[FlowKitConstants.TextIndex][occurrence]);
+
                 _textComponent[occurrence].alpha = endAlpha;
             }
             else if (component == _imageComponent[occurrence].gameObject)
             {
+                var endAlpha = (float)(toAlpha.HasValue ? toAlpha : _originalAlpha[FlowKitConstants.ImageIndex][occurrence]);
+
                 Color imgColor = _imageComponent[occurrence].color;
                 imgColor.a = endAlpha;
                 _imageComponent[occurrence].color = imgColor;
             }
             else if (component == _buttonComponent[occurrence].gameObject)
             {
+                var endAlpha = (float)(toAlpha.HasValue ? toAlpha : _originalAlpha[FlowKitConstants.ButtonIndex][occurrence]);
+
                 Color btnColor = _buttonComponent[occurrence].image.color;
                 btnColor.a = endAlpha;
                 _buttonComponent[occurrence].image.color = btnColor;
@@ -334,70 +262,55 @@ namespace FlowKit.UI
             FlowKitEvents.InvokeFadeEnd();
         }
 
-        private IEnumerator FadeUiTo(GameObject component, int occurrence, float targetAlpha, float duration, EasingType easing, float delay)
+
+        // ----------------------------------------------------- PRIVATE UTILITIES -----------------------------------------------------
+
+        private void GetAlphaLerping(GameObject component, int occurrence, float? fromAlpha, float? toAlpha, float easedTime, out float animationAlpha)
         {
-            SaveAlpha(component, occurrence);
-
-            if (delay > 0) { yield return new WaitForSeconds(delay); }
-
-            float elapsedTime = 0f;
-            FlowKitEvents.InvokeFadeStart();
-
-            while (elapsedTime < duration)
+            animationAlpha = 0f;
+            if (fromAlpha.HasValue && toAlpha.HasValue)
             {
-                float time = elapsedTime / duration;
-                float easedTime = Utils.Easing.SetEasingFunction(time, easing);
-
+                animationAlpha = Mathf.Lerp(fromAlpha.Value, toAlpha.Value, easedTime);
+            }
+            else if (fromAlpha.HasValue && !toAlpha.HasValue)
+            {
                 if (component == _panelAlpha.gameObject)
                 {
-                    _panelAlpha.alpha = Mathf.Lerp(_panelAlpha.alpha, targetAlpha, easedTime);
+                    animationAlpha = Mathf.Lerp(fromAlpha.Value, _originalAlpha[FlowKitConstants.PanelIndex][0], easedTime);
                 }
                 else if (component == _textComponent[occurrence].gameObject)
                 {
-                    _textComponent[occurrence].alpha = Mathf.Lerp(_textComponent[occurrence].alpha, targetAlpha, easedTime);
+                    animationAlpha = Mathf.Lerp(fromAlpha.Value, _originalAlpha[FlowKitConstants.TextIndex][occurrence], easedTime);
                 }
                 else if (component == _imageComponent[occurrence].gameObject)
                 {
-                    Color imgColour = _imageComponent[occurrence].color;
-                    imgColour.a = Mathf.Lerp(imgColour.a, targetAlpha, easedTime);
-                    _imageComponent[occurrence].color = imgColour;
+                    animationAlpha = Mathf.Lerp(fromAlpha.Value, _originalAlpha[FlowKitConstants.ImageIndex][occurrence], easedTime);
                 }
                 else if (component == _buttonComponent[occurrence].gameObject)
                 {
-                    Color btnColour = _buttonComponent[occurrence].image.color;
-                    btnColour.a = Mathf.Lerp(btnColour.a, targetAlpha, easedTime);
-                    _buttonComponent[occurrence].image.color = btnColour;
+                    animationAlpha = Mathf.Lerp(fromAlpha.Value, _originalAlpha[FlowKitConstants.ButtonIndex][occurrence], easedTime);
                 }
-
-                elapsedTime += Time.deltaTime;
-                yield return null;
             }
-
-            if (component == _panelAlpha.gameObject)
+            else if (!fromAlpha.HasValue && toAlpha.HasValue)
             {
-                _panelAlpha.alpha = targetAlpha;
+                if (component == _panelAlpha.gameObject)
+                {
+                    animationAlpha = Mathf.Lerp(_panelAlpha.alpha, toAlpha.Value, easedTime);
+                }
+                else if (component == _textComponent[occurrence].gameObject)
+                {
+                    animationAlpha = Mathf.Lerp(_textComponent[occurrence].alpha, toAlpha.Value, easedTime);
+                }
+                else if (component == _imageComponent[occurrence].gameObject)
+                {
+                    animationAlpha = Mathf.Lerp(_imageComponent[occurrence].color.a, toAlpha.Value, easedTime);
+                }
+                else if (component == _buttonComponent[occurrence].gameObject)
+                {
+                    animationAlpha = Mathf.Lerp(_buttonComponent[occurrence].image.color.a, toAlpha.Value, easedTime);
+                }
             }
-            else if (component == _textComponent[occurrence].gameObject)
-            {
-                _textComponent[occurrence].alpha = targetAlpha;
-            }
-            else if (component == _imageComponent[occurrence].gameObject)
-            {
-                Color imgColor = _imageComponent[occurrence].color;
-                imgColor.a = targetAlpha;
-                _imageComponent[occurrence].color = imgColor;
-            }
-            else if (component == _buttonComponent[occurrence].gameObject)
-            {
-                Color btnColour = _buttonComponent[occurrence].image.color;
-                btnColour.a = targetAlpha;
-                _buttonComponent[occurrence].image.color = btnColour;
-            }
-
-            FlowKitEvents.InvokeFadeEnd();
         }
-
-        // ----------------------------------------------------- PRIVATE UTILITIES -----------------------------------------------------
 
         private bool IndexNullChecksPass(AnimationTarget target, int occurrence)
         {
