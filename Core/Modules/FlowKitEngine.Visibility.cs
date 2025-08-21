@@ -92,10 +92,10 @@ namespace FlowKit
             /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
             /// <param name="duration">Time in seconds for the fading duration</param>
             /// <param name="delay">Time in seconds to wait before starting the fade</param>
-            public void FadeIn(AnimationTarget target, int occurrence, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+            public void FadeIn(AnimationTarget target, int occurrence, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
                 occurrence -= 1;
-                _engine.visibilityImpl.FadeIn(target, occurrence, duration, delay);
+                _engine.visibilityImpl.FadeIn(target, occurrence, duration, easing, delay);
             }
 
             /// <summary>
@@ -110,10 +110,10 @@ namespace FlowKit
             /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
             /// <param name="duration">Time in seconds for the fading duration</param>
             /// <param name="delay">Time in seconds to wait before starting the fade</param>
-            public void FadeOut(AnimationTarget target, int occurrence, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+            public void FadeOut(AnimationTarget target, int occurrence, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
                 occurrence -= 1;
-                _engine.visibilityImpl.FadeOut(target, occurrence, duration, delay);
+                _engine.visibilityImpl.FadeOut(target, occurrence, duration, easing, delay);
             }
 
             /// <summary>
@@ -129,10 +129,10 @@ namespace FlowKit
             /// <param name="alpha">Specifies the target alpha value (Range between 0-1)</param>
             /// <param name="duration">Time in seconds for the fading duration</param>
             /// <param name="delay">Time in seconds to wait before starting the fade</param>
-            public void FadeTo(AnimationTarget target, int occurrence, float alpha, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+            public void FadeTo(AnimationTarget target, int occurrence, float alpha, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
                 occurrence -= 1;
-                _engine.visibilityImpl.FadeTo(target, occurrence, alpha, duration, delay);
+                _engine.visibilityImpl.FadeTo(target, occurrence, alpha, duration, easing, delay);
             }
         }
     }
