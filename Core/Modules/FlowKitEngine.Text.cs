@@ -52,6 +52,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds for the Delay per character</param>
             public void TypeWriteWithDelay(int occurrence, float delay = FlowKitConstants.TypeWriter.PerCharacterDelay)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.textEffectImpl.DelayTypeWrite(occurrence, delay);
             }
@@ -68,6 +70,8 @@ namespace FlowKit
             /// <param name="duration">Time in seconds for the entire text to animate</param>
             public void TypeWriteWithDuration(int occurrence, float duration = FlowKitConstants.TypeWriter.CompleteTextDuration)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.textEffectImpl.DurationTypeWrite(occurrence, duration);
             }
@@ -89,6 +93,8 @@ namespace FlowKit
             /// <param name="color">Specifies the color32 to cycle to and from</param>
             public void ColorCycle(int occurrence, float duration, float delay, Color32 color)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.textEffectImpl.ColorCycleTwo(occurrence, duration, delay, color);
             }
@@ -110,6 +116,8 @@ namespace FlowKit
             /// <param name="colors">Specifies the color32's the text should cycle through</param>
             public void ColorCycle(int occurrence, float duration, float delay, Color32[] colors)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.textEffectImpl.ColorCycleMulti(occurrence, duration, delay, colors);
             }

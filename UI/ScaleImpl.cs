@@ -56,13 +56,13 @@ namespace FlowKit.UI
             new Utils.AutoIncreaseList<bool>()
         };
 
-        public ScaleImpl(TextMeshProUGUI[] text, Image[] image, Button[] button, RectTransform panel, MonoBehaviour runner)
+        public ScaleImpl(MonoBehaviour runner, RectTransform panel, TextMeshProUGUI[] text, Image[] image, Button[] button)
         {
+            _monoBehaviour = runner;
+            _panelTransform = panel;
             _textComponent = text;
             _imageComponent = image;
             _buttonComponent = button;
-            _panelTransform = panel;
-            _monoBehaviour = runner;
         }
 
         // ----------------------------------------------------- PUBLIC API -----------------------------------------------------
@@ -74,28 +74,28 @@ namespace FlowKit.UI
                 case AnimationTarget.Panel:
                     if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
 
-                    SaveScale(_panelTransform.gameObject, 0);
+                    SaveScale(target, 0);
 
                     _panelTransform.localScale = new Vector2(scale, scale);
                     break;
                 case AnimationTarget.Text:
                     if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
 
-                    SaveScale(_textComponent[occurrence].gameObject, occurrence);
+                    SaveScale(target, occurrence);
 
                     _textComponent[occurrence].rectTransform.localScale = new Vector2(scale, scale);
                     break;
                 case AnimationTarget.Image:
                     if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
 
-                    SaveScale(_imageComponent[occurrence].gameObject, occurrence);
+                    SaveScale(target, occurrence);
 
                     _imageComponent[occurrence].rectTransform.localScale = new Vector2(scale, scale);
                     break;
                 case AnimationTarget.Button:
                     if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
 
-                    SaveScale(_buttonComponent[occurrence].gameObject, occurrence);
+                    SaveScale(target, occurrence);
 
                     ((RectTransform)_buttonComponent[occurrence].transform).localScale = new Vector2(scale, scale);
                     break;
@@ -160,31 +160,39 @@ namespace FlowKit.UI
                 case AnimationTarget.Panel:
                     if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
 
-                    _monoBehaviour.StartCoroutine(ScaleFromToUi(_panelTransform, occurrence, fromScale, toScale, duration, easing, delay));
+                    SaveScale(target, 0);
+
+                    _monoBehaviour.StartCoroutine(ScaleFromToUi(_panelTransform, target, occurrence, fromScale, toScale, duration, easing, delay));
                     break;
                 case AnimationTarget.Text:
                     if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(ScaleFromToUi(_textComponent[occurrence].rectTransform, occurrence, fromScale, toScale, duration, easing, delay));
+                    SaveScale(target, occurrence);
+
+                    _monoBehaviour.StartCoroutine(ScaleFromToUi(_textComponent[occurrence].rectTransform, target, occurrence, fromScale, toScale, duration, easing, delay));
                     break;
                 case AnimationTarget.Image:
                     if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(ScaleFromToUi(_imageComponent[occurrence].rectTransform, occurrence, fromScale, toScale, duration, easing, delay));
+                    SaveScale(target, occurrence);
+
+                    _monoBehaviour.StartCoroutine(ScaleFromToUi(_imageComponent[occurrence].rectTransform, target, occurrence, fromScale, toScale, duration, easing, delay));
                     break;
                 case AnimationTarget.Button:
                     if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(ScaleFromToUi((RectTransform)_buttonComponent[occurrence].transform, occurrence, fromScale, toScale, duration, easing, delay));
+                    SaveScale(target, occurrence);
+
+                    _monoBehaviour.StartCoroutine(ScaleFromToUi((RectTransform)_buttonComponent[occurrence].transform, target, occurrence, fromScale, toScale, duration, easing, delay));
                     break;
             }
         }
 
         // ----------------------------------------------------- SCALE ANIMATION -----------------------------------------------------
 
-        private IEnumerator ScaleFromToUi(RectTransform component, int occurrence, float? fromScale, float? toScale, float duration, EasingType easing, float delay)
+        private IEnumerator ScaleFromToUi(RectTransform component, AnimationTarget target, int occurrence, float? fromScale, float? toScale, float duration, EasingType easing, float delay)
         {
-            GetStartScale(component, occurrence, out Vector2 startScale);
+            GetStartScale(target, occurrence, out Vector2 startScale);
 
             if (delay > 0) { yield return new WaitForSeconds(delay); }
             CorrectScaleBasedOnValues(ref startScale, in fromScale, in toScale, out Vector2 endScale);
@@ -209,6 +217,27 @@ namespace FlowKit.UI
 
         // ----------------------------------------------------- PRIVATE UTILITIES -----------------------------------------------------
 
+        private void GetStartScale(AnimationTarget target, int occurrence, out Vector2 startScale)
+        {
+            startScale = Vector2.zero;
+
+            switch (target)
+            {
+                case AnimationTarget.Panel:
+                    startScale = _panelTransform.localScale;
+                    break;
+                case AnimationTarget.Text:
+                    startScale = _textComponent[occurrence].rectTransform.localScale;
+                    break;
+                case AnimationTarget.Image:
+                    startScale = _imageComponent[occurrence].rectTransform.localScale;
+                    break;
+                case AnimationTarget.Button:
+                    startScale = _buttonComponent[occurrence].transform.localScale;
+                    break;
+            }
+        }
+
         private void CorrectScaleBasedOnValues(ref Vector2 startScale, in float? fromScale, in float? toScale, out Vector2 endScale)
         {
             endScale = startScale;
@@ -227,6 +256,41 @@ namespace FlowKit.UI
             }
         }
 
+        private void SaveScale(AnimationTarget target, int occurrence)
+        {
+            switch (target)
+            {
+                case AnimationTarget.Panel:
+                    if (!_storedScale[FlowKitConstants.PanelIndex][0])
+                    {
+                        _originalScale[FlowKitConstants.PanelIndex][0] = _panelTransform.localScale;
+                        _storedScale[FlowKitConstants.PanelIndex][0] = true;
+                    }
+                    break;
+                case AnimationTarget.Text:
+                    if (!_storedScale[FlowKitConstants.TextIndex][occurrence])
+                    {
+                        _originalScale[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].rectTransform.localScale;
+                        _storedScale[FlowKitConstants.TextIndex][occurrence] = true;
+                    }
+                    break;
+                case AnimationTarget.Image:
+                    if (!_storedScale[FlowKitConstants.ImageIndex][occurrence])
+                    {
+                        _originalScale[FlowKitConstants.ImageIndex][occurrence] = _imageComponent[occurrence].rectTransform.localScale;
+                        _storedScale[FlowKitConstants.ImageIndex][occurrence] = true;
+                    }
+                    break;
+                case AnimationTarget.Button:
+                    if (!_storedScale[FlowKitConstants.ButtonIndex][occurrence])
+                    {
+                        _originalScale[FlowKitConstants.ButtonIndex][occurrence] = ((RectTransform)_buttonComponent[occurrence].transform).localScale;
+                        _storedScale[FlowKitConstants.ButtonIndex][occurrence] = true;
+                    }
+                    break;
+            }
+        }
+
         private bool IndexNullChecksPass(AnimationTarget target, int occurrence)
         {
             switch (target)
@@ -241,84 +305,6 @@ namespace FlowKit.UI
                     return occurrence < _buttonComponent.Length && _buttonComponent[occurrence] != null;
                 default:
                     return false;
-            }
-        }
-
-        private void SaveScale(GameObject component, int occurrence)
-        {
-            if (component == _panelTransform.gameObject)
-            {
-                if (!_storedScale[FlowKitConstants.PanelIndex][0])
-                {
-                    _originalScale[FlowKitConstants.PanelIndex][0] = _panelTransform.localScale;
-                    _storedScale[FlowKitConstants.PanelIndex][0] = true;
-                }
-                return;
-            }
-            else if (component == _textComponent[occurrence].gameObject)
-            {
-                if (!_storedScale[FlowKitConstants.TextIndex][occurrence])
-                {
-                    _originalScale[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].rectTransform.localScale;
-                    _storedScale[FlowKitConstants.TextIndex][occurrence] = true;
-                }
-                return;
-            }
-            else if (component == _imageComponent[occurrence].gameObject)
-            {
-                if (!_storedScale[FlowKitConstants.ImageIndex][occurrence])
-                {
-                    _originalScale[FlowKitConstants.ImageIndex][occurrence] = _imageComponent[occurrence].rectTransform.localScale;
-                    _storedScale[FlowKitConstants.ImageIndex][occurrence] = true;
-                }
-                return;
-            }
-            else if (component == _buttonComponent[occurrence].gameObject)
-            {
-                if (!_storedScale[FlowKitConstants.ButtonIndex][occurrence])
-                {
-                    _originalScale[FlowKitConstants.ButtonIndex][occurrence] = ((RectTransform)_buttonComponent[occurrence].transform).localScale;
-                    _storedScale[FlowKitConstants.ButtonIndex][occurrence] = true;
-                }
-                return;
-            }
-        }
-
-        private void GetStartScale(RectTransform component, int occurrence, out Vector2 startScale)
-        {
-            startScale = Vector2.zero;
-
-            if (component == _panelTransform)
-            {
-                if (!_storedScale[FlowKitConstants.PanelIndex][0])
-                {
-                    SaveScale(_panelTransform.gameObject, 0);
-                }
-                startScale = _panelTransform.localScale;
-            }
-            else if (component == _textComponent[occurrence].rectTransform)
-            {
-                if (!_storedScale[FlowKitConstants.TextIndex][occurrence])
-                {
-                    SaveScale(_panelTransform.gameObject, occurrence);
-                }
-                startScale = _textComponent[occurrence].rectTransform.localScale;
-            }
-            else if (component == _imageComponent[occurrence].rectTransform)
-            {
-                if (!_storedScale[FlowKitConstants.ImageIndex][occurrence])
-                {
-                    SaveScale(_panelTransform.gameObject, occurrence);
-                }
-                startScale = _imageComponent[occurrence].rectTransform.localScale;
-            }
-            else if (component == (RectTransform)_buttonComponent[occurrence].transform)
-            {
-                if (!_storedScale[FlowKitConstants.ButtonIndex][occurrence])
-                {
-                    SaveScale(_panelTransform.gameObject, occurrence);
-                }
-                startScale = _buttonComponent[occurrence].transform.localScale;
             }
         }
     }

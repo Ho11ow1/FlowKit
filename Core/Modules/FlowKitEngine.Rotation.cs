@@ -50,6 +50,8 @@ namespace FlowKit
             /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
             public void ResetRotation(AnimationTarget target, int occurrence)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.rotateImpl.Reset(target, occurrence, _engine.gameObject);
             }
@@ -67,6 +69,8 @@ namespace FlowKit
             /// <param name="degrees">Degrees the rotation should rotate, positive values go counter-clockwise, negative clockwise</param>
             public void SetRotation(AnimationTarget target, int occurrence, float degrees)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.rotateImpl.SetRotation(target, occurrence, degrees);
             }
@@ -87,6 +91,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
             public void Rotate(AnimationTarget target, int occurrence, float degrees, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.rotateImpl.Rotation(target, occurrence, degrees, duration, easing, delay);
             }
@@ -105,6 +111,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
             public void RotateForever(AnimationTarget target, int occurrence, float degreesPerSecond, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.rotateImpl.RotationForever(target, occurrence, degreesPerSecond, delay);
             }

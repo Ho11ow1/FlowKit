@@ -52,6 +52,8 @@ namespace FlowKit
             /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
             public void ResetPosition(AnimationTarget target, int occurrence)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.transitionImpl.Reset(target, occurrence, _engine.gameObject);
             }
@@ -69,6 +71,8 @@ namespace FlowKit
             /// <param name="position">Specifies the position where the element will appear on the panel (Based on anchor preset)</param>
             public void SetPosition(AnimationTarget target, int occurrence, Vector2 position)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.transitionImpl.SetPosition(target, occurrence, position);
             }
@@ -89,6 +93,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
             public void MoveFromTop(AnimationTarget target, int occurrence, float offset, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.transitionImpl.TransitionFromTop(target, occurrence, offset, duration, easing, delay);
             }
@@ -109,6 +115,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
             public void MoveFromBottom(AnimationTarget target, int occurrence, float offset, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.transitionImpl.TransitionFromBottom(target, occurrence, offset, duration, easing, delay);
             }
@@ -129,6 +137,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
             public void MoveFromLeft(AnimationTarget target, int occurrence, float offset, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.transitionImpl.TransitionFromLeft(target, occurrence, offset, duration, easing, delay);
             }
@@ -149,6 +159,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
             public void MoveFromRight(AnimationTarget target, int occurrence, float offset, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.transitionImpl.TransitionFromRight(target, occurrence, offset, duration, easing, delay);
             }
@@ -169,6 +181,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
             public void MoveFromPosition(AnimationTarget target, int occurrence, Vector2 offset, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.transitionImpl.TransitionFromPosition(target, occurrence, offset, duration, easing, delay);
             }
@@ -189,6 +203,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
             public void MoveToTop(AnimationTarget target, int occurrence, float offset, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.transitionImpl.TransitionToTop(target, occurrence, offset, duration, easing, delay);
             }
@@ -209,6 +225,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
             public void MoveToBottom(AnimationTarget target, int occurrence, float offset, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.transitionImpl.TransitionToBottom(target, occurrence, offset, duration, easing, delay);
             }
@@ -229,6 +247,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
             public void MoveToLeft(AnimationTarget target, int occurrence, float offset, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.transitionImpl.TransitionToLeft(target, occurrence, offset, duration, easing, delay);
             }
@@ -249,6 +269,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
             public void MoveToRight(AnimationTarget target, int occurrence, float offset, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.transitionImpl.TransitionToRight(target, occurrence, offset, duration, easing, delay);
             }
@@ -269,6 +291,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
             public void MoveToPosition(AnimationTarget target, int occurrence, Vector2 offset, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.transitionImpl.TransitionToPosition(target, occurrence, offset, duration, easing, delay);
             }

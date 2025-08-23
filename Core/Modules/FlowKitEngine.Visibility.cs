@@ -50,6 +50,8 @@ namespace FlowKit
             /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
             public void ResetAlpha(AnimationTarget target, int occurrence)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.visibilityImpl.Reset(target, occurrence, _engine.gameObject);
             }
@@ -62,7 +64,7 @@ namespace FlowKit
             ///   </item>
             /// </list>
             /// </summary>
-            /// <param name="visible">Sets the panel visibility condition</param>
+            /// <param name="isVisible">Sets the panel visibility condition</param>
             public void SetPanelVisibility(bool isVisible)
             {
                 _engine.visibilityImpl.SetVisibility(AnimationTarget.Panel, 0, isVisible);
@@ -76,6 +78,8 @@ namespace FlowKit
             /// <param name="isVisible">Specifies if the target element should be visible</param>
             public void SetVisibility(AnimationTarget target, int occurrence, bool isVisible)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.visibilityImpl.SetVisibility(target, occurrence, isVisible);
             }
@@ -95,6 +99,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds to wait before starting the fade</param>
             public void FadeFrom0To1(AnimationTarget target, int occurrence, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.visibilityImpl.FadeFromTo(target, occurrence, FlowKitConstants.TransparentAlpha, FlowKitConstants.OpaqueAlpha, duration, easing, delay);
             }
@@ -114,6 +120,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds to wait before starting the fade</param>
             public void FadeFrom1To0(AnimationTarget target, int occurrence, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.visibilityImpl.FadeFromTo(target, occurrence, FlowKitConstants.OpaqueAlpha, FlowKitConstants.TransparentAlpha, duration, easing, delay);
             }
@@ -134,6 +142,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds to wait before starting the fade</param>
             public void FadeTo(AnimationTarget target, int occurrence, float toAlpha, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.visibilityImpl.FadeFromTo(target, occurrence, null, toAlpha, duration, easing, delay);
             }
@@ -154,6 +164,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds to wait before starting the fade</param>
             public void FadeFrom(AnimationTarget target, int occurrence, float fromAlpha, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.visibilityImpl.FadeFromTo(target, occurrence, fromAlpha, null, duration, easing, delay);
             }
@@ -175,6 +187,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds to wait before starting the fade</param>
             public void FadeFromTo(AnimationTarget target, int occurrence, float fromAlpha, float toAlpha, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.visibilityImpl.FadeFromTo(target, occurrence, fromAlpha, toAlpha, duration, easing, delay);
             }

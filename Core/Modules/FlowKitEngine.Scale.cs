@@ -50,6 +50,8 @@ namespace FlowKit
             /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
             public void ResetScale(AnimationTarget target, int occurrence)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.scalingImpl.Reset(target, occurrence, _engine.gameObject);
             }
@@ -67,6 +69,8 @@ namespace FlowKit
             /// <param name="scale">Specifies the target scale of the element</param>
             public void SetScale(AnimationTarget target, int occurrence, float scale)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.scalingImpl.SetScale(target, occurrence, scale);
             }
@@ -87,6 +91,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds to wait before starting the scaling</param>
             public void ScaleUp(AnimationTarget target, int occurrence, float multiplier, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.scalingImpl.ScaleFromTo(target, occurrence, null, multiplier, duration, easing, delay);
             }
@@ -107,6 +113,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds to wait before starting the scaling</param>
             public void ScaleDown(AnimationTarget target, int occurrence, float multiplier, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.scalingImpl.ScaleFromTo(target, occurrence, null, 1 / multiplier, duration, easing, delay);
             }
@@ -127,6 +135,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds to wait before starting the scaling</param>
             public void ScaleFrom(AnimationTarget target, int occurrence, float fromScale, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.scalingImpl.ScaleFromTo(target, occurrence, fromScale, null, duration, easing, delay);
             }
@@ -148,6 +158,8 @@ namespace FlowKit
             /// <param name="delay">Time in seconds to wait before starting the scaling</param>
             public void ScaleFromTo(AnimationTarget target, int occurrence, float fromScale, float toScale, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.scalingImpl.ScaleFromTo(target, occurrence, fromScale, toScale, duration, easing, delay);
             }

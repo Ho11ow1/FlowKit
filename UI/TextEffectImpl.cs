@@ -38,10 +38,10 @@ namespace FlowKit.UI
 
         private readonly Utils.StringAutoIncreaseList _targetString = new Utils.StringAutoIncreaseList();
 
-        public TextEffectImpl(TextMeshProUGUI[] tmp, MonoBehaviour runner)
+        public TextEffectImpl(MonoBehaviour runner, TextMeshProUGUI[] tmp)
         {
-            _textComponent = tmp;
             _monoBehaviour = runner;
+            _textComponent = tmp;
         }
 
         // ----------------------------------------------------- PUBLIC API -----------------------------------------------------

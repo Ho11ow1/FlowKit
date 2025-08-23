@@ -44,6 +44,7 @@ namespace FlowKit
         private TextMeshProUGUI[] textsArr;
         private Image[] imagesArr;
         private Button[] buttonsArr;
+        private TextMeshProUGUI[] buttonTextsArr;
 
         /// <summary>
         /// Read-only access to the panel's RectTransform.
@@ -68,6 +69,11 @@ namespace FlowKit
         /// found in the panel's direct chidren (not nested deeper).
         /// </summary>
         public IReadOnlyList<Button> Buttons => buttonsArr;
+        /// <summary>
+        /// Read-only access to all Button TextMeshProUGUI children components 
+        /// found in the Button's direct chidren (not nested deeper).
+        /// </summary>
+        public IReadOnlyList<TextMeshProUGUI> ButtonTexts => buttonTextsArr;
 
         void Awake()
         {
@@ -86,6 +92,17 @@ namespace FlowKit
             imagesArr = GetDirectChildren<Image>(child => !child.GetComponent<Button>());
             buttonsArr = GetDirectChildren<Button>();
 
+            List<TextMeshProUGUI> buttonTexts = new List<TextMeshProUGUI>();
+            foreach (var button in buttonsArr)
+            {
+                var textChild = button.GetComponentInChildren<TextMeshProUGUI>();
+                if (textChild != null)
+                {
+                    buttonTexts.Add(textChild);
+                }
+            }
+            buttonTextsArr = buttonTexts.ToArray();
+
             #if UNITY_EDITOR
             if (canvasGroup == null) { Debug.LogWarning($"[{gameObject.name}] No canvasGroup component found."); }
             if (textsArr == null) { Debug.LogWarning($"[{gameObject.name}] No Text component found in children. Parent: [{transform.parent.name ?? "none"}]"); }
@@ -98,11 +115,11 @@ namespace FlowKit
         private void InitComponents()
         {
             queueComponent = new Core.FlowKitQueue(this);
-            visibilityImpl = new UI.VisibilityImpl(textsArr, imagesArr, buttonsArr, canvasGroup, this);
-            transitionImpl = new UI.MovementImpl(textsArr, imagesArr, buttonsArr, panelRect, this);
-            rotateImpl = new UI.RotationImpl(textsArr, imagesArr, buttonsArr, panelRect, this);
-            scalingImpl = new UI.ScaleImpl(textsArr, imagesArr, buttonsArr, panelRect, this);
-            textEffectImpl = new UI.TextEffectImpl(textsArr, this);
+            visibilityImpl = new UI.VisibilityImpl(this, canvasGroup, textsArr, imagesArr, buttonsArr, buttonTextsArr);
+            transitionImpl = new UI.MovementImpl(this, panelRect, textsArr, imagesArr, buttonsArr);
+            rotateImpl = new UI.RotationImpl(this, panelRect, textsArr, imagesArr, buttonsArr);
+            scalingImpl = new UI.ScaleImpl(this, panelRect, textsArr, imagesArr, buttonsArr);
+            textEffectImpl = new UI.TextEffectImpl(this, textsArr);
         }
 
         private void InitModules()
@@ -113,6 +130,8 @@ namespace FlowKit
             Rotation = new RotateModule(this);
             Text = new TextModule(this);
         }
+
+        // ----------------------------------------------------- PRIVATE UTILITIES -----------------------------------------------------
 
         // System.Func<Transform, bool> name = null | Optional filter lambda such as (obj => !obj.GetComponent<T>())
         private T[] GetDirectChildren<T>(System.Func<Transform, bool> filter = null) where T : Component
@@ -130,6 +149,11 @@ namespace FlowKit
                 }
             }
             return list.ToArray();
+        }
+
+        private static bool IsOccurrenceValid(int occurrence)
+        {
+            return occurrence >= 1;
         }
 
         // ----------------------------------------------------- Queue API -----------------------------------------------------

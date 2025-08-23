@@ -56,13 +56,13 @@ namespace FlowKit.UI
             new Utils.AutoIncreaseList<bool>()
         };
 
-        public MovementImpl(TextMeshProUGUI[] text, Image[] image, Button[] button, RectTransform panel, MonoBehaviour runner)
+        public MovementImpl(MonoBehaviour runner, RectTransform panel, TextMeshProUGUI[] text, Image[] image, Button[] button)
         {
+            _monoBehaviour = runner;
+            _panelTransform = panel;
             _textComponent = text;
             _imageComponent = image;
             _buttonComponent = button;
-            _panelTransform = panel;
-            _monoBehaviour = runner;
         }
 
         // ----------------------------------------------------- PUBLIC API -----------------------------------------------------
@@ -74,28 +74,28 @@ namespace FlowKit.UI
                 case AnimationTarget.Panel:
                     if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
 
-                    SavePosition(_panelTransform.gameObject, 0);
+                    SavePosition(target, 0);
 
                     _panelTransform.anchoredPosition = newPosition;
                     break;
                 case AnimationTarget.Text:
                     if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
 
-                    SavePosition(_textComponent[occurrence].gameObject, occurrence);
+                    SavePosition(target, occurrence);
 
                     _textComponent[occurrence].rectTransform.anchoredPosition = newPosition;
                     break;
                 case AnimationTarget.Image:
                     if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
 
-                    SavePosition(_imageComponent[occurrence].gameObject, occurrence);
+                    SavePosition(target, occurrence);
 
                     _imageComponent[occurrence].rectTransform.anchoredPosition = newPosition;
                     break;
                 case AnimationTarget.Button:
                     if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
 
-                    SavePosition(_buttonComponent[occurrence].gameObject, occurrence);
+                    SavePosition(target, occurrence);
 
                     ((RectTransform)_buttonComponent[occurrence].transform).anchoredPosition = newPosition;
                     break;
@@ -295,22 +295,30 @@ namespace FlowKit.UI
                 case AnimationTarget.Panel:
                     if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
 
-                    _monoBehaviour.StartCoroutine(TransitionTo(_panelTransform, occurrence, new Vector2(0, offset), duration, easing, delay));
+                    SavePosition(target, 0);
+
+                    _monoBehaviour.StartCoroutine(TransitionTo(_panelTransform, target, occurrence, new Vector2(0, offset), duration, easing, delay));
                     break;
                 case AnimationTarget.Text:
                     if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(TransitionTo(_textComponent[occurrence].rectTransform, occurrence, new Vector2(0, offset), duration, easing, delay));
+                    SavePosition(target, occurrence);
+
+                    _monoBehaviour.StartCoroutine(TransitionTo(_textComponent[occurrence].rectTransform, target, occurrence, new Vector2(0, offset), duration, easing, delay));
                     break;
                 case AnimationTarget.Image:
                     if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(TransitionTo(_imageComponent[occurrence].rectTransform, occurrence, new Vector2(0, offset), duration, easing, delay));
+                    SavePosition(target, occurrence);
+
+                    _monoBehaviour.StartCoroutine(TransitionTo(_imageComponent[occurrence].rectTransform, target, occurrence, new Vector2(0, offset), duration, easing, delay));
                     break;
                 case AnimationTarget.Button:
                     if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(TransitionTo((RectTransform)_buttonComponent[occurrence].transform, occurrence, new Vector2(0, offset), duration, easing, delay));
+                    SavePosition(target, occurrence);
+
+                    _monoBehaviour.StartCoroutine(TransitionTo((RectTransform)_buttonComponent[occurrence].transform, target, occurrence, new Vector2(0, offset), duration, easing, delay));
                     break;
             }
         }
@@ -322,22 +330,30 @@ namespace FlowKit.UI
                 case AnimationTarget.Panel:
                     if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
 
-                    _monoBehaviour.StartCoroutine(TransitionTo(_panelTransform, occurrence, new Vector2(0, -offset), duration, easing, delay));
+                    SavePosition(target, 0);
+
+                    _monoBehaviour.StartCoroutine(TransitionTo(_panelTransform, target, occurrence, new Vector2(0, -offset), duration, easing, delay));
                     break;
                 case AnimationTarget.Text:
                     if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(TransitionTo(_textComponent[occurrence].rectTransform, occurrence, new Vector2(0, -offset), duration, easing, delay));
+                    SavePosition(target, occurrence);
+
+                    _monoBehaviour.StartCoroutine(TransitionTo(_textComponent[occurrence].rectTransform, target, occurrence, new Vector2(0, -offset), duration, easing, delay));
                     break;
                 case AnimationTarget.Image:
                     if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(TransitionTo(_imageComponent[occurrence].rectTransform, occurrence, new Vector2(0, -offset), duration, easing, delay));
+                    SavePosition(target, occurrence);
+
+                    _monoBehaviour.StartCoroutine(TransitionTo(_imageComponent[occurrence].rectTransform, target, occurrence, new Vector2(0, -offset), duration, easing, delay));
                     break;
                 case AnimationTarget.Button:
                     if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(TransitionTo((RectTransform)_buttonComponent[occurrence].transform, occurrence, new Vector2(0, -offset), duration, easing, delay));
+                    SavePosition(target, occurrence);
+
+                    _monoBehaviour.StartCoroutine(TransitionTo((RectTransform)_buttonComponent[occurrence].transform, target, occurrence, new Vector2(0, -offset), duration, easing, delay));
                     break;
             }
         }
@@ -349,22 +365,30 @@ namespace FlowKit.UI
                 case AnimationTarget.Panel:
                     if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
 
-                    _monoBehaviour.StartCoroutine(TransitionTo(_panelTransform, occurrence, new Vector2(-offset, 0), duration, easing, delay));
+                    SavePosition(target, 0);
+
+                    _monoBehaviour.StartCoroutine(TransitionTo(_panelTransform, target, occurrence, new Vector2(-offset, 0), duration, easing, delay));
                     break;
                 case AnimationTarget.Text:
                     if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(TransitionTo(_textComponent[occurrence].rectTransform, occurrence, new Vector2(-offset, 0), duration, easing, delay));
+                    SavePosition(target, occurrence);
+
+                    _monoBehaviour.StartCoroutine(TransitionTo(_textComponent[occurrence].rectTransform, target, occurrence, new Vector2(-offset, 0), duration, easing, delay));
                     break;
                 case AnimationTarget.Image:
                     if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(TransitionTo(_imageComponent[occurrence].rectTransform, occurrence, new Vector2(-offset, 0), duration, easing, delay));
+                    SavePosition(target, occurrence);
+
+                    _monoBehaviour.StartCoroutine(TransitionTo(_imageComponent[occurrence].rectTransform, target, occurrence, new Vector2(-offset, 0), duration, easing, delay));
                     break;
                 case AnimationTarget.Button:
                     if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(TransitionTo((RectTransform)_buttonComponent[occurrence].transform, occurrence, new Vector2(-offset, 0), duration, easing, delay));
+                    SavePosition(target, occurrence);
+
+                    _monoBehaviour.StartCoroutine(TransitionTo((RectTransform)_buttonComponent[occurrence].transform, target, occurrence, new Vector2(-offset, 0), duration, easing, delay));
                     break;
             }
         }
@@ -376,22 +400,30 @@ namespace FlowKit.UI
                 case AnimationTarget.Panel:
                     if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
 
-                    _monoBehaviour.StartCoroutine(TransitionTo(_panelTransform, occurrence, new Vector2(offset, 0), duration, easing, delay));
+                    SavePosition(target, 0);
+
+                    _monoBehaviour.StartCoroutine(TransitionTo(_panelTransform, target, occurrence, new Vector2(offset, 0), duration, easing, delay));
                     break;
                 case AnimationTarget.Text:
                     if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(TransitionTo(_textComponent[occurrence].rectTransform, occurrence, new Vector2(offset, 0), duration, easing, delay));
+                    SavePosition(target, occurrence);
+
+                    _monoBehaviour.StartCoroutine(TransitionTo(_textComponent[occurrence].rectTransform, target, occurrence, new Vector2(offset, 0), duration, easing, delay));
                     break;
                 case AnimationTarget.Image:
                     if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(TransitionTo(_imageComponent[occurrence].rectTransform, occurrence, new Vector2(offset, 0), duration, easing, delay));
+                    SavePosition(target, occurrence);
+
+                    _monoBehaviour.StartCoroutine(TransitionTo(_imageComponent[occurrence].rectTransform, target, occurrence, new Vector2(offset, 0), duration, easing, delay));
                     break;
                 case AnimationTarget.Button:
                     if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(TransitionTo((RectTransform)_buttonComponent[occurrence].transform, occurrence, new Vector2(offset, 0), duration, easing, delay));
+                    SavePosition(target, occurrence);
+
+                    _monoBehaviour.StartCoroutine(TransitionTo((RectTransform)_buttonComponent[occurrence].transform, target, occurrence, new Vector2(offset, 0), duration, easing, delay));
                     break;
             }
         }
@@ -403,22 +435,30 @@ namespace FlowKit.UI
                 case AnimationTarget.Panel:
                     if (!IndexNullChecksPass(AnimationTarget.Panel, 0)) { return; }
 
-                    _monoBehaviour.StartCoroutine(TransitionTo(_panelTransform, occurrence, offset, duration, easing, delay));
+                    SavePosition(target, 0);
+
+                    _monoBehaviour.StartCoroutine(TransitionTo(_panelTransform, target, occurrence, offset, duration, easing, delay));
                     break;
                 case AnimationTarget.Text:
                     if (!IndexNullChecksPass(AnimationTarget.Text, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(TransitionTo(_textComponent[occurrence].rectTransform, occurrence, offset, duration, easing, delay));
+                    SavePosition(target, occurrence);
+
+                    _monoBehaviour.StartCoroutine(TransitionTo(_textComponent[occurrence].rectTransform, target, occurrence, offset, duration, easing, delay));
                     break;
                 case AnimationTarget.Image:
                     if (!IndexNullChecksPass(AnimationTarget.Image, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(TransitionTo(_imageComponent[occurrence].rectTransform, occurrence, offset, duration, easing, delay));
+                    SavePosition(target, occurrence);
+
+                    _monoBehaviour.StartCoroutine(TransitionTo(_imageComponent[occurrence].rectTransform, target, occurrence, offset, duration, easing, delay));
                     break;
                 case AnimationTarget.Button:
                     if (!IndexNullChecksPass(AnimationTarget.Button, occurrence)) { return; }
 
-                    _monoBehaviour.StartCoroutine(TransitionTo((RectTransform)_buttonComponent[occurrence].transform, occurrence, offset, duration, easing, delay));
+                    SavePosition(target, occurrence);
+
+                    _monoBehaviour.StartCoroutine(TransitionTo((RectTransform)_buttonComponent[occurrence].transform, target, occurrence, offset, duration, easing, delay));
                     break;
             }
         }
@@ -454,9 +494,9 @@ namespace FlowKit.UI
 
         // ----------------------------------------------------- TO TRANSITION -----------------------------------------------------
 
-        private IEnumerator TransitionTo(RectTransform component, int occurrence, Vector2 offset, float duration, EasingType easing, float delay)
+        private IEnumerator TransitionTo(RectTransform component, AnimationTarget target, int occurrence, Vector2 offset, float duration, EasingType easing, float delay)
         {
-            GetStartPos(component, occurrence, out Vector2 startPos);
+            GetStartPos(target, occurrence, out Vector2 startPos);
             Vector2 targetPos;
 
             if (delay > 0) { yield return new WaitForSeconds(delay); }
@@ -481,6 +521,62 @@ namespace FlowKit.UI
 
         // ----------------------------------------------------- PRIVATE UTILITIES -----------------------------------------------------
 
+        private void GetStartPos(AnimationTarget target, int occurrence, out Vector2 startPos)
+        {
+            startPos = Vector2.zero;
+
+            switch (target)
+            {
+                case AnimationTarget.Panel:
+                    startPos = _panelTransform.anchoredPosition;
+                    break;
+                case AnimationTarget.Text:
+                    startPos = _textComponent[occurrence].rectTransform.anchoredPosition;
+                    break;
+                case AnimationTarget.Image:
+                    startPos = _imageComponent[occurrence].rectTransform.anchoredPosition;
+                    break;
+                case AnimationTarget.Button:
+                    startPos = ((RectTransform)_buttonComponent[occurrence].transform).anchoredPosition;
+                    break;
+            }
+        }
+
+        private void SavePosition(AnimationTarget target, int occurrence)
+        {
+            switch (target)
+            {
+                case AnimationTarget.Panel:
+                    if (!_storedPosition[FlowKitConstants.PanelIndex][0])
+                    {
+                        _originalPosition[FlowKitConstants.PanelIndex][0] = _panelTransform.anchoredPosition;
+                        _storedPosition[FlowKitConstants.PanelIndex][0] = true;
+                    }
+                    break;
+                case AnimationTarget.Text:
+                    if (!_storedPosition[FlowKitConstants.TextIndex][occurrence])
+                    {
+                        _originalPosition[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].rectTransform.anchoredPosition;
+                        _storedPosition[FlowKitConstants.TextIndex][occurrence] = true;
+                    }
+                    break;
+                case AnimationTarget.Image:
+                    if (!_storedPosition[FlowKitConstants.ImageIndex][occurrence])
+                    {
+                        _originalPosition[FlowKitConstants.ImageIndex][occurrence] = _imageComponent[occurrence].rectTransform.anchoredPosition;
+                        _storedPosition[FlowKitConstants.ImageIndex][occurrence] = true;
+                    }
+                    break;
+                case AnimationTarget.Button:
+                    if (!_storedPosition[FlowKitConstants.ButtonIndex][occurrence])
+                    {
+                        _originalPosition[FlowKitConstants.ButtonIndex][occurrence] = ((RectTransform)_buttonComponent[occurrence].transform).anchoredPosition;
+                        _storedPosition[FlowKitConstants.ButtonIndex][occurrence] = true;
+                    }
+                    break;
+            }
+        }
+
         private bool IndexNullChecksPass(AnimationTarget target, int occurrence)
         {
             switch (target)
@@ -495,84 +591,6 @@ namespace FlowKit.UI
                     return occurrence < _buttonComponent.Length && _buttonComponent[occurrence] != null;
                 default:
                     return false;
-            }
-        }
-
-        private void SavePosition(GameObject component, int occurrence)
-        {
-            if (component == _panelTransform.gameObject)
-            {
-                if (!_storedPosition[FlowKitConstants.PanelIndex][0])
-                {
-                    _originalPosition[FlowKitConstants.PanelIndex][0] = _panelTransform.anchoredPosition;
-                    _storedPosition[FlowKitConstants.PanelIndex][0] = true;
-                }
-                return;
-            }
-            else if (component == _textComponent[occurrence].gameObject)
-            {
-                if (!_storedPosition[FlowKitConstants.TextIndex][occurrence])
-                {
-                    _originalPosition[FlowKitConstants.TextIndex][occurrence] = _textComponent[occurrence].rectTransform.anchoredPosition;
-                    _storedPosition[FlowKitConstants.TextIndex][occurrence] = true;
-                }
-                return;
-            }
-            else if (component == _imageComponent[occurrence].gameObject)
-            {
-                if (!_storedPosition[FlowKitConstants.ImageIndex][occurrence])
-                {
-                    _originalPosition[FlowKitConstants.ImageIndex][occurrence] = _imageComponent[occurrence].rectTransform.anchoredPosition;
-                    _storedPosition[FlowKitConstants.ImageIndex][occurrence] = true;
-                }
-                return;
-            }
-            else if (component == _buttonComponent[occurrence].gameObject)
-            {
-                if (!_storedPosition[FlowKitConstants.ButtonIndex][occurrence])
-                {
-                    _originalPosition[FlowKitConstants.ButtonIndex][occurrence] = ((RectTransform)_buttonComponent[occurrence].transform).anchoredPosition;
-                    _storedPosition[FlowKitConstants.ButtonIndex][occurrence] = true;
-                }
-                return;
-            }
-        }
-
-        private void GetStartPos(RectTransform component, int occurrence, out Vector2 startPos)
-        {
-            startPos = Vector2.zero;
-
-            if (component == _panelTransform)
-            {
-                if (!_storedPosition[FlowKitConstants.PanelIndex][0])
-                {
-                    SavePosition(_panelTransform.gameObject, occurrence);
-                }
-                startPos = _panelTransform.anchoredPosition;
-            }
-            else if (component == _textComponent[occurrence].rectTransform)
-            {
-                if (!_storedPosition[FlowKitConstants.TextIndex][occurrence])
-                {
-                    SavePosition(_textComponent[occurrence].gameObject, occurrence);
-                }
-                startPos = _textComponent[occurrence].rectTransform.anchoredPosition;
-            }
-            else if (component == _imageComponent[occurrence].rectTransform)
-            {
-                if (!_storedPosition[FlowKitConstants.ImageIndex][occurrence])
-                {
-                    SavePosition(_imageComponent[occurrence].gameObject, occurrence);
-                }
-                startPos = _imageComponent[occurrence].rectTransform.anchoredPosition;
-            }
-            else if (component == (RectTransform)_buttonComponent[occurrence].transform)
-            {
-                if (!_storedPosition[FlowKitConstants.ButtonIndex][occurrence])
-                {
-                    SavePosition(_buttonComponent[occurrence].gameObject, occurrence);
-                }
-                startPos = ((RectTransform)_buttonComponent[occurrence].transform).anchoredPosition;
             }
         }
     }
