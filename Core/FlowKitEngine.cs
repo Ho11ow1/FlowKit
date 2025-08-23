@@ -39,11 +39,41 @@ namespace FlowKit
         private UI.TextEffectImpl textEffectImpl;
 
         // Component variables
-        private CanvasGroup _cg;
-        private RectTransform _panel;
-        private TextMeshProUGUI[] _texts;
-        private Image[] _images;
-        private Button[] _buttons;
+        private RectTransform panelRect;
+        private CanvasGroup canvasGroup;
+        private TextMeshProUGUI[] textsArr;
+        private Image[] imagesArr;
+        private Button[] buttonsArr;
+        private TextMeshProUGUI[] buttonTextsArr;
+
+        /// <summary>
+        /// Read-only access to the panel's RectTransform.
+        /// </summary>
+        public RectTransform PanelRect => panelRect;
+        /// <summary>
+        /// Read-only access to the panel's CanvasGroup.
+        /// </summary>
+        public CanvasGroup CanvasGroup => canvasGroup;
+        /// <summary>
+        /// Read-only access to all TextMeshProUGUI components 
+        /// found in the panel's direct chidren (not nested deeper).
+        /// </summary>
+        public IReadOnlyList<TextMeshProUGUI> Texts => textsArr;
+        /// <summary>
+        /// Read-only access to all Image components 
+        /// found in the panel's direct chidren (not nested deeper).
+        /// </summary>
+        public IReadOnlyList<Image> Images => imagesArr;
+        /// <summary>
+        /// Read-only access to all Button components 
+        /// found in the panel's direct chidren (not nested deeper).
+        /// </summary>
+        public IReadOnlyList<Button> Buttons => buttonsArr;
+        /// <summary>
+        /// Read-only access to all Button TextMeshProUGUI children components 
+        /// found in the Button's direct chidren (not nested deeper).
+        /// </summary>
+        public IReadOnlyList<TextMeshProUGUI> ButtonTexts => buttonTextsArr;
 
         void Awake()
         {
@@ -56,42 +86,40 @@ namespace FlowKit
 
         private void InitVariables()
         {
-            _cg = GetComponent<CanvasGroup>();
+            panelRect = GetComponent<RectTransform>();
+            canvasGroup = GetComponent<CanvasGroup>();
+            textsArr = GetDirectChildren<TextMeshProUGUI>(child => !child.GetComponent<Button>());
+            imagesArr = GetDirectChildren<Image>(child => !child.GetComponent<Button>());
+            buttonsArr = GetDirectChildren<Button>();
 
-            _texts = GetComponentsInChildren<TextMeshProUGUI>();
-
-            var imageList = new List<Image>();
-            foreach (Transform childTransform in transform)
+            List<TextMeshProUGUI> buttonTexts = new List<TextMeshProUGUI>();
+            foreach (var button in buttonsArr)
             {
-                GameObject child = childTransform.gameObject;
-                if (child.TryGetComponent<Image>(out Image img) && child.GetComponent<RectTransform>())
+                var textChild = button.GetComponentInChildren<TextMeshProUGUI>();
+                if (textChild != null)
                 {
-                    imageList.Add(img);
+                    buttonTexts.Add(textChild);
                 }
             }
-            _images = imageList.ToArray();
-
-            _buttons = GetComponentsInChildren<Button>();
-
-            _panel = GetComponent<RectTransform>();
+            buttonTextsArr = buttonTexts.ToArray();
 
             #if UNITY_EDITOR
-            if (_cg == null) { Debug.LogWarning($"[{gameObject.name}] No CanvasGroup component found."); }
-            if (_texts == null) { Debug.LogWarning($"[{gameObject.name}] No Text component found in children. Parent: [{transform.parent.name ?? "none"}]"); }
-            if (_images == null) { Debug.LogWarning($"[{gameObject.name}] No Image component found in children. Parent: [{transform.parent.name ?? "none"}]"); }
-            if (_buttons == null) { Debug.LogWarning($"[{gameObject.name}] No Button component found in children. Parent: [{transform.parent.name ?? "none"}]"); }
-            if (_panel == null) { Debug.LogWarning($"[{gameObject.name}] No RectTransform component found."); }
+            if (canvasGroup == null) { Debug.LogWarning($"[{gameObject.name}] No canvasGroup component found."); }
+            if (textsArr == null) { Debug.LogWarning($"[{gameObject.name}] No Text component found in children. Parent: [{transform.parent.name ?? "none"}]"); }
+            if (imagesArr == null) { Debug.LogWarning($"[{gameObject.name}] No Image component found in children. Parent: [{transform.parent.name ?? "none"}]"); }
+            if (buttonsArr == null) { Debug.LogWarning($"[{gameObject.name}] No Button component found in children. Parent: [{transform.parent.name ?? "none"}]"); }
+            if (panelRect == null) { Debug.LogWarning($"[{gameObject.name}] No RectTransform component found."); }
             #endif
         }
 
         private void InitComponents()
         {
             queueComponent = new Core.FlowKitQueue(this);
-            visibilityImpl = new UI.VisibilityImpl(_texts, _images, _buttons, _cg, this);
-            transitionImpl = new UI.MovementImpl(_texts, _images, _buttons, _panel, this);
-            rotateImpl = new UI.RotationImpl(_texts, _images, _buttons, _panel, this);
-            scalingImpl = new UI.ScaleImpl(_texts, _images, _buttons, _panel, this);
-            textEffectImpl = new UI.TextEffectImpl(_texts, this);
+            visibilityImpl = new UI.VisibilityImpl(this, canvasGroup, textsArr, imagesArr, buttonsArr, buttonTextsArr);
+            transitionImpl = new UI.MovementImpl(this, panelRect, textsArr, imagesArr, buttonsArr);
+            rotateImpl = new UI.RotationImpl(this, panelRect, textsArr, imagesArr, buttonsArr);
+            scalingImpl = new UI.ScaleImpl(this, panelRect, textsArr, imagesArr, buttonsArr);
+            textEffectImpl = new UI.TextEffectImpl(this, textsArr);
         }
 
         private void InitModules()
@@ -101,6 +129,31 @@ namespace FlowKit
             Scale = new ScaleModule(this);
             Rotation = new RotateModule(this);
             Text = new TextModule(this);
+        }
+
+        // ----------------------------------------------------- PRIVATE UTILITIES -----------------------------------------------------
+
+        // System.Func<Transform, bool> name = null | Optional filter lambda such as (obj => !obj.GetComponent<T>())
+        private T[] GetDirectChildren<T>(System.Func<Transform, bool> filter = null) where T : Component
+        {
+            var list = new List<T>();
+            foreach (Transform child in transform)
+            {
+                if (child.TryGetComponent<T>(out T component) && child.GetComponent<RectTransform>())
+                {
+                    // If filter is null or the child passes the filter
+                    if (filter == null || filter(child))
+                    {
+                        list.Add(component);
+                    }
+                }
+            }
+            return list.ToArray();
+        }
+
+        private static bool IsOccurrenceValid(int occurrence)
+        {
+            return occurrence >= 1;
         }
 
         // ----------------------------------------------------- Queue API -----------------------------------------------------

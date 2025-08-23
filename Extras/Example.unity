@@ -922,9 +922,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96e05f965a03c1a4aaafc4e66e5de0cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _titleFK: {fileID: 1605683972}
-  _optionsFK: {fileID: 562046773}
-  _disclaimerFK: {fileID: 405672149}
+  titleFlowKit: {fileID: 1605683972}
+  buttonsFlowKit: {fileID: 562046773}
+  disclaimerFlowKit: {fileID: 405672149}
   useQueue: 0
 --- !u!1 &562046768
 GameObject:

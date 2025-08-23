@@ -50,6 +50,8 @@ namespace FlowKit
             /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
             public void ResetRotation(AnimationTarget target, int occurrence)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.rotateImpl.Reset(target, occurrence, _engine.gameObject);
             }
@@ -67,6 +69,8 @@ namespace FlowKit
             /// <param name="degrees">Degrees the rotation should rotate, positive values go counter-clockwise, negative clockwise</param>
             public void SetRotation(AnimationTarget target, int occurrence, float degrees)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.rotateImpl.SetRotation(target, occurrence, degrees);
             }
@@ -75,9 +79,6 @@ namespace FlowKit
             /// Rotates the target UI element.
             /// <list type="bullet">
             ///   <item>
-            ///     <description><b>Note</b>: Subsequent calls will start animationg from the current rotation</description>
-            ///   </item>
-            ///   <item>
             ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
             ///   </item>
             /// </list>
@@ -85,13 +86,35 @@ namespace FlowKit
             /// <param name="target">Target component to rotate (Panel, Text, Image, Button)</param>
             /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
             /// <param name="degrees">Degrees the rotation should rotate, positive values go counter-clockwise, negative clockwise</param>
-            /// <param name="easing">Specifies the easing method the transition should use</param>
             /// <param name="duration">Time in seconds for the rotation duration</param>
+            /// <param name="easing">Specifies the easing method the transition should use</param>
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
-            public void Rotate(AnimationTarget target, int occurrence, float degrees, EasingType easing = EasingType.Linear, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+            public void Rotate(AnimationTarget target, int occurrence, float degrees, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
-                _engine.rotateImpl.Rotation(target, occurrence, degrees, easing, duration, delay);
+                _engine.rotateImpl.Rotation(target, occurrence, degrees, duration, easing, delay);
+            }
+
+            /// <summary>
+            /// Rotates the target UI element forever.
+            /// <list type="bullet">
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
+            /// </list>
+            /// </summary>
+            /// <param name="target">Target component to rotate (Panel, Text, Image, Button)</param>
+            /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
+            /// <param name="degreesPerSecond">Degrees the rotation should rotate every second, positive values go counter-clockwise, negative clockwise</param>
+            /// <param name="delay">Time in seconds to wait before starting the transition</param>
+            public void RotateForever(AnimationTarget target, int occurrence, float degreesPerSecond, float delay = 0f)
+            {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
+                occurrence -= 1;
+                _engine.rotateImpl.RotationForever(target, occurrence, degreesPerSecond, delay);
             }
         }
     }
