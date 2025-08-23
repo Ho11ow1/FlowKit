@@ -50,34 +50,38 @@ namespace FlowKit
             /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
             public void ResetAlpha(AnimationTarget target, int occurrence)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
                 _engine.visibilityImpl.Reset(target, occurrence, _engine.gameObject);
             }
 
             /// <summary>
-            /// Immediately sets the UI panel visibility | <b>[NOT Animated]</b>
+            /// Immediately sets the UI panel visibility condition | <b>[NOT Animated]</b>
             /// <list type="bullet">
             ///   <item>
             ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
             ///   </item>
             /// </list>
             /// </summary>
-            /// <param name="visible">Sets the panel visibility condition</param>
-            public void SetPanelVisibility(bool visible)
+            /// <param name="isVisible">Sets the panel visibility condition</param>
+            public void SetPanelVisibility(bool isVisible)
             {
-                _engine.visibilityImpl.SetVisibility(AnimationTarget.Panel, 0, visible);
+                _engine.visibilityImpl.SetVisibility(AnimationTarget.Panel, 0, isVisible);
             }
 
             /// <summary>
-            /// Immediately sets the visibility of a target UI element | <b>[NOT Animated]</b>
+            /// Immediately sets the visibility condition of a target UI element | <b>[NOT Animated]</b>
             /// </summary>
             /// <param name="target">Target component to fade (Panel, Text, Image, Button)</param>
             /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
-            /// <param name="visible">Specifies if the target element should be visible</param>
-            public void SetVisibility(AnimationTarget target, int occurrence, bool visible)
+            /// <param name="isVisible">Specifies if the target element should be visible</param>
+            public void SetVisibility(AnimationTarget target, int occurrence, bool isVisible)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
-                _engine.visibilityImpl.SetVisibility(target, occurrence, visible);
+                _engine.visibilityImpl.SetVisibility(target, occurrence, isVisible);
             }
 
             /// <summary>
@@ -90,12 +94,15 @@ namespace FlowKit
             /// </summary>
             /// <param name="target">Target component to fade (Panel, Text, Image, Button)</param>
             /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
+            /// <param name="easing">Specifies the easing method the fade should use</param>
             /// <param name="duration">Time in seconds for the fading duration</param>
             /// <param name="delay">Time in seconds to wait before starting the fade</param>
-            public void FadeIn(AnimationTarget target, int occurrence, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+            public void FadeFrom0To1(AnimationTarget target, int occurrence, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
-                _engine.visibilityImpl.FadeIn(target, occurrence, duration, delay);
+                _engine.visibilityImpl.FadeFromTo(target, occurrence, FlowKitConstants.TransparentAlpha, FlowKitConstants.OpaqueAlpha, duration, easing, delay);
             }
 
             /// <summary>
@@ -109,11 +116,14 @@ namespace FlowKit
             /// <param name="target">Target component to fade (Panel, Text, Image, Button)</param>
             /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
             /// <param name="duration">Time in seconds for the fading duration</param>
+            /// <param name="easing">Specifies the easing method the fade should use</param>
             /// <param name="delay">Time in seconds to wait before starting the fade</param>
-            public void FadeOut(AnimationTarget target, int occurrence, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+            public void FadeFrom1To0(AnimationTarget target, int occurrence, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
-                _engine.visibilityImpl.FadeOut(target, occurrence, duration, delay);
+                _engine.visibilityImpl.FadeFromTo(target, occurrence, FlowKitConstants.OpaqueAlpha, FlowKitConstants.TransparentAlpha, duration, easing, delay);
             }
 
             /// <summary>
@@ -126,13 +136,61 @@ namespace FlowKit
             /// </summary>
             /// <param name="target">Target component to fade (Panel, Text, Image, Button)</param>
             /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
-            /// <param name="alpha">Specifies the target alpha value (Range between 0-1)</param>
+            /// <param name="toAlpha">Specifies the target alpha value (Range between 0-1)</param>
             /// <param name="duration">Time in seconds for the fading duration</param>
+            /// <param name="easing">Specifies the easing method the fade should use</param>
             /// <param name="delay">Time in seconds to wait before starting the fade</param>
-            public void FadeTo(AnimationTarget target, int occurrence, float alpha, float duration = FlowKitConstants.DefaultDuration, float delay = 0f)
+            public void FadeTo(AnimationTarget target, int occurrence, float toAlpha, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
                 occurrence -= 1;
-                _engine.visibilityImpl.FadeTo(target, occurrence, alpha, duration, delay);
+                _engine.visibilityImpl.FadeFromTo(target, occurrence, null, toAlpha, duration, easing, delay);
+            }
+
+            /// <summary>
+            /// Fades the target UI element from a specified alpha value to it's original alpha value
+            /// <list type="bullet">
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
+            /// </list>
+            /// </summary>
+            /// <param name="target">Target component to fade (Panel, Text, Image, Button)</param>
+            /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
+            /// <param name="fromAlpha">Specifies the starting alpha value (Range between 0-1)</param>
+            /// <param name="duration">Time in seconds for the fading duration</param>
+            /// <param name="easing">Specifies the easing method the fade should use</param>
+            /// <param name="delay">Time in seconds to wait before starting the fade</param>
+            public void FadeFrom(AnimationTarget target, int occurrence, float fromAlpha, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
+            {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
+                occurrence -= 1;
+                _engine.visibilityImpl.FadeFromTo(target, occurrence, fromAlpha, null, duration, easing, delay);
+            }
+
+            /// <summary>
+            /// Fades the target UI element from one alpha value to another
+            /// <list type="bullet">
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
+            /// </list>
+            /// </summary>
+            /// <param name="target">Target component to fade (Panel, Text, Image, Button)</param>
+            /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
+            /// <param name="fromAlpha">Specifies the starting alpha value (Range between 0-1)</param>
+            /// <param name="toAlpha">Specifies the ending alpha value (Range between 0-1)</param>
+            /// <param name="duration">Time in seconds for the fading duration</param>
+            /// <param name="easing">Specifies the easing method the fade should use</param>
+            /// <param name="delay">Time in seconds to wait before starting the fade</param>
+            public void FadeFromTo(AnimationTarget target, int occurrence, float fromAlpha, float toAlpha, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
+            {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
+                occurrence -= 1;
+                _engine.visibilityImpl.FadeFromTo(target, occurrence, fromAlpha, toAlpha, duration, easing, delay);
             }
         }
     }
