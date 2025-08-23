@@ -1,6 +1,6 @@
 # FlowKit
 [![Status: Work In Progress](https://img.shields.io/badge/Status-Work%20In%20Progress-yellow.svg)](https://github.com/Ho11ow1/FlowKit)
-[![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-blue.svg)](https://github.com/Ho11ow1/FlowKit/releases)
+[![Version: 1.3.0](https://img.shields.io/badge/Version-1.3.0-blue.svg)](https://github.com/Ho11ow1/FlowKit/releases)
 [![License: Apache-2-0](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://opensource.org/license/apache-2-0)<br/>
 [![Unity](https://img.shields.io/badge/Unity-2022.3.10f1%2B-black.svg?logo=unity&logoColor=white)](#)<br/>
 **A lightweight and flexible animation toolkit for Unity UI and visual effects.**<br/>
@@ -11,11 +11,11 @@ Supports smooth fade, transition, scale, rotate, and typewriter animations, alon
   - Animate UI with a single entry point (`FlowKitEngine.cs`)
   - Modular backend, internal-only animation components
 - **Core Animation Module split**
-  - **Visibility**: Handles opacity and display state via
-  - **Transition**: Controls UI positioning and movement
+  - **Visibility**: Handles opacity and display state
+  - **Movement**: Controls UI positioning and movement
   - **Text**: Manages text specific animations and effects
   - **Scale**: Handles size animations
-  - **Rotate**: Controls rotation animations
+  - **Rotation**: Controls rotation animations
 - **Text Effects**
   - Typewriter animation with configurable speed and character delay
   - Easy to use colorCycling effect
@@ -41,7 +41,7 @@ https://github.com/Ho11ow1/FlowKit.git
 ## Usage
 
 ```csharp
-using FlowKit.Core;
+using FlowKit;
 using FlowKit.Common;
 
 public class PopupController : MonoBehaviour
@@ -60,13 +60,13 @@ public class PopupController : MonoBehaviour
 
     public void ShowPopup()
     {
-        popupFK.Visibility.FadeIn(AnimationTarget.Panel, 1, 0.5f);
-        popupFK.Transition.FromLeft(AnimationTarget.Image, 1, 100f, EasingType.EaseInOut, 0.75f);
+        popupFK.Visibility.FadeFrom0To1(AnimationTarget.Panel, 1, 0.5f);
+        popupFK.Movement.MoveFromLeft(AnimationTarget.Image, 1, 300f, 0.75f, EasingType.EaseInOut);
     }
 
     public void HidePopup()
     {
-        popupFK.Visibility.FadeOut(AnimationTarget.Panel, 1, 0.5f, 0.25f);
+        popupFK.Visibility.FadeFrom1To0(AnimationTarget.Panel, 1, 0.5f, 0.25f);
     }
 
     void OnDestroy()

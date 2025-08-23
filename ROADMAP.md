@@ -2,18 +2,22 @@
 
 A list of planned features and improvements for future FlowKit versions.
 
-## ✅ Completed (v1.2.0)
-- [ Core ] Split core into multiple properties based on their functionality
-- [ Core ] Introduce new `Set` methods to allow for immediate action (This was perviously only possible with setting the duration value to 0f)
-- [ Core ] Add `Reset` methods where needed
-- [ Core ] Create `Planned` Color cycling method allowing cycling between the current and input Color32
-- [ Core ] Improve API method documentation
-- [ Editor ] Create Live Preview for simple in-editor testing (Currently only supports a linear-curve and basic animations)
-- [ Extras ] Update to use new Set methods for simplicity
-- [ UI ] Improved internal Index & Null checks forcing silent failure when errors would normally occur
+## ✅ Completed (v1.3.0)
+- [ Core ] Altered init functionality to only collect direct children
+- [ Core ] Created public get properties for collected components
+- [ Core ] Created new ButtonText array for easier modification
+- [ Core ] Improved bounds checking
+- [ Core ] Renamed various methods for simplicity
+- [ Core ] Refactor method params to a more understandable format
+- [ Core/UI ] New methods
+- [ Core/UI ] Added easing into `Visibility` methods
+- [ UI ] Implemented buttonText visibility changes on Set & Reset methods
+- [ UI ] Combined internal functionality for less code to maintain
+- [ PrefabLib ] Created General & Sandbox prefabs for multi style games
+- [ PrefabLib ] Documented all prefabs with use-cases and tips
 
 ## 🔜 In Progress
-- Custom shaders for both 2D and 3D projects
+- Custom shaders for both 2D and 3D projects (Still learning more about them)
 
 ## 🧠 Planned
-- Preset counters such as clocks, score counters, currency counters (In some way or another)
+- 
