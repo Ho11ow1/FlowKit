@@ -2,7 +2,8 @@
     "name": "FlowKit.Extras",
     "references": [
         "FlowKit.Core",
-        "FlowKit.Common"
+        "FlowKit.Common",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
 	"excludePlatforms": [],
