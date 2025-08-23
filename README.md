@@ -66,7 +66,7 @@ public class PopupController : MonoBehaviour
 
     public void HidePopup()
     {
-        popupFK.Visibility.FadeFrom1To0(AnimationTarget.Panel, 1, 0.5f, 0.25f);
+        popupFK.Visibility.FadeFrom1To0(AnimationTarget.Panel, 1, 0.5f);
     }
 
     void OnDestroy()
