@@ -12,12 +12,12 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 * --------------------------------------------------------
-* FlowKit - TexVisibility API Property
+* FlowKit - Visibility API Property
 * Created by Hollow1
 * 
 * Provides a single location for all visibility specific operations.
 * 
-* Version: 1.2.0
+* Version: 1.3.0
 * GitHub: https://github.com/Ho11ow1/FlowKit
 * License: Apache License 2.0
 * -------------------------------------------------------- */

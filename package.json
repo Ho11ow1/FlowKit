@@ -1,11 +1,13 @@
 {
     "name": "com.hollow1.flowkit",
-    "version": "1.2.0",
-    "displayName": "FlowKit",
+    "version": "1.3.0",
     "description": "A lightweight and flexible animation toolkit for Unity UI and visual effects.",
+    "displayName": "FlowKit",
     "unity": "2022.3",
     "unityRelease": "10f1",
     "licensesUrl": "https://github.com/Ho11ow1/FlowKit/blob/master/LICENSE",
+    "changelogUrl": "https://github.com/Ho11ow1/FlowKit/blob/master/ROADMAP.md",
+    "documentationUrl": "https://github.com/Ho11ow1/FlowKit/blob/master/README.md",
     "dependencies": { "com.unity.textmeshpro": "2.0.1" },
     "keywords": [
         "flowkit",
@@ -22,6 +24,6 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/Ho11ow1/FlowKit.git",
-        "revision": "v1.2.0"
+        "revision": "v1.3.0"
     }
 }
