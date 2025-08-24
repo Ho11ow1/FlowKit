@@ -46,14 +46,12 @@ namespace FlowKit.Extras
             titleFlowKit.Text.TypeWriteWithDuration(1);
             disclaimerFlowKit.Text.TypeWriteWithDuration(1);
 
-            bool fading = false;
-
             buttonsFlowKit.Queue(new AnimationStep[]
             {
-                AnimationStep.Call(() => buttonsFlowKit.Visibility.SetVisibility(AnimationTarget.Button, 1, fading)),
-                AnimationStep.Call(() => buttonsFlowKit.Visibility.SetVisibility(AnimationTarget.Button, 2, fading)),
-                AnimationStep.Call(() => buttonsFlowKit.Visibility.SetVisibility(AnimationTarget.Button, 3, fading)),
-                AnimationStep.Call(() => buttonsFlowKit.Visibility.SetVisibility(AnimationTarget.Button, 4, fading))
+                AnimationStep.Call(() => buttonsFlowKit.Visibility.SetVisibility(AnimationTarget.Button, 1, false)),
+                AnimationStep.Call(() => buttonsFlowKit.Visibility.SetVisibility(AnimationTarget.Button, 2, false)),
+                AnimationStep.Call(() => buttonsFlowKit.Visibility.SetVisibility(AnimationTarget.Button, 3, false)),
+                AnimationStep.Call(() => buttonsFlowKit.Visibility.SetVisibility(AnimationTarget.Button, 4, false))
             },
             "Button FadeOut", true);
 
