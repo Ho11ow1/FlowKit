@@ -55,7 +55,7 @@ namespace FlowKit
                 if (!IsOccurrenceValid(occurrence)) { return; }
 
                 occurrence -= 1;
-                _engine.transitionImpl.Reset(target, occurrence, _engine.gameObject);
+                _engine.movementImpl.Reset(target, occurrence, _engine.gameObject);
             }
 
             /// <summary>
@@ -74,7 +74,31 @@ namespace FlowKit
                 if (!IsOccurrenceValid(occurrence)) { return; }
 
                 occurrence -= 1;
-                _engine.transitionImpl.SetPosition(target, occurrence, position);
+                _engine.movementImpl.SetPosition(target, occurrence, position);
+            }
+
+            // ----------------------------------------------------- MOVEMENT FROM METHODS -----------------------------------------------------
+
+            /// <summary>
+            /// Transitions the UI element from an offset position on both axes back to its starting position
+            /// <list type="bullet">
+            ///   <item>
+            ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
+            ///   </item>
+            /// </list>
+            /// </summary>
+            /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
+            /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
+            /// <param name="offset">Offset in pixels (or units depending on canvas scaling and render mode). determines the starting offset position to animate from, Positive values offset right and up</param>
+            /// <param name="duration">Time in seconds for the transition duration</param>
+            /// <param name="easing">Specifies the easing method the transition should use</param>
+            /// <param name="delay">Time in seconds to wait before starting the transition</param>
+            public void MoveFromPosition(AnimationTarget target, int occurrence, Vector2 offset, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
+            {
+                if (!IsOccurrenceValid(occurrence)) { return; }
+
+                occurrence -= 1;
+                _engine.movementImpl.TransitionFromToPosition(target, occurrence, offset, duration, easing, delay, false);
             }
 
             /// <summary>
@@ -96,7 +120,7 @@ namespace FlowKit
                 if (!IsOccurrenceValid(occurrence)) { return; }
 
                 occurrence -= 1;
-                _engine.transitionImpl.TransitionFromTop(target, occurrence, offset, duration, easing, delay);
+                _engine.movementImpl.TransitionFromTo(target, occurrence, new Vector2(0, offset), null, duration, easing, delay);
             }
 
             /// <summary>
@@ -118,7 +142,7 @@ namespace FlowKit
                 if (!IsOccurrenceValid(occurrence)) { return; }
 
                 occurrence -= 1;
-                _engine.transitionImpl.TransitionFromBottom(target, occurrence, offset, duration, easing, delay);
+                _engine.movementImpl.TransitionFromTo(target, occurrence, new Vector2(0, -offset), null, duration, easing, delay);
             }
 
             /// <summary>
@@ -140,7 +164,7 @@ namespace FlowKit
                 if (!IsOccurrenceValid(occurrence)) { return; }
 
                 occurrence -= 1;
-                _engine.transitionImpl.TransitionFromLeft(target, occurrence, offset, duration, easing, delay);
+                _engine.movementImpl.TransitionFromTo(target, occurrence, new Vector2(-offset, 0), null, duration, easing, delay);
             }
 
             /// <summary>
@@ -162,11 +186,13 @@ namespace FlowKit
                 if (!IsOccurrenceValid(occurrence)) { return; }
 
                 occurrence -= 1;
-                _engine.transitionImpl.TransitionFromRight(target, occurrence, offset, duration, easing, delay);
+                _engine.movementImpl.TransitionFromTo(target, occurrence, new Vector2(offset, 0), null, duration, easing, delay);
             }
 
+            // ----------------------------------------------------- MOVEMENT TO METHODS -----------------------------------------------------
+
             /// <summary>
-            /// Transitions the UI element from an offset position on both axes back to its starting position
+            /// Transitions the UI element from its starting position to an offset position
             /// <list type="bullet">
             ///   <item>
             ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
@@ -175,16 +201,19 @@ namespace FlowKit
             /// </summary>
             /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
             /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
-            /// <param name="offset">Offset in pixels (or units depending on canvas scaling and render mode). determines the starting offset position to animate from, Positive values offset right and up</param>
+            /// <param name="offset">Offset in pixels (or units depending on canvas scaling and render mode). determines the final offset position to animate to, Positive values offset right and up</param>
             /// <param name="duration">Time in seconds for the transition duration</param>
             /// <param name="easing">Specifies the easing method the transition should use</param>
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
-            public void MoveFromPosition(AnimationTarget target, int occurrence, Vector2 offset, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
+            public void MoveToPosition(AnimationTarget target, int occurrence, Vector2 offset, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
-                if (!IsOccurrenceValid(occurrence)) { return; }
+                if (!IsOccurrenceValid(occurrence))
+                {
+                    return;
+                }
 
                 occurrence -= 1;
-                _engine.transitionImpl.TransitionFromPosition(target, occurrence, offset, duration, easing, delay);
+                _engine.movementImpl.TransitionFromToPosition(target, occurrence, offset, duration, easing, delay, true);
             }
 
             /// <summary>
@@ -206,7 +235,7 @@ namespace FlowKit
                 if (!IsOccurrenceValid(occurrence)) { return; }
 
                 occurrence -= 1;
-                _engine.transitionImpl.TransitionToTop(target, occurrence, offset, duration, easing, delay);
+                _engine.movementImpl.TransitionFromTo(target, occurrence, null, new Vector2(0, offset), duration, easing, delay);
             }
 
             /// <summary>
@@ -228,7 +257,7 @@ namespace FlowKit
                 if (!IsOccurrenceValid(occurrence)) { return; }
 
                 occurrence -= 1;
-                _engine.transitionImpl.TransitionToBottom(target, occurrence, offset, duration, easing, delay);
+                _engine.movementImpl.TransitionFromTo(target, occurrence, null, new Vector2(0, -offset), duration, easing, delay);
             }
 
             /// <summary>
@@ -250,7 +279,7 @@ namespace FlowKit
                 if (!IsOccurrenceValid(occurrence)) { return; }
 
                 occurrence -= 1;
-                _engine.transitionImpl.TransitionToLeft(target, occurrence, offset, duration, easing, delay);
+                _engine.movementImpl.TransitionFromTo(target, occurrence, null, new Vector2(-offset, 0), duration, easing, delay);
             }
 
             /// <summary>
@@ -272,11 +301,11 @@ namespace FlowKit
                 if (!IsOccurrenceValid(occurrence)) { return; }
 
                 occurrence -= 1;
-                _engine.transitionImpl.TransitionToRight(target, occurrence, offset, duration, easing, delay);
+                _engine.movementImpl.TransitionFromTo(target, occurrence, null, new Vector2(offset, 0), duration, easing, delay);
             }
 
             /// <summary>
-            /// Transitions the UI element from its starting position to an offset position
+            /// Transitions the UI elements from one position to another
             /// <list type="bullet">
             ///   <item>
             ///     <description><b>Note</b>: The <c>occurrence</c> is using 1-based indexing, meaning the first element is 1, not 0.</description>
@@ -285,16 +314,17 @@ namespace FlowKit
             /// </summary>
             /// <param name="target">Target component to transition (Panel, Text, Image, Button)</param>
             /// <param name="occurrence">Specifies the instance of the target element (1-based index)</param>
-            /// <param name="offset">Offset in pixels (or units depending on canvas scaling and render mode). determines the final offset position to animate to, Positive values offset right and up</param>
+            /// <param name="fromPos">Specifies the Vector2 position from which the UI element should start from</param>
+            /// <param name="toPos">Specifies the Vector2 position at which the UI element should end moving</param>
             /// <param name="duration">Time in seconds for the transition duration</param>
             /// <param name="easing">Specifies the easing method the transition should use</param>
             /// <param name="delay">Time in seconds to wait before starting the transition</param>
-            public void MoveToPosition(AnimationTarget target, int occurrence, Vector2 offset, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
+            public void MoveFromTo(AnimationTarget target, int occurrence, Vector2 fromPos, Vector2 toPos, float duration = FlowKitConstants.DefaultDuration, EasingType easing = EasingType.Linear, float delay = 0f)
             {
                 if (!IsOccurrenceValid(occurrence)) { return; }
 
                 occurrence -= 1;
-                _engine.transitionImpl.TransitionToPosition(target, occurrence, offset, duration, easing, delay);
+                _engine.movementImpl.TransitionFromTo(target, occurrence, fromPos, toPos, duration, easing, delay);
             }
         }
     }
