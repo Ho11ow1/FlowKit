@@ -41,7 +41,7 @@ namespace FlowKit.UI
         private readonly Button[] _buttonComponent;
         private readonly TextMeshProUGUI[] _buttonTexts;
 
-        private readonly List<Utils.AutoIncreaseList<float>> _originalAlpha= new List<Utils.AutoIncreaseList<float>>()
+        private readonly List<Utils.AutoIncreaseList<float>> _originalAlpha = new List<Utils.AutoIncreaseList<float>>()
         {
             new Utils.AutoIncreaseList<float>(),
             new Utils.AutoIncreaseList<float>(),
