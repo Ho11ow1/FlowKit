@@ -12,6 +12,7 @@ namespace FlowKit
         private Transform contentParent;
         [SerializeField] private ContentTabController contentTabController;
 
+        [Header("UI References")]
         [SerializeField] private GameObject characterButtonPrefab;
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private TextMeshProUGUI quoteText;
@@ -22,10 +23,11 @@ namespace FlowKit
         [SerializeField] private Button isFavouriteToggle;
 
         public static Dictionary<string, CharacterData> CharacterMap { get; private set; } = new Dictionary<string, CharacterData>();
-        public static string SelectedCharacterName = "Willow";
+        public static string SelectedCharacterName;
 
-        void Awake()
+        void Start()
         {
+            SelectedCharacterName = CharacterMap.Keys.FirstOrDefault<string>();
             contentParent = gameObject.transform;
 
             InitCharacterMap();
@@ -37,35 +39,30 @@ namespace FlowKit
             isFavouriteToggle.onClick.AddListener(() => OnFavouriteTogglePressed());
         }
 
-        // ----------------------------------------------------- PRIVATE OPTIONAL INIT METHODS -----------------------------------------------------
+        // ----------------------------------------------------- PRIVATE EXAMPLE INIT METHODS -----------------------------------------------------
 
         /* --------------------------------------------------------------------
-         *                        THESE METHODS ARE OPTIONAL.
+         *                   THESE METHODS ARE EXAMPLES.
          * 
-         * The logic defined within these methods is public so you can also do it in
-         * your own files if you so choose.
-         * 
-         * Do not forget to set the SelectedCharacterName to a valid character or else it will throw an error.
-         * 
-         * (These examples use a utility class for a simple and single point of modification,
-         * This class can be found under FlowKit/Common/ResourcePaths.cs)
+         * The logic defined within these methods is and example and only serves
+         * as a way to show how to use the CharacterData class.
          * 
          * --------------------------------------------------------------------
          */
 
         private void InitCharacterMap()
         {
-            //CharacterMap.Add("Willow", new CharacterData("Willow", "Well, well, well...", Resources.Load<Sprite>(Common.ResourcePaths.Portraits.Willow1)));
+            //CharacterMap.Add("Willow", new CharacterData("Willow", "Well, well, well...", Resources.Load<Sprite>(ResourceData.Portraits.Willow1)));
         }
         
         private void InitCharacterGallery()
         {
-            //CharacterMap["Willow"].AddGalleryItem(new GalleryItem("Willow1", Resources.Load<Sprite>(Common.ResourcePaths.Gallery.Willow1)));
+            //CharacterMap["Willow"].AddGalleryItem(new GalleryItem("Willow1", Resources.Load<Sprite>(ResourceData.Gallery.Willow1)));
         }
 
         private void InitCharacterStageLevels()
         {
-            //CharacterMap["Willow"].SetMaxStageBasedOnLevel(new int[] { 1, 2, 3, 4, 5, 6 }, new int[] { 4, 5, 6, 7, 8, 8 });
+            //CharacterMap["Willow"].SetMaxStageBasedOnLevel(new int[] { 1, 2, 3, 4, 5, 6 }, new int[] { 4, 5, 6, 7, 8, 9 });
         }
 
         // ----------------------------------------------------- CHARACTER BUTTON HANDLERS -----------------------------------------------------
@@ -128,18 +125,12 @@ namespace FlowKit
             ToggleFavouriteSprite();
         }
 
-        // Commented color example for debugging purposes
         private void ToggleFavouriteSprite()
         {
             isFavouriteToggle.GetComponentInChildren<Image>().sprite = CharacterMap[SelectedCharacterName].IsFavourite ?
-                Resources.Load<Sprite>(Common.ResourcePaths.UI.FavouriteTrue)
+                Resources.Load<Sprite>(ResourceData.Instance.ui.SetAsFavourite)
                 :
-                Resources.Load<Sprite>(Common.ResourcePaths.UI.FavouriteFalse);
-            //isFavouriteToggle.GetComponentInChildren<Image>().color = CharacterMap[SelectedCharacterName].IsFavourite ?
-            //    Color.white
-            //    :
-            //    Color.black;
+                Resources.Load<Sprite>(ResourceData.Instance.ui.NotSetAsFavourite);
         }
-
     }
 }
