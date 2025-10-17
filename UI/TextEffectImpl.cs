@@ -36,12 +36,25 @@ namespace FlowKit.UI
         private readonly MonoBehaviour _monoBehaviour;
         private readonly TextMeshProUGUI[] _textComponent;
 
-        private readonly Utils.StringAutoIncreaseList _targetString = new Utils.StringAutoIncreaseList();
+        private readonly List<string> _targetString = new List<string>();
 
         public TextEffectImpl(MonoBehaviour runner, TextMeshProUGUI[] tmp)
         {
             _monoBehaviour = runner;
             _textComponent = tmp;
+
+            ClearList();
+            PopulateList();
+        }
+
+        private void PopulateList()
+        {
+            _targetString.AddRange(new string[_textComponent.Length]);
+        }
+
+        private void ClearList()
+        {
+            _targetString.Clear();
         }
 
         // ----------------------------------------------------- PUBLIC API -----------------------------------------------------

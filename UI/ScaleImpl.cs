@@ -28,6 +28,7 @@ using UnityEngine.UI;
 using TMPro;
 
 using FlowKit.Common;
+using FlowKit.UI.Utils;
 
 namespace FlowKit.UI
 {
@@ -40,20 +41,20 @@ namespace FlowKit.UI
         private readonly Image[] _imageComponent;
         private readonly Button[] _buttonComponent;
 
-        private readonly List<Utils.AutoIncreaseList<Vector2>> _originalScale = new List<Utils.AutoIncreaseList<Vector2>>()
+        private readonly List<List<Vector2>> _originalScale = new List<List<Vector2>>()
         {
-            new Utils.AutoIncreaseList<Vector2>(),
-            new Utils.AutoIncreaseList<Vector2>(),
-            new Utils.AutoIncreaseList<Vector2>(),
-            new Utils.AutoIncreaseList<Vector2>()
+            new List<Vector2>(),
+            new List<Vector2>(),
+            new List<Vector2>(),
+            new List<Vector2>()
         };
 
-        private readonly List<Utils.AutoIncreaseList<bool>> _storedScale = new List<Utils.AutoIncreaseList<bool>>()
+        private readonly List<List<bool>> _storedScale = new List<List<bool>>()
         {
-            new Utils.AutoIncreaseList<bool>(),
-            new Utils.AutoIncreaseList<bool>(),
-            new Utils.AutoIncreaseList<bool>(),
-            new Utils.AutoIncreaseList<bool>()
+            new List<bool>(),
+            new List<bool>(),
+            new List<bool>(),
+            new List<bool>()
         };
 
         public ScaleImpl(MonoBehaviour runner, RectTransform panel, TextMeshProUGUI[] text, Image[] image, Button[] button)
@@ -63,6 +64,28 @@ namespace FlowKit.UI
             _textComponent = text;
             _imageComponent = image;
             _buttonComponent = button;
+
+            ClearLists();
+            PopulateLists();
+        }
+
+        private void PopulateLists()
+        {
+            _originalScale[FlowKitConstants.PanelIndex].Add(new Vector2(0, 0));
+            _originalScale[FlowKitConstants.TextIndex].AddRange(new Vector2[_textComponent.Length]);
+            _originalScale[FlowKitConstants.ImageIndex].AddRange(new Vector2[_imageComponent.Length]);
+            _originalScale[FlowKitConstants.ButtonIndex].AddRange(new Vector2[_buttonComponent.Length]);
+
+            _storedScale[FlowKitConstants.PanelIndex].Add(false);
+            _storedScale[FlowKitConstants.TextIndex].AddRange(new bool[_textComponent.Length]);
+            _storedScale[FlowKitConstants.ImageIndex].AddRange(new bool[_imageComponent.Length]);
+            _storedScale[FlowKitConstants.ButtonIndex].AddRange(new bool[_buttonComponent.Length]);
+        }
+
+        private void ClearLists()
+        {
+            ListUtils.ClearAll(_originalScale);
+            ListUtils.ClearAll(_storedScale);
         }
 
         // ----------------------------------------------------- PUBLIC API -----------------------------------------------------

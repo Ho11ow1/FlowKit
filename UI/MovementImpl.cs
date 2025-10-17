@@ -28,6 +28,7 @@ using UnityEngine.UI;
 using TMPro;
 
 using FlowKit.Common;
+using FlowKit.UI.Utils;
 
 namespace FlowKit.UI
 {
@@ -40,20 +41,20 @@ namespace FlowKit.UI
         private readonly Image[] _imageComponent;
         private readonly Button[] _buttonComponent;
 
-        private readonly List<Utils.AutoIncreaseList<Vector2>> _originalPosition = new List<Utils.AutoIncreaseList<Vector2>>()
+        private readonly List<List<Vector2>> _originalPosition = new List<List<Vector2>>()
         {
-            new Utils.AutoIncreaseList<Vector2>(),
-            new Utils.AutoIncreaseList<Vector2>(),
-            new Utils.AutoIncreaseList<Vector2>(),
-            new Utils.AutoIncreaseList<Vector2>()
+            new List<Vector2>(),
+            new List<Vector2>(),
+            new List<Vector2>(),
+            new List<Vector2>()
         };
 
-        private readonly List<Utils.AutoIncreaseList<bool>> _storedPosition = new List<Utils.AutoIncreaseList<bool>>()
+        private readonly List<List<bool>> _storedPosition = new List<List<bool>>()
         {
-            new Utils.AutoIncreaseList<bool>(),
-            new Utils.AutoIncreaseList<bool>(),
-            new Utils.AutoIncreaseList<bool>(),
-            new Utils.AutoIncreaseList<bool>()
+            new List<bool>(),
+            new List<bool>(),
+            new List<bool>(),
+            new List<bool>()
         };
 
         public MovementImpl(MonoBehaviour runner, RectTransform panel, TextMeshProUGUI[] text, Image[] image, Button[] button)
@@ -63,6 +64,28 @@ namespace FlowKit.UI
             _textComponent = text;
             _imageComponent = image;
             _buttonComponent = button;
+
+            ClearLists();
+            PopulateLists();
+        }
+
+        private void PopulateLists()
+        {
+            _originalPosition[FlowKitConstants.PanelIndex].Add(new Vector2(0, 0));
+            _originalPosition[FlowKitConstants.TextIndex].AddRange(new Vector2[_textComponent.Length]);
+            _originalPosition[FlowKitConstants.ImageIndex].AddRange(new Vector2[_imageComponent.Length]);
+            _originalPosition[FlowKitConstants.ButtonIndex].AddRange(new Vector2[_buttonComponent.Length]);
+
+            _storedPosition[FlowKitConstants.PanelIndex].Add(false);
+            _storedPosition[FlowKitConstants.TextIndex].AddRange(new bool[_textComponent.Length]);
+            _storedPosition[FlowKitConstants.ImageIndex].AddRange(new bool[_imageComponent.Length]);
+            _storedPosition[FlowKitConstants.ButtonIndex].AddRange(new bool[_buttonComponent.Length]);
+        }
+
+        private void ClearLists()
+        {
+            ListUtils.ClearAll(_originalPosition);
+            ListUtils.ClearAll(_storedPosition);
         }
 
         // ----------------------------------------------------- PUBLIC API -----------------------------------------------------
