@@ -1,9 +1,6 @@
 {
     "name": "FlowKit.PrefabLib",
-    "references": [
-        "FlowKit.Common",
-		"Unity.TextMeshPro"
-	],
+    "references": [],
     "includePlatforms": [],
 	"excludePlatforms": [],
     "allowUnsafeCode": false,
