@@ -75,6 +75,7 @@ namespace FlowKit
                 #endif
                 return;
             }
+            quest.AssignOwner(this);
             QuestMap.Add(quest.Title, quest);
         }
 
@@ -126,6 +127,7 @@ namespace FlowKit
                 #endif
                 return;
             }
+            item.AssignOwner(this);
             GalleryMap.Add(item.Name, item);
         }
 
@@ -250,6 +252,7 @@ namespace FlowKit
     [System.Serializable]
     public class Quest
     {
+        public CharacterData Owner { get; private set; } = null;
         public string Title;
         public string Description;
         public bool IsActive;
@@ -261,11 +264,17 @@ namespace FlowKit
             Description = description;
             IsActive = isActive;
         }
+
+        internal void AssignOwner(CharacterData owner)
+        {
+            Owner = owner;
+        }
     }
 
     [System.Serializable]
     public class GalleryItem
     {
+        public CharacterData Owner { get; private set; } = null;
         public string Name;
         public Sprite Sprite;
         public bool IsUnlocked = false;
@@ -274,6 +283,11 @@ namespace FlowKit
         {
             Name = name;
             Sprite = sprite;
+        }
+
+        internal void AssignOwner(CharacterData owner)
+        {
+            Owner = owner;
         }
     }
 }

@@ -8,6 +8,7 @@ namespace FlowKit
 {
     public class ContentTabController : MonoBehaviour
     {
+        [Header("UI References")]
         [SerializeField] private GameObject galleryItemPrefab;
         [SerializeField] private GameObject QuestPanel;
         [SerializeField] private GameObject GalleryPanel;
@@ -54,6 +55,8 @@ namespace FlowKit
 
         public void OpenContentTab(ContentTab tab)
         {
+            CharacterData characterData = CharacterDataView.CharacterMap[CharacterDataView.SelectedCharacterName];
+
             if (tab == ContentTab.QuestLog)
             {
                 CurrentTab = ContentTab.QuestLog;
@@ -62,7 +65,7 @@ namespace FlowKit
                 GalleryPanel.SetActive(false);
                 TipsPanel.SetActive(false);
 
-                HandleQuestLogContent();
+                HandleQuestLogContent(characterData);
             }
             else if (tab == ContentTab.Gallery)
             {
@@ -72,7 +75,7 @@ namespace FlowKit
                 GalleryPanel.SetActive(true);
                 TipsPanel.SetActive(false);
 
-                HandleGalleryContent();
+                HandleGalleryContent(characterData);
             }
             else if (tab == ContentTab.Tips)
             {
@@ -82,15 +85,14 @@ namespace FlowKit
                 GalleryPanel.SetActive(false);
                 TipsPanel.SetActive(true);
 
-                HandleTipsContent();
+                HandleTipsContent(characterData);
             }
         }
 
         // ----------------------------------------------------- CONTENT TAB HANDLERS -----------------------------------------------------
 
-        private void HandleQuestLogContent()
+        private void HandleQuestLogContent(CharacterData characterData)
         {
-            CharacterData characterData = CharacterDataView.CharacterMap[CharacterDataView.SelectedCharacterName];
             var textArr = QuestPanel.GetComponentsInChildren<TextMeshProUGUI>();
             if (textArr.Length == 0) { return; }
 
@@ -120,17 +122,8 @@ namespace FlowKit
             }
         }
 
-        /* --------------------------------------------------------------------
-         * 
-         * Modify the Resources.Load path to match your locked gallery image.
-         * Or alternatively use the ResourcePaths.cs static classes
-         * which can be found under FlowKit/Common/ResourcePaths.cs
-         * 
-         * --------------------------------------------------------------------
-         */
-        private void HandleGalleryContent()
+        private void HandleGalleryContent(CharacterData characterData)
         {
-            CharacterData characterData = CharacterDataView.CharacterMap[CharacterDataView.SelectedCharacterName];
             var galleryContentGrid = GalleryPanel.GetComponentInChildren<GridLayoutGroup>();
 
             // Reset view for each character selection
@@ -145,7 +138,7 @@ namespace FlowKit
 
                 if (!galleryItem.Value.IsUnlocked)
                 {
-                    galleryItemObject.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>(Common.ResourcePaths.Gallery.Locked);
+                    galleryItemObject.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>(ResourceData.Instance.gallery.LockedItem);
                 }
                 else if (galleryItem.Value.IsUnlocked && galleryItem.Value.Sprite != null)
                 {
@@ -165,9 +158,9 @@ namespace FlowKit
          * 
          * --------------------------------------------------------------------
          */
-        private void OnGalleryItemSelected(GalleryItem galleryItem)
+        public void OnGalleryItemSelected(GalleryItem galleryItem)
         {
-            
+            ResourceData.Instance.methodCalls.OnGalleryItemSelected?.Invoke(galleryItem);
         }
 
         /* --------------------------------------------------------------------
@@ -181,9 +174,9 @@ namespace FlowKit
          * 
          * --------------------------------------------------------------------
          */
-        private void HandleTipsContent()
+        public void HandleTipsContent(CharacterData characterData)
         {
-            
+            ResourceData.Instance.methodCalls.HandleTips?.Invoke(characterData);
         }
     }
 }
