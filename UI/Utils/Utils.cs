@@ -42,54 +42,13 @@ namespace FlowKit.UI
             }
         }
 
-        internal class AutoIncreaseList<T> : List<T> where T : new()
+        internal static class ListUtils
         {
-            internal new T this[int index]
+            public static void ClearAll<T>(List<List<T>> holdingList)
             {
-                get
+                foreach (List<T> childList in holdingList)
                 {
-                    while (index >= Count)
-                    {
-                        Add(new T());
-                    }
-
-                    return base[index];
-                }
-
-                set
-                {
-                    while (index >= Count)
-                    {
-                        Add(new T());
-                    }
-
-                    base[index] = value;
-                }
-            }
-        }
-
-        internal class StringAutoIncreaseList : List<string>
-        {
-            internal new string this[int index]
-            {
-                get
-                {
-                    while (index >= Count)
-                    {
-                        Add("");
-                    }
-
-                    return base[index];
-                }
-
-                set
-                {
-                    while (index >= Count)
-                    {
-                        Add("");
-                    }
-
-                    base[index] = value;
+                    childList.Clear();
                 }
             }
         }

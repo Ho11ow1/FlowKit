@@ -28,6 +28,7 @@ using UnityEngine.UI;
 using TMPro;
 
 using FlowKit.Common;
+using FlowKit.UI.Utils;
 
 namespace FlowKit.UI
 {
@@ -40,20 +41,20 @@ namespace FlowKit.UI
         private readonly Image[] _imageComponent;
         private readonly Button[] _buttonComponent;
 
-        private readonly List<Utils.AutoIncreaseList<Quaternion>> _originalRotation = new List<Utils.AutoIncreaseList<Quaternion>>()
+        private readonly List<List<Quaternion>> _originalRotation = new List<List<Quaternion>>()
         {
-            new Utils.AutoIncreaseList<Quaternion>(),
-            new Utils.AutoIncreaseList<Quaternion>(),
-            new Utils.AutoIncreaseList<Quaternion>(),
-            new Utils.AutoIncreaseList<Quaternion>()
+            new List<Quaternion>(),
+            new List<Quaternion>(),
+            new List<Quaternion>(),
+            new List<Quaternion>()
         };
 
-        private readonly List<Utils.AutoIncreaseList<bool>> _storedRotation = new List<Utils.AutoIncreaseList<bool>>()
+        private readonly List<List<bool>> _storedRotation = new List<List<bool>>()
         {
-            new Utils.AutoIncreaseList<bool>(),
-            new Utils.AutoIncreaseList<bool>(),
-            new Utils.AutoIncreaseList<bool>(),
-            new Utils.AutoIncreaseList<bool>()
+            new List<bool>(),
+            new List<bool>(),
+            new List<bool>(),
+            new List<bool>()
         };
 
         public RotationImpl(MonoBehaviour runner, RectTransform panel, TextMeshProUGUI[] text, Image[] image, Button[] button)
@@ -63,6 +64,28 @@ namespace FlowKit.UI
             _textComponent = text;
             _imageComponent = image;
             _buttonComponent = button;
+
+            ClearLists();
+            PopulateLists();
+        }
+
+        private void PopulateLists()
+        {
+            _originalRotation[FlowKitConstants.PanelIndex].Add(new Quaternion());
+            _originalRotation[FlowKitConstants.TextIndex].AddRange(new Quaternion[_textComponent.Length]);
+            _originalRotation[FlowKitConstants.ImageIndex].AddRange(new Quaternion[_imageComponent.Length]);
+            _originalRotation[FlowKitConstants.ButtonIndex].AddRange(new Quaternion[_buttonComponent.Length]);
+
+            _storedRotation[FlowKitConstants.PanelIndex].Add(false);
+            _storedRotation[FlowKitConstants.TextIndex].AddRange(new bool[_textComponent.Length]);
+            _storedRotation[FlowKitConstants.ImageIndex].AddRange(new bool[_imageComponent.Length]);
+            _storedRotation[FlowKitConstants.ButtonIndex].AddRange(new bool[_buttonComponent.Length]);
+        }
+
+        private void ClearLists()
+        {
+            ListUtils.ClearAll(_originalRotation);
+            ListUtils.ClearAll(_storedRotation);
         }
 
         // ----------------------------------------------------- PUBLIC API -----------------------------------------------------

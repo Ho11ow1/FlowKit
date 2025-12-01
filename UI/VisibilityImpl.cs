@@ -28,6 +28,7 @@ using UnityEngine.UI;
 using TMPro;
 
 using FlowKit.Common;
+using FlowKit.UI.Utils;
 
 namespace FlowKit.UI
 {
@@ -41,20 +42,20 @@ namespace FlowKit.UI
         private readonly Button[] _buttonComponent;
         private readonly TextMeshProUGUI[] _buttonTexts;
 
-        private readonly List<Utils.AutoIncreaseList<float>> _originalAlpha = new List<Utils.AutoIncreaseList<float>>()
+        private readonly List<List<float>> _originalAlpha = new List<List<float>>()
         {
-            new Utils.AutoIncreaseList<float>(),
-            new Utils.AutoIncreaseList<float>(),
-            new Utils.AutoIncreaseList<float>(),
-            new Utils.AutoIncreaseList<float>()
+            new List<float>(),
+            new List<float>(),
+            new List<float>(),
+            new List<float>()
         };
 
-        private readonly List<Utils.AutoIncreaseList<bool>> _storedAlpha = new List<Utils.AutoIncreaseList<bool>>()
+        private readonly List<List<bool>> _storedAlpha = new List<List<bool>>()
         {
-            new Utils.AutoIncreaseList<bool>(),
-            new Utils.AutoIncreaseList<bool>(),
-            new Utils.AutoIncreaseList<bool>(),
-            new Utils.AutoIncreaseList<bool>()
+            new List<bool>(),
+            new List<bool>(),
+            new List<bool>(),
+            new List<bool>()
         };
 
         public VisibilityImpl(MonoBehaviour runner, CanvasGroup panel, TextMeshProUGUI[] text, Image[] image, Button[] button, TextMeshProUGUI[] buttonTexts)
@@ -65,6 +66,28 @@ namespace FlowKit.UI
             _imageComponent = image;
             _buttonComponent = button;
             _buttonTexts = buttonTexts;
+
+            ClearLists();
+            PopulateLists();
+        }
+
+        private void PopulateLists()
+        {
+            _originalAlpha[FlowKitConstants.PanelIndex].Add(0f);
+            _originalAlpha[FlowKitConstants.TextIndex].AddRange(new float[_textComponent.Length]);
+            _originalAlpha[FlowKitConstants.ImageIndex].AddRange(new float[_imageComponent.Length]);
+            _originalAlpha[FlowKitConstants.ButtonIndex].AddRange(new float[_buttonComponent.Length]);
+
+            _storedAlpha[FlowKitConstants.PanelIndex].Add(false);
+            _storedAlpha[FlowKitConstants.TextIndex].AddRange(new bool[_textComponent.Length]);
+            _storedAlpha[FlowKitConstants.ImageIndex].AddRange(new bool[_imageComponent.Length]);
+            _storedAlpha[FlowKitConstants.ButtonIndex].AddRange(new bool[_buttonComponent.Length]);
+        }
+
+        private void ClearLists()
+        {
+            ListUtils.ClearAll(_originalAlpha);
+            ListUtils.ClearAll(_storedAlpha);
         }
 
         // ----------------------------------------------------- PUBLIC API -----------------------------------------------------
