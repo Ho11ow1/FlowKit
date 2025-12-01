@@ -33,7 +33,7 @@ namespace FlowKit
         // Class variables
         private Core.FlowKitQueue queueComponent;
         private UI.VisibilityImpl visibilityImpl;
-        private UI.MovementImpl transitionImpl;
+        private UI.MovementImpl movementImpl;
         private UI.RotationImpl rotateImpl;
         private UI.ScaleImpl scalingImpl;
         private UI.TextEffectImpl textEffectImpl;
@@ -116,7 +116,7 @@ namespace FlowKit
         {
             queueComponent = new Core.FlowKitQueue(this);
             visibilityImpl = new UI.VisibilityImpl(this, canvasGroup, textsArr, imagesArr, buttonsArr, buttonTextsArr);
-            transitionImpl = new UI.MovementImpl(this, panelRect, textsArr, imagesArr, buttonsArr);
+            movementImpl = new UI.MovementImpl(this, panelRect, textsArr, imagesArr, buttonsArr);
             rotateImpl = new UI.RotationImpl(this, panelRect, textsArr, imagesArr, buttonsArr);
             scalingImpl = new UI.ScaleImpl(this, panelRect, textsArr, imagesArr, buttonsArr);
             textEffectImpl = new UI.TextEffectImpl(this, textsArr);
