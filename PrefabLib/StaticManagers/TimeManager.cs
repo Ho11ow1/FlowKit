@@ -1,13 +1,10 @@
 using System;
-using UnityEngine;
 using UnityEngine.Events;
 
 namespace FlowKit
 {
-    public class TimeManager : MonoBehaviour
+    public static class TimeManager
     {
-        public static TimeManager Instance { get; private set; }
-
         public enum TimeOfDay
         {
             Morning,
@@ -20,59 +17,46 @@ namespace FlowKit
 
         private static readonly string[] _daysOfWeek = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
         private static readonly string[] _weekendDays = { "Saturday", "Sunday" };
-        private TimeOfDay dayPeriod = TimeOfDay.Morning;
-        private string day = _daysOfWeek[0];
-        private int dayCount = 1;
-        private int week = 1;
-        private bool isWeekend = false;
+        private static TimeOfDay dayPeriod = TimeOfDay.Morning;
+        private static string day = _daysOfWeek[0];
+        private static int dayCount = 1;
+        private static int week = 1;
+        private static bool isWeekend = false;
 
         /// <summary>
         /// Returns the current day period.
         /// </summary>
-        public TimeOfDay DayPeriod => dayPeriod;
+        public static TimeOfDay DayPeriod => dayPeriod;
         /// <summary>
         /// Returns the current day of the week.
         /// </summary>
-        public string Day => day;
+        public static string Day => day;
         /// <summary>
         /// Returns the amount of days passed since starting.
         /// </summary>
-        public int DayCount => dayCount;
+        public static int DayCount => dayCount;
         /// <summary>
         /// Returns the current week number.
         /// </summary>
-        public int Week => week;
+        public static int Week => week;
         /// <summary>
         /// Returns true if the current day is a weekend day.
         /// </summary>
-        public bool IsWeekend => isWeekend;
+        public static bool IsWeekend => isWeekend;
 
         public static event UnityAction<TimeOfDay> OnDayPeriodChange;
         public static event UnityAction<string> OnDayChange;
         public static event UnityAction<int> OnWeekChange;
 
-        void Awake()
+        private static void CorrectWeekendState()
         {
-            if (Instance == null)
-            {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-        }
-
-        private void CorrectWeekendState()
-        {
-            isWeekend = Array.Exists(_weekendDays, day => day == this.day);
+            isWeekend = Array.Exists(_weekendDays, d => d == day);
         }
 
         /// <summary>
         /// Advances the current day period to the next one.
         /// </summary>
-        public void AdvanceDayPeriod()
+        public static void AdvanceDayPeriod()
         {
             switch (dayPeriod)
             {
@@ -108,7 +92,7 @@ namespace FlowKit
         /// Sets the current day period.
         /// </summary>
         /// <param name="timeOfDay">TimeOfDay enum value to set the dayPeriod to</param>
-        public void SetDayPeriod(TimeOfDay timeOfDay)
+        public static void SetDayPeriod(TimeOfDay timeOfDay)
         {
             dayPeriod = timeOfDay;
         }
@@ -116,7 +100,7 @@ namespace FlowKit
         /// <summary>
         /// Advances the current day by 1.
         /// </summary>
-        public void AdvanceDay()
+        public static void AdvanceDay()
         {
             var previousDayIndex = Array.IndexOf(_daysOfWeek, day);
 
@@ -141,9 +125,9 @@ namespace FlowKit
         /// </summary>
         /// <param name="dayName">Name of the day of the week</param>
         /// <exception cref="ArgumentException">Thrown when the dayName is not a valid day</exception>
-        public void SetDay(string dayName)
+        public static void SetDay(string dayName)
         {
-            if (!Array.Exists(_daysOfWeek, day => day == this.day))
+            if (!Array.Exists(_daysOfWeek, d => d == day))
             {
                 throw new ArgumentException(nameof(day), $"Day '{day}' is not a valid day of the week");
             }
@@ -157,7 +141,7 @@ namespace FlowKit
         /// </summary>
         /// <param name="dayIndex">Index between 0 and 6 for the daysOfWeek array</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the dayIndex is outside the bounds of the daysOfWeek array</exception>
-        public void SetDay(int dayIndex)
+        public static void SetDay(int dayIndex)
         {
             if (dayIndex < 0 || dayIndex >= _daysOfWeek.Length)
             {
@@ -171,7 +155,7 @@ namespace FlowKit
         /// <summary>
         /// Advances the current week by 1.
         /// </summary>
-        public void AdvanceWeek()
+        public static void AdvanceWeek()
         {
             week += 1;
 
@@ -182,9 +166,48 @@ namespace FlowKit
         /// Sets the current week number.
         /// </summary>
         /// <param name="weekNumber">Week number to set the week to</param>
-        public void SetWeek(int weekNumber)
+        public static void SetWeek(int weekNumber)
         {
             week = weekNumber;
         }
+
+        /// <summary>
+        /// Collects and returns a TimeData class
+        /// </summary>
+        /// <returns>TimeData class holding all time related variables</returns>
+        public static TimeData GetSaveData()
+        {
+            return new TimeData
+            {
+                dayPeriod = dayPeriod,
+                day = day,
+                dayCount = dayCount,
+                week = week,
+                isWeekend = isWeekend
+            };
+        }
+
+        /// <summary>
+        /// Loads and sets all data from TimeData
+        /// </summary>
+        /// <param name="data">The TimeData to load</param>
+        public static void LoadSaveData(TimeData data)
+        {
+            dayPeriod = data.dayPeriod;
+            day = data.day;
+            dayCount = data.dayCount;
+            week = data.week;
+            isWeekend = data.isWeekend;
+        }
+    }
+
+    [System.Serializable]
+    public class TimeData
+    {
+        public TimeManager.TimeOfDay dayPeriod;
+        public string day;
+        public int dayCount;
+        public int week;
+        public bool isWeekend;
     }
 }
