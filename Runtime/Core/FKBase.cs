@@ -1,16 +1,23 @@
 using UnityEngine;
 
-public class FKBase : MonoBehaviour
+namespace FlowKit
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public abstract class FKBase : MonoBehaviour
     {
-        
-    }
+        [SerializeField] protected EasingType defaultEasing = EasingType.Linear;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public RectTransform RectTransform { get; protected set; }
+        public bool IsAnimating { get; protected set; }
+
+        protected virtual void Awake()
+        {
+            RectTransform = GetComponent<RectTransform>();
+        }
+
+        public void Stop()
+        {
+            StopAllCoroutines();
+            IsAnimating = false;
+        }
     }
 }

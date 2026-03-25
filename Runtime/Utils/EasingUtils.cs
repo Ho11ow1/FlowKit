@@ -1,16 +1,18 @@
-using UnityEngine;
-
-public class EasingUtils : MonoBehaviour
+namespace FlowKit.Utils
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public static class EasingUtils
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public static float Evaluate(EasingType easing, float time)
+        {
+            return easing switch
+            {
+                EasingType.Linear => time,
+                EasingType.Cubic => time * time * time,
+                EasingType.EaseIn => time * time,
+                EasingType.EaseOut => time * (2 - time),
+                EasingType.EaseInOut => time < 0.5f ? 2 * time * time : -1 + (4 - 2 * time) * time,
+                _ => time
+            };
+        }
     }
 }

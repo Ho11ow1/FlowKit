@@ -1,16 +1,32 @@
-using UnityEngine;
-
-public class Enums : MonoBehaviour
+namespace FlowKit
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public enum EasingType
     {
-        
+        Linear,
+        Cubic,
+        EaseIn,
+        EaseOut,
+        EaseInOut
     }
 
-    // Update is called once per frame
-    void Update()
+    public enum AnimationType
     {
-        
+        Movement,
+        Rotation,
+        Scale,
+        Fade,
+        Text
+    }
+
+    public enum Direction
+    {
+        ToUp,
+        ToRight,
+        ToBottom,
+        ToLeft,
+        FromUp,
+        FromRight,
+        FromBottom,
+        FromLeft
     }
 }
