@@ -43,30 +43,40 @@ namespace FlowKit
         // ============================== ENUMERATORS ============================== \\
 
         // =============== Component Self =============== \\
-        public IEnumerator WaveRoutine(float amplitude = 0.2f, float frequency = 4f, float? duration = null, float delay = 0f)
-            => WaveRoutine(RectTransform, amplitude, frequency, duration, delay);
+        public FKHandle WaveHandle(float amplitude = 0.2f, float frequency = 4f, float? duration = null, float delay = 0f)
+            => WaveHandle(RectTransform, amplitude, frequency, duration, delay);
 
         // =============== Monolith via Reference =============== \\
-        public IEnumerator WaveRoutine(RectTransform obj, float amplitude = 0.2f, float frequency = 4f, float? duration = null, float delay = 0f)
+        public FKHandle WaveHandle(RectTransform obj, float amplitude = 0.2f, float frequency = 4f, float? duration = null, float delay = 0f)
         {
             if (obj == null)
             {
-                FKLogger.NullObject<FKText>(nameof(Wave), gameObject.name);
-                yield break;
+                FKLogger.NullObject<FKText>(nameof(WaveHandle), gameObject.name);
+                return FKHandle.Invalid;
             }
             if (!obj.TryGetComponent<TMP_Text>(out var txt))
             {
                 FKLogger.MissingComponent<FKText>(typeof(TMP_Text), obj.name);
-                yield break;
+                return FKHandle.Invalid;
             }
 
             if (duration.HasValue)
             {
-                yield return WaveImpl(txt, amplitude, frequency, duration.Value, delay, GenerateEventData(obj, duration.Value));
+                return new FKHandle(this,
+                    () => WaveImpl(txt, amplitude, frequency, duration.Value, delay, GenerateEventData(obj, duration.Value)),
+                    null);
             }
             else
             {
-                yield return InfiniteWaveImpl(txt, amplitude, frequency, delay, GenerateEventData(obj, float.PositiveInfinity));
+                var eventData = GenerateEventData(obj, float.PositiveInfinity);
+                return new FKHandle(this,
+                    () => InfiniteWaveImpl(txt, amplitude, frequency, delay, eventData),
+                    () => 
+                        {
+                            FlowKitEvents.InvokeEnd(eventData);
+                            eventData.Target.GetComponent<TMP_Text>().ForceMeshUpdate();
+                        }
+                    );
             }
         }
 
@@ -78,7 +88,7 @@ namespace FlowKit
             {
                 yield return new WaitForSecondsRealtime(delay);
             }
-            Events.FlowKitEvents.InvokeStart(data);
+            FlowKitEvents.InvokeStart(data);
 
             tmp.ForceMeshUpdate();
             var textInfo = tmp.textInfo;
@@ -97,7 +107,7 @@ namespace FlowKit
             }
             tmp.ForceMeshUpdate();
 
-            Events.FlowKitEvents.InvokeEnd(data);
+            FlowKitEvents.InvokeEnd(data);
         }
 
         private IEnumerator InfiniteWaveImpl(TMP_Text tmp, float amplitude, float frequency, float delay, FKEventData data)
@@ -106,7 +116,7 @@ namespace FlowKit
             {
                 yield return new WaitForSecondsRealtime(delay);
             }
-            Events.FlowKitEvents.InvokeStart(data);
+            FlowKitEvents.InvokeStart(data);
 
             tmp.ForceMeshUpdate();
             var textInfo = tmp.textInfo;

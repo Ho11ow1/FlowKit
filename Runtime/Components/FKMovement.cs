@@ -58,35 +58,39 @@ namespace FlowKit
         // ============================== ENUMERATORS ============================== \\
 
         // =============== Component Self =============== \\
-        public IEnumerator MoveRoutine(Vector2 to, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
-            => MoveRoutine(RectTransform, to, duration, easing, delay);
-        public IEnumerator MoveRoutine(Direction direction, float offset, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
-            => MoveRoutine(RectTransform, direction, offset, duration, easing, delay);
+        public FKHandle MoveHandle(Vector2 to, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
+            => MoveHandle(RectTransform, to, duration, easing, delay);
+        public FKHandle MoveHandle(Direction direction, float offset, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
+            => MoveHandle(RectTransform, direction, offset, duration, easing, delay);
 
         // =============== Monolith via Reference ===============\\
-        public IEnumerator MoveRoutine(RectTransform obj, Vector2 to, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
+        public FKHandle MoveHandle(RectTransform obj, Vector2 to, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
         {
             if (obj == null)
             {
-                FKLogger.NullObject<FKMovement>(nameof(MoveRoutine), gameObject.name);
-                yield break;
+                FKLogger.NullObject<FKMovement>(nameof(MoveHandle), gameObject.name);
+                return FKHandle.Invalid;
             }
 
-            yield return MoveImpl(obj, obj.localPosition, to, duration, easing, delay, GenerateEventData(obj, duration));
+            return new FKHandle(this,
+                () => MoveImpl(obj, obj.localPosition, to, duration, easing, delay, GenerateEventData(obj, duration)),
+                null);
         }
-        public IEnumerator MoveRoutine(RectTransform obj, Direction direction, float offset, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
+        public FKHandle MoveHandle(RectTransform obj, Direction direction, float offset, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
         {
             if (obj == null)
             {
-                FKLogger.NullObject<FKMovement>(nameof(MoveRoutine), gameObject.name);
-                yield break;
+                FKLogger.NullObject<FKMovement>(nameof(MoveHandle), gameObject.name);
+                return FKHandle.Invalid;
             }
             if (!CalculateOffsetPosition(obj.localPosition, direction, offset, out var from, out var to))
             {
-                yield break;
+                return FKHandle.Invalid;
             }
 
-            yield return MoveImpl(obj, from, to, duration, easing, delay, GenerateEventData(obj, duration));
+            return new FKHandle(this,
+                () => MoveImpl(obj, from, to, duration, easing, delay, GenerateEventData(obj, duration)),
+                null);
         }
 
         // ============================== ACTUAL LOGIC ============================== \\
@@ -97,7 +101,7 @@ namespace FlowKit
             {
                 yield return new WaitForSecondsRealtime(delay);
             }
-            Events.FlowKitEvents.InvokeStart(data);
+            FlowKitEvents.InvokeStart(data);
 
             float elapsedTime = 0f;
             while (elapsedTime < duration)
@@ -111,7 +115,7 @@ namespace FlowKit
             }
             obj.anchoredPosition = to;
 
-            Events.FlowKitEvents.InvokeEnd(data);
+            FlowKitEvents.InvokeEnd(data);
         }
 
         private bool CalculateOffsetPosition(Vector2 currentPos, Direction dir, float offset, out Vector2 from, out Vector2 to)

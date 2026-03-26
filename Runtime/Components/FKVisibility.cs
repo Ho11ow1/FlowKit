@@ -56,24 +56,26 @@ namespace FlowKit
         // ============================== ENUMERATORS ============================== \\
 
         // =============== Component Self =============== \\
-        public IEnumerator FadeRoutine(float fromAlpha, float toAlpha, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
-            => FadeRoutine(RectTransform, fromAlpha, toAlpha, duration, easing, delay);
+        public FKHandle FadeHandle(float fromAlpha, float toAlpha, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
+            => FadeHandle(RectTransform, fromAlpha, toAlpha, duration, easing, delay);
 
         // =============== Monolith via Reference =============== \\
-        public IEnumerator FadeRoutine(RectTransform obj, float fromAlpha, float toAlpha, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
+        public FKHandle FadeHandle(RectTransform obj, float fromAlpha, float toAlpha, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
         {
             if (obj == null)
             {
-                FKLogger.NullObject<FKVisibility>(nameof(FadeRoutine), gameObject.name);
-                yield break;
+                FKLogger.NullObject<FKVisibility>(nameof(FadeHandle), gameObject.name);
+                return FKHandle.Invalid;
             }
             if (!obj.TryGetComponent<CanvasGroup>(out var cg))
             {
                 FKLogger.MissingComponent<FKVisibility>(typeof(CanvasGroup), obj.name);
-                yield break;
+                return FKHandle.Invalid;
             }
 
-            yield return FadeImpl(cg, fromAlpha, toAlpha, duration, easing, delay, GenerateEventData(obj, duration));
+            return new FKHandle(this, 
+                () => FadeImpl(cg, fromAlpha, toAlpha, duration, easing, delay, GenerateEventData(obj, duration)),
+                null);
         }
 
         // ============================== ACTUAL LOGIC ============================== \\
@@ -84,7 +86,7 @@ namespace FlowKit
             {
                 yield return new WaitForSecondsRealtime(delay);
             }
-            Events.FlowKitEvents.InvokeStart(data);
+            FlowKitEvents.InvokeStart(data);
 
             cg.alpha = from;
             cg.interactable = from > 0f;
@@ -104,7 +106,7 @@ namespace FlowKit
             cg.interactable = to > 0f;
             cg.blocksRaycasts = to > 0f;
 
-            Events.FlowKitEvents.InvokeEnd(data);
+            FlowKitEvents.InvokeEnd(data);
         }
 
         private FKEventData GenerateEventData(RectTransform target, float duration)

@@ -78,43 +78,49 @@ namespace FlowKit
         // ============================== ENUMERATORS ============================== \\
 
         // =============== Component Self =============== \\
-        public IEnumerator ScaleRoutine(float scale, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
-            => ScaleRoutine(RectTransform, scale, duration, easing, delay);
-        public IEnumerator ScaleXRoutine(float scaleX, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
-            => ScaleXRoutine(RectTransform, scaleX, duration, easing, delay);
-        public IEnumerator ScaleYRoutine(float scaleY, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
-            => ScaleYRoutine(RectTransform, scaleY, duration, easing, delay);
+        public FKHandle ScaleHandle(float scale, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
+            => ScaleHandle(RectTransform, scale, duration, easing, delay);
+        public FKHandle ScaleXHandle(float scaleX, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
+            => ScaleXHandle(RectTransform, scaleX, duration, easing, delay);
+        public FKHandle ScaleYHandle(float scaleY, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
+            => ScaleYHandle(RectTransform, scaleY, duration, easing, delay);
 
         // =============== Monolith via Reference =============== \\
-        public IEnumerator ScaleRoutine(RectTransform obj, float scale, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
+        public FKHandle ScaleHandle(RectTransform obj, float scale, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
         {
             if (obj == null)
             {
-                FKLogger.NullObject<FKScale>(nameof(ScaleRoutine), gameObject.name);
-                yield break;
+                FKLogger.NullObject<FKScale>(nameof(ScaleHandle), gameObject.name);
+                return FKHandle.Invalid;
             }
 
-            yield return ScaleImpl(obj, scale, scale, duration, easing, delay, GenerateEventData(obj, duration));
+            return new FKHandle(this,
+                () => ScaleImpl(obj, scale, scale, duration, easing, delay, GenerateEventData(obj, duration)),
+                null);
         }
-        public IEnumerator ScaleXRoutine(RectTransform obj, float scaleX, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
+        public FKHandle ScaleXHandle(RectTransform obj, float scaleX, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
         {
             if (obj == null)
             {
-                FKLogger.NullObject<FKScale>(nameof(ScaleXRoutine), gameObject.name);
-                yield break;
+                FKLogger.NullObject<FKScale>(nameof(ScaleXHandle), gameObject.name);
+                return FKHandle.Invalid;
             }
 
-            yield return ScaleImpl(obj, scaleX, 1, duration, easing, delay, GenerateEventData(obj, duration));
+            return new FKHandle(this,
+                () => ScaleImpl(obj, scaleX, 1, duration, easing, delay, GenerateEventData(obj, duration)),
+                null);
         }
-        public IEnumerator ScaleYRoutine(RectTransform obj, float scaleY, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
+        public FKHandle ScaleYHandle(RectTransform obj, float scaleY, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
         {
             if (obj == null)
             {
-                FKLogger.NullObject<FKScale>(nameof(ScaleYRoutine), gameObject.name);
-                yield break;
+                FKLogger.NullObject<FKScale>(nameof(ScaleYHandle), gameObject.name);
+                return FKHandle.Invalid;
             }
 
-            yield return ScaleImpl(obj, 1, scaleY, duration, easing, delay, GenerateEventData(obj, duration));
+            return new FKHandle(this,
+                () => ScaleImpl(obj, 1, scaleY, duration, easing, delay, GenerateEventData(obj, duration)),
+                null);
         }
 
         // ============================== ACTUAL LOGIC ============================== \\
@@ -125,7 +131,7 @@ namespace FlowKit
             {
                 yield return new WaitForSecondsRealtime(delay);
             }
-            Events.FlowKitEvents.InvokeStart(data);
+            FlowKitEvents.InvokeStart(data);
 
             var startScale = obj.localScale;
             var targetScale = new Vector2(startScale.x * scaleX, startScale.y * scaleY);
@@ -142,7 +148,7 @@ namespace FlowKit
             }
             obj.localScale = targetScale;
 
-            Events.FlowKitEvents.InvokeEnd(data);
+            FlowKitEvents.InvokeEnd(data);
         }
 
         private FKEventData GenerateEventData(RectTransform target, float duration)
