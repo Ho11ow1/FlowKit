@@ -24,18 +24,42 @@ namespace FlowKit
         // =============== Monolith via Reference ===============\\
         public void Rotate(RectTransform obj, float degrees, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
         {
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKRotation>(nameof(Rotate), gameObject.name);
+                return;
+            }
+
             StartCoroutine(RotateImpl(obj, degrees, duration, easing, delay, GenerateEventData(obj, duration)));
         }
         public void Spin(RectTransform obj, float degreesPerSecond, float delay = 0f)
         {
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKRotation>(nameof(Spin), gameObject.name);
+                return;
+            }
+
             StartCoroutine(SpinImpl(obj, degreesPerSecond, delay, GenerateEventData(obj, float.PositiveInfinity)));
         }
         public void SetRotation(RectTransform obj, float degrees)
         {
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKRotation>(nameof(SetRotation), gameObject.name);
+                return;
+            }
+
             obj.localRotation = Quaternion.Euler(0, 0, -degrees);
         }
         public void SetRotation(RectTransform obj, Vector3 rotationVector)
         {
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKRotation>(nameof(SetRotation), gameObject.name);
+                return;
+            }
+
             obj.localRotation = Quaternion.Euler(rotationVector.x, rotationVector.y, -rotationVector.z);
         }
 
@@ -50,11 +74,23 @@ namespace FlowKit
         // =============== Monolith via Reference =============== \\
         public IEnumerator RotateRoutine(RectTransform obj, float degrees, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
         {
-            return RotateImpl(obj, degrees, duration, easing, delay, GenerateEventData(obj, duration));
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKRotation>(nameof(RotateRoutine), gameObject.name);
+                yield break;
+            }
+
+            yield return RotateImpl(obj, degrees, duration, easing, delay, GenerateEventData(obj, duration));
         }
         public IEnumerator SpinRoutine(RectTransform obj, float degreesPerSecond, float delay = 0f)
         {
-            return SpinImpl(obj, degreesPerSecond, delay, GenerateEventData(obj, float.PositiveInfinity));
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKRotation>(nameof(SpinRoutine), gameObject.name);
+                yield break;
+            }
+
+            yield return SpinImpl(obj, degreesPerSecond, delay, GenerateEventData(obj, float.PositiveInfinity));
         }
 
         // ============================== ACTUAL LOGIC ============================== \\

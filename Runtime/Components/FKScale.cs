@@ -26,22 +26,52 @@ namespace FlowKit
         // =============== Monolith via Reference ===============\\
         public void Scale(RectTransform obj, float scale, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
         {
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKScale>(nameof(Scale), gameObject.name);
+                return;
+            }
+
             StartCoroutine(ScaleImpl(obj, scale, scale, duration, easing, delay, GenerateEventData(obj, duration)));
         }
         public void ScaleX(RectTransform obj, float scaleX, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
         {
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKScale>(nameof(ScaleX), gameObject.name);
+                return;
+            }
+
             StartCoroutine(ScaleImpl(obj, scaleX, 1, duration, easing, delay, GenerateEventData(obj, duration)));
         }
         public void ScaleY(RectTransform obj, float scaleY, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
         {
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKScale>(nameof(ScaleY), gameObject.name);
+                return;
+            }
+
             StartCoroutine(ScaleImpl(obj, 1, scaleY, duration, easing, delay, GenerateEventData(obj, duration)));
         }
         public void SetScale(RectTransform obj, float scale)
         {
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKScale>(nameof(SetScale), gameObject.name);
+                return;
+            }
+
             obj.localScale = new Vector2(scale, scale);
         }
         public void SetScale(RectTransform obj, Vector2 scale)
         {
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKScale>(nameof(SetScale), gameObject.name);
+                return;
+            }
+
             obj.localScale = scale;
         }
 
@@ -58,15 +88,33 @@ namespace FlowKit
         // =============== Monolith via Reference =============== \\
         public IEnumerator ScaleRoutine(RectTransform obj, float scale, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
         {
-            return ScaleImpl(obj, scale, scale, duration, easing, delay, GenerateEventData(obj, duration));
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKScale>(nameof(ScaleRoutine), gameObject.name);
+                yield break;
+            }
+
+            yield return ScaleImpl(obj, scale, scale, duration, easing, delay, GenerateEventData(obj, duration));
         }
         public IEnumerator ScaleXRoutine(RectTransform obj, float scaleX, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
         {
-            return ScaleImpl(obj, scaleX, 1, duration, easing, delay, GenerateEventData(obj, duration));
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKScale>(nameof(ScaleXRoutine), gameObject.name);
+                yield break;
+            }
+
+            yield return ScaleImpl(obj, scaleX, 1, duration, easing, delay, GenerateEventData(obj, duration));
         }
         public IEnumerator ScaleYRoutine(RectTransform obj, float scaleY, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
         {
-            return ScaleImpl(obj, 1, scaleY, duration, easing, delay, GenerateEventData(obj, duration));
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKScale>(nameof(ScaleYRoutine), gameObject.name);
+                yield break;
+            }
+
+            yield return ScaleImpl(obj, 1, scaleY, duration, easing, delay, GenerateEventData(obj, duration));
         }
 
         // ============================== ACTUAL LOGIC ============================== \\
