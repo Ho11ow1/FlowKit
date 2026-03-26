@@ -13,13 +13,13 @@ namespace FlowKit
 
         // =============== Component Self =============== \\
         public void Rotate(float degrees, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
-        {
-            StartCoroutine(RotateImpl(RectTransform, degrees, duration, easing, delay, GenerateEventData(RectTransform, duration)));
-        }
+            => Rotate(RectTransform, degrees, duration, easing, delay);
         public void Spin(float degreesPerSecond, float delay = 0f)
-        {
-            StartCoroutine(SpinImpl(RectTransform, degreesPerSecond, delay, GenerateEventData(RectTransform, float.PositiveInfinity)));
-        }
+            => Spin(RectTransform, degreesPerSecond, delay);
+        public void SetRotation(float degrees)
+            => SetRotation(RectTransform, degrees);
+        public void SetRotation(Vector3 rotationVector)
+            => SetRotation(RectTransform, rotationVector);
 
         // =============== Monolith via Reference ===============\\
         public void Rotate(RectTransform obj, float degrees, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
@@ -30,18 +30,22 @@ namespace FlowKit
         {
             StartCoroutine(SpinImpl(obj, degreesPerSecond, delay, GenerateEventData(obj, float.PositiveInfinity)));
         }
+        public void SetRotation(RectTransform obj, float degrees)
+        {
+            obj.localRotation = Quaternion.Euler(0, 0, -degrees);
+        }
+        public void SetRotation(RectTransform obj, Vector3 rotationVector)
+        {
+            obj.localRotation = Quaternion.Euler(rotationVector.x, rotationVector.y, -rotationVector.z);
+        }
 
         // ============================== ENUMERATORS ============================== \\
 
         // =============== Component Self =============== \\
         public IEnumerator RotateRoutine(float degrees, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
-        {
-            return RotateImpl(RectTransform, degrees, duration, easing, delay, GenerateEventData(RectTransform, duration));
-        }
+            => RotateRoutine(RectTransform, degrees, duration, easing, delay);
         public IEnumerator SpinRoutine(float degreesPerSecond, float delay = 0f)
-        {
-            return SpinImpl(RectTransform, degreesPerSecond, delay, GenerateEventData(RectTransform, float.PositiveInfinity));
-        }
+            => SpinRoutine(RectTransform, degreesPerSecond, delay);
 
         // =============== Monolith via Reference =============== \\
         public IEnumerator RotateRoutine(RectTransform obj, float degrees, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
