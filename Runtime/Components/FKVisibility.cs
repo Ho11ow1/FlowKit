@@ -29,7 +29,7 @@ namespace FlowKit
             }
             if (!obj.TryGetComponent<CanvasGroup>(out var cg))
             {
-                FKLogger.MissingCanvasGroup<FKVisibility>(obj.name);
+                FKLogger.MissingComponent<FKVisibility>(typeof(CanvasGroup), obj.name);
                 return;
             }
 
@@ -44,7 +44,7 @@ namespace FlowKit
             }
             if (!obj.TryGetComponent<CanvasGroup>(out var cg))
             {
-                FKLogger.MissingCanvasGroup<FKVisibility>(obj.name);
+                FKLogger.MissingComponent<FKVisibility>(typeof(CanvasGroup), obj.name);
                 return;
             }
 
@@ -69,7 +69,7 @@ namespace FlowKit
             }
             if (!obj.TryGetComponent<CanvasGroup>(out var cg))
             {
-                FKLogger.MissingCanvasGroup<FKVisibility>(obj.name);
+                FKLogger.MissingComponent<FKVisibility>(typeof(CanvasGroup), obj.name);
                 yield break;
             }
 

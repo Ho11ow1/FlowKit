@@ -135,10 +135,6 @@ namespace FlowKit
 
                 yield return null;
             }
-            //
-            // Will be able to be called in future with async cancellations / .Stop() jump to end label
-            //
-            Events.FlowKitEvents.InvokeEnd(data);
         }
 
         private FKEventData GenerateEventData(RectTransform target, float duration)
