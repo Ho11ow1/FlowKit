@@ -20,7 +20,7 @@ namespace FlowKit.Events
         /// <returns>A formatted string of all the data inside of this struct</returns>
         public override string ToString()
         {
-            return $"[FlowKit] {AnimationType} on '{Target.name}' from '{Source.name}' ({Duration}s)";
+            return $"[FlowKit] {AnimationType} on '{Target.name}' from '{Source.name}' ({(float.IsPositiveInfinity(Duration) ? "Infinity" : $"{Duration}s")})";
         }
     }
 }
