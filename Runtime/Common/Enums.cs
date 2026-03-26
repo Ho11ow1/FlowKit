@@ -14,7 +14,7 @@ namespace FlowKit
         Movement,
         Rotation,
         Scale,
-        Fade,
+        Visibility,
         Text
     }
 

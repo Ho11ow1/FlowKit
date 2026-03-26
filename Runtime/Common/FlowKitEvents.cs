@@ -32,7 +32,7 @@ namespace FlowKit.Events
                 case AnimationType.Scale:
                     OnScaleStart?.Invoke(data);
                     break;
-                case AnimationType.Fade:
+                case AnimationType.Visibility:
                     OnFadeStart?.Invoke(data);
                     break;
                 case AnimationType.Text:
@@ -55,7 +55,7 @@ namespace FlowKit.Events
                 case AnimationType.Scale:
                     OnScaleEnd?.Invoke(data);
                     break;
-                case AnimationType.Fade:
+                case AnimationType.Visibility:
                     OnFadeEnd?.Invoke(data);
                     break;
                 case AnimationType.Text:
