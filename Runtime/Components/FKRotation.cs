@@ -80,9 +80,10 @@ namespace FlowKit
                 return FKHandle.Invalid;
             }
 
+            var eventData = GenerateEventData(obj, duration);
             return new FKHandle(this,
-                () => RotateImpl(obj, degrees, duration, easing, delay, GenerateEventData(obj, duration)),
-                null);
+                () => RotateImpl(obj, degrees, duration, easing, delay, eventData),
+                eventData);
         }
         public FKHandle SpinHandle(RectTransform obj, float degreesPerSecond, float delay = 0f)
         {
@@ -95,7 +96,7 @@ namespace FlowKit
             var eventData = GenerateEventData(obj, float.PositiveInfinity);
             return new FKHandle(this,
                 () => SpinImpl(obj, degreesPerSecond, delay, eventData),
-                () => FlowKitEvents.InvokeEnd(eventData));
+                eventData);
         }
 
         // ============================== ACTUAL LOGIC ============================== \\

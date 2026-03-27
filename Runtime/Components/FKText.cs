@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 
 using FlowKit.Events;
+using Mono.Cecil;
 
 namespace FlowKit
 {
@@ -62,21 +63,18 @@ namespace FlowKit
 
             if (duration.HasValue)
             {
+                var eventData = GenerateEventData(obj, duration.Value);
                 return new FKHandle(this,
                     () => WaveImpl(txt, amplitude, frequency, duration.Value, delay, GenerateEventData(obj, duration.Value)),
-                    null);
+                    eventData);
             }
             else
             {
                 var eventData = GenerateEventData(obj, float.PositiveInfinity);
                 return new FKHandle(this,
                     () => InfiniteWaveImpl(txt, amplitude, frequency, delay, eventData),
-                    () => 
-                        {
-                            FlowKitEvents.InvokeEnd(eventData);
-                            eventData.Target.GetComponent<TMP_Text>().ForceMeshUpdate();
-                        }
-                    );
+                    eventData,
+                    () => eventData.Target.GetComponent<TMP_Text>().ForceMeshUpdate());
             }
         }
 

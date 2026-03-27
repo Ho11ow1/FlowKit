@@ -72,9 +72,10 @@ namespace FlowKit
                 return FKHandle.Invalid;
             }
 
+            var eventData = GenerateEventData(obj, duration);
             return new FKHandle(this,
-                () => MoveImpl(obj, obj.localPosition, to, duration, easing, delay, GenerateEventData(obj, duration)),
-                null);
+                () => MoveImpl(obj, obj.localPosition, to, duration, easing, delay, eventData),
+                eventData);
         }
         public FKHandle MoveHandle(RectTransform obj, Direction direction, float offset, float duration, EasingType easing = EasingType.Linear, float delay = 0f)
         {
@@ -88,9 +89,10 @@ namespace FlowKit
                 return FKHandle.Invalid;
             }
 
+            var eventData = GenerateEventData(obj, duration);
             return new FKHandle(this,
-                () => MoveImpl(obj, from, to, duration, easing, delay, GenerateEventData(obj, duration)),
-                null);
+                () => MoveImpl(obj, from, to, duration, easing, delay, eventData),
+                eventData);
         }
 
         // ============================== ACTUAL LOGIC ============================== \\

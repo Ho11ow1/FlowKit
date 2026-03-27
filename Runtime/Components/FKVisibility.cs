@@ -73,9 +73,10 @@ namespace FlowKit
                 return FKHandle.Invalid;
             }
 
+            var eventData = GenerateEventData(obj, duration);
             return new FKHandle(this, 
-                () => FadeImpl(cg, fromAlpha, toAlpha, duration, easing, delay, GenerateEventData(obj, duration)),
-                null);
+                () => FadeImpl(cg, fromAlpha, toAlpha, duration, easing, delay, eventData),
+                eventData);
         }
 
         // ============================== ACTUAL LOGIC ============================== \\
