@@ -7,7 +7,7 @@ using FlowKit.Utils;
 
 namespace FlowKit
 {
-    public class FKMovement : FKBase
+    public sealed class FKMovement : FKBase
     {
         // ============================== VOIDS ============================== \\
 
@@ -164,11 +164,6 @@ namespace FlowKit
                     to = Vector2.zero;
                     return false;
             }
-        }
-
-        private FKEventData GenerateEventData(RectTransform target, float duration)
-        {
-            return new FKEventData(gameObject, AnimationType.Movement, target, duration);
         }
     }
 }

@@ -7,7 +7,7 @@ using FlowKit.Utils;
 
 namespace FlowKit
 {
-    public class FKRotation : FKBase
+    public sealed class FKRotation : FKBase
     {
         // ============================== VOIDS ============================== \\
 
@@ -141,11 +141,6 @@ namespace FlowKit
 
                 yield return null;
             }
-        }
-
-        private FKEventData GenerateEventData(RectTransform target, float duration)
-        {
-            return new FKEventData(gameObject, AnimationType.Rotation, target, duration);
         }
     }
 }

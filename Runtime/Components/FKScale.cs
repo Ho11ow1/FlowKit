@@ -7,7 +7,7 @@ using FlowKit.Utils;
 
 namespace FlowKit
 {
-    public class FKScale : FKBase
+    public sealed class FKScale : FKBase
     {
         // ============================== VOIDS ============================== \\
 
@@ -152,11 +152,6 @@ namespace FlowKit
             obj.localScale = targetScale;
 
             FlowKitEvents.InvokeEnd(data);
-        }
-
-        private FKEventData GenerateEventData(RectTransform target, float duration)
-        {
-            return new FKEventData(gameObject, AnimationType.Scale, target, duration);
         }
     }
 }

@@ -2,8 +2,12 @@ using UnityEngine;
 
 namespace FlowKit
 {
-    [DefaultExecutionOrder(-10)]
-    public partial class FKEngine : MonoBehaviour
+    [RequireComponent(typeof(FKMovement))]
+    [RequireComponent(typeof(FKRotation))]
+    [RequireComponent(typeof(FKScale))]
+    [RequireComponent(typeof(FKText))]
+    [RequireComponent(typeof(FKVisibility))]
+    public class FKEngine : MonoBehaviour
     {
         public FKMovement Movement { get; private set; }
         public FKRotation Rotation { get; private set; }
@@ -13,11 +17,11 @@ namespace FlowKit
 
         private void Awake()
         {
-            Movement = gameObject.AddComponent<FKMovement>();
-            Rotation = gameObject.AddComponent<FKRotation>();
-            Scale = gameObject.AddComponent<FKScale>();
-            Text = gameObject.AddComponent<FKText>();
-            Visibility = gameObject.AddComponent<FKVisibility>();
+            Movement = GetComponent<FKMovement>();
+            Rotation = GetComponent<FKRotation>();
+            Scale = GetComponent<FKScale>();
+            Text = GetComponent<FKText>();
+            Visibility = GetComponent<FKVisibility>();
         }
     }
 }

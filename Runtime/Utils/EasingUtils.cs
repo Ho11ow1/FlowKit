@@ -1,6 +1,6 @@
 namespace FlowKit.Utils
 {
-    public static class EasingUtils
+    internal static class EasingUtils
     {
         public static float Evaluate(EasingType easing, float time)
         {

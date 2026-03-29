@@ -89,7 +89,7 @@ namespace FlowKit
             return this;
         }
 
-        public IEnumerator Await()
+        public IEnumerator AsCoroutine()
         {
             while (IsAnimating)
             {

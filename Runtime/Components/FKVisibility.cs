@@ -7,7 +7,7 @@ using FlowKit.Utils;
 
 namespace FlowKit
 {
-    public class FKVisibility : FKBase
+    public sealed class FKVisibility : FKBase
     {
         // ============================== VOIDS ============================== \\
 
@@ -108,11 +108,6 @@ namespace FlowKit
             cg.blocksRaycasts = to > 0f;
 
             FlowKitEvents.InvokeEnd(data);
-        }
-
-        private FKEventData GenerateEventData(RectTransform target, float duration)
-        {
-            return new FKEventData(gameObject, AnimationType.Visibility, target, duration);
         }
     }
 }

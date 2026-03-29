@@ -15,7 +15,8 @@ namespace FlowKit
         Rotation,
         Scale,
         Visibility,
-        Text
+        Text,
+        Unknown
     }
 
     public enum Direction
@@ -28,5 +29,11 @@ namespace FlowKit
         FromRight,
         FromBottom,
         FromLeft
+    }
+
+    internal enum Vertecies
+    {
+        X,
+        Y
     }
 }
