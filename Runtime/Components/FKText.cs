@@ -42,7 +42,6 @@ namespace FlowKit
                 StartCoroutine(InfiniteWaveImpl(txt, amplitude, frequency, delay, GenerateEventData(obj, float.PositiveInfinity)));
             }
         }
-
         public void Shake(RectTransform obj, float amplitude = 0.2f, float frequency = 4f, float? duration = null, float delay = 0f)
         {
             if (obj == null)

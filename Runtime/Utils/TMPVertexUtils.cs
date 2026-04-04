@@ -2,7 +2,6 @@ using UnityEngine;
 
 using TMPro;
 
-
 namespace FlowKit.Utils
 {
     internal static class TMPVertexUtils
@@ -39,8 +38,5 @@ namespace FlowKit.Utils
 
         private static float GetSineWave(float time, float frequency, int index, float amplitude) 
             => Mathf.Sin(time * frequency + index * 0.5f) * amplitude;
-
-        private static float GetCosWave(float time, float frequency, int index, float amplitude)
-            => Mathf.Cos(time * frequency + index * 0.5f) * amplitude;
     }
 }
