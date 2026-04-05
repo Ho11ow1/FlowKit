@@ -9,7 +9,7 @@ namespace FlowKit.Events
         public readonly RectTransform Target;
         public readonly float Duration;
 
-        public FKEventData(GameObject source, AnimationType animationType, RectTransform target, float duration)
+        internal FKEventData(GameObject source, AnimationType animationType, RectTransform target, float duration)
         {
             Source = source;
             AnimationType = animationType;
