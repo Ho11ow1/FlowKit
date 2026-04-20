@@ -37,6 +37,47 @@ namespace FlowKit
         /// <param name="delay">Delay in seconds before the effect starts.</param>
         public void Shake(float amplitude = 0.2f, float frequency = 4f, float? duration = null, float delay = 0f)
             => Shake(RectTransform, amplitude, frequency, duration, delay);
+        /// <summary>
+        /// Cycles through a gradient between two colors on this component's <see cref="TMP_Text"/>.
+        /// <para>Logs a null warning via <see cref="FKLogger"/> and returns early if <see cref="RectTransform"/> is null.</para>
+        /// <para>Logs a missing component warning and returns early if no <see cref="TMP_Text"/> is found on this component.</para>
+        /// </summary>
+        /// <param name="fromColor">Starting color of the cycle.</param>
+        /// <param name="toColor">Ending color of the cycle.</param>
+        /// <param name="cycleInterval">Time in seconds to complete one full color transition.</param>
+        /// <param name="duration">Total length of the effect in seconds.</param>
+        /// <param name="delay">Delay in seconds before the effect starts.</param>
+        public void ColorCycle(Color32 fromColor, Color32 toColor, float cycleInterval, float duration, float delay = 0f)
+            => ColorCycle(RectTransform, fromColor, toColor, cycleInterval, duration, delay);
+        /// <summary>
+        /// Cycles through an array of colors on this component's <see cref="TMP_Text"/>.
+        /// <para>Logs a null warning via <see cref="FKLogger"/> and returns early if <see cref="RectTransform"/> is null.</para>
+        /// <para>Logs a missing component warning and returns early if no <see cref="TMP_Text"/> is found on this component.</para>
+        /// </summary>
+        /// <param name="colors">Array of colors to cycle through in order.</param>
+        /// <param name="cycleInterval">Time in seconds to complete one full color transition.</param>
+        /// <param name="duration">Total length of the effect in seconds.</param>
+        /// <param name="delay">Delay in seconds before the effect starts.</param>
+        public void ColorCycle(Color32[] colors, float cycleInterval, float duration, float delay = 0f)
+            => ColorCycle(RectTransform, colors, cycleInterval, duration, delay);
+        /// <summary>
+        /// Applies a typewriter effect to the <see cref="TMP_Text"/> on this component, revealing characters at a fixed rate.
+        /// <para>Logs a null warning via <see cref="FKLogger"/> and returns early if <see cref="RectTransform"/> is null.</para>
+        /// <para>Logs a missing component warning and returns early if no <see cref="TMP_Text"/> is found on this component.</para>
+        /// </summary>
+        /// <param name="cps">Characters revealed per second.</param>
+        /// <param name="delay">Delay in seconds before the effect starts.</param>
+        public void TypeWrite(int cps = 3, float delay = 0f)
+            => TypeWrite(RectTransform, cps, delay);
+        /// <summary>
+        /// Applies a typewriter effect to the <see cref="TMP_Text"/> on this component, revealing all characters over a fixed duration.
+        /// <para>Logs a null warning via <see cref="FKLogger"/> and returns early if <see cref="RectTransform"/> is null.</para>
+        /// <para>Logs a missing component warning and returns early if no <see cref="TMP_Text"/> is found on this component.</para>
+        /// </summary>
+        /// <param name="duration">Total time in seconds to reveal all characters.</param>
+        /// <param name="delay">Delay in seconds before the effect starts.</param>
+        public void TypeWrite(float duration = 3f, float delay = 0f)
+            => TypeWrite(RectTransform, duration, delay);
 
         // =============== Monolith via Reference =============== \\
         /// <summary>
@@ -69,7 +110,7 @@ namespace FlowKit
             }
             else
             {
-                StartCoroutine(InfiniteWaveImpl(txt, amplitude, frequency, delay, GenerateEventData(obj, float.PositiveInfinity)));
+                StartCoroutine(WaveImpl(txt, amplitude, frequency, float.PositiveInfinity, delay, GenerateEventData(obj, float.PositiveInfinity)));
             }
         }
         /// <summary>
@@ -102,8 +143,109 @@ namespace FlowKit
             }
             else
             {
-                StartCoroutine(InfiniteShakeImpl(txt, amplitude, frequency, delay, GenerateEventData(obj, float.PositiveInfinity)));
+                StartCoroutine(ShakeImpl(txt, amplitude, frequency, float.PositiveInfinity, delay, GenerateEventData(obj, float.PositiveInfinity)));
             }
+        }
+        /// <summary>
+        /// Cycles through a gradient between two colors on the <see cref="TMP_Text"/> of the specified RectTransform.
+        /// <para>Logs a null warning via <see cref="FKLogger"/> and returns early if <paramref name="obj"/> is null.</para>
+        /// <para>Logs a missing component warning and returns early if no <see cref="TMP_Text"/> is found on <paramref name="obj"/>.</para>
+        /// </summary>
+        /// <param name="obj">RectTransform whose <see cref="TMP_Text"/> will be animated.</param>
+        /// <param name="fromColor">Starting color of the cycle.</param>
+        /// <param name="toColor">Ending color of the cycle.</param>
+        /// <param name="cycleInterval">Time in seconds to complete one full color transition.</param>
+        /// <param name="duration">Total length of the effect in seconds.</param>
+        /// <param name="delay">Delay in seconds before the effect starts.</param>
+        public void ColorCycle(RectTransform obj, Color32 fromColor, Color32 toColor, float cycleInterval, float duration, float delay = 0f)
+        {
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKText>(nameof(ColorCycle), gameObject.name);
+                return;
+            }
+            if (!obj.TryGetComponent<TMP_Text>(out var txt))
+            {
+                FKLogger.MissingComponent<FKText>(typeof(TMP_Text), obj.name);
+                return;
+            }
+
+            var colors = new Color32[] { fromColor, toColor };
+            StartCoroutine(ColorCycleImpl(txt, colors, cycleInterval, duration, delay, GenerateEventData(obj, duration)));
+        }
+        /// <summary>
+        /// Cycles through an array of colors on the <see cref="TMP_Text"/> of the specified RectTransform.
+        /// <para>Logs a null warning via <see cref="FKLogger"/> and returns early if <paramref name="obj"/> is null.</para>
+        /// <para>Logs a missing component warning and returns early if no <see cref="TMP_Text"/> is found on <paramref name="obj"/>.</para>
+        /// </summary>
+        /// <param name="obj">RectTransform whose <see cref="TMP_Text"/> will be animated.</param>
+        /// <param name="colors">Array of colors to cycle through in order.</param>
+        /// <param name="cycleInterval">Time in seconds to complete one full color transition.</param>
+        /// <param name="duration">Total length of the effect in seconds.</param>
+        /// <param name="delay">Delay in seconds before the effect starts.</param>
+        public void ColorCycle(RectTransform obj, Color32[]colors, float cycleInterval, float duration, float delay = 0f)
+        {
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKText>(nameof(ColorCycle), gameObject.name);
+                return;
+            }
+            if (!obj.TryGetComponent<TMP_Text>(out var txt))
+            {
+                FKLogger.MissingComponent<FKText>(typeof(TMP_Text), obj.name);
+                return;
+            }
+
+            StartCoroutine(ColorCycleImpl(txt, colors, cycleInterval, duration, delay, GenerateEventData(obj, duration)));
+        }
+
+        /// <summary>
+        /// Applies a typewriter effect to the <see cref="TMP_Text"/> on the specified RectTransform, revealing characters at a fixed rate.
+        /// <para>Logs a null warning via <see cref="FKLogger"/> and returns early if <paramref name="obj"/> is null.</para>
+        /// <para>Logs a missing component warning and returns early if no <see cref="TMP_Text"/> is found on <paramref name="obj"/>.</para>
+        /// </summary>
+        /// <param name="obj">RectTransform whose <see cref="TMP_Text"/> will be animated.</param>
+        /// <param name="cps">Characters revealed per second.</param>
+        /// <param name="delay">Delay in seconds before the effect starts.</param>
+        public void TypeWrite(RectTransform obj, int cps = 3, float delay = 0f)
+        {
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKText>(nameof(TypeWrite), gameObject.name);
+                return;
+            }
+            if (!obj.TryGetComponent<TMP_Text>(out var txt))
+            {
+                FKLogger.MissingComponent<FKText>(typeof(TMP_Text), obj.name);
+                return;
+            }
+
+            var duration = Mathf.Round(txt.textInfo.characterCount / (float)cps);
+            StartCoroutine(TypeWriteImpl(txt, cps, delay, GenerateEventData(obj, duration)));
+        }
+        /// <summary>
+        /// Applies a typewriter effect to the <see cref="TMP_Text"/> on the specified RectTransform, revealing all characters over a fixed duration.
+        /// <para>Logs a null warning via <see cref="FKLogger"/> and returns early if <paramref name="obj"/> is null.</para>
+        /// <para>Logs a missing component warning and returns early if no <see cref="TMP_Text"/> is found on <paramref name="obj"/>.</para>
+        /// </summary>
+        /// <param name="obj">RectTransform whose <see cref="TMP_Text"/> will be animated.</param>
+        /// <param name="duration">Total time in seconds to reveal all characters.</param>
+        /// <param name="delay">Delay in seconds before the effect starts.</param>
+        public void TypeWrite(RectTransform obj, float duration = 3f, float delay = 0f)
+        {
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKText>(nameof(TypeWrite), gameObject.name);
+                return;
+            }
+            if (!obj.TryGetComponent<TMP_Text>(out var txt))
+            {
+                FKLogger.MissingComponent<FKText>(typeof(TMP_Text), obj.name);
+                return;
+            }
+
+            var cps = Mathf.RoundToInt(txt.textInfo.characterCount / duration);
+            StartCoroutine(TypeWriteImpl(txt, cps, delay, GenerateEventData(obj, duration)));
         }
         #endregion
         #region Handles
@@ -134,6 +276,51 @@ namespace FlowKit
         /// <returns>An <see cref="FKHandle"/> bound to the animation.</returns>
         public FKHandle ShakeHandle(float amplitude = 0.2f, float frequency = 4f, float? duration = null, float delay = 0f)
             => ShakeHandle(RectTransform, amplitude, frequency, duration, delay);
+        /// <summary>
+        /// Cycles through a gradient between two colors on this component's <see cref="TMP_Text"/>.
+        /// <para>The animation does not start until the handle is played.</para>
+        /// <para>Returns <see cref="FKHandle.Invalid"/> if <see cref="RectTransform"/> is null or no <see cref="TMP_Text"/> is found on this component.</para>
+        /// </summary>
+        /// <param name="fromColor">Starting color of the cycle.</param>
+        /// <param name="toColor">Ending color of the cycle.</param>
+        /// <param name="cycleInterval">Time in seconds to complete one full color transition.</param>
+        /// <param name="duration">Total length of the effect in seconds.</param>
+        /// <param name="delay">Delay in seconds before the effect starts.</param>
+        /// <returns>An <see cref="FKHandle"/> bound to the animation, or <see cref="FKHandle.Invalid"/> on failure.</returns>
+        public FKHandle ColorCycleHandle(Color32 fromColor, Color32 toColor, float cycleInterval, float duration, float delay = 0f)
+            => ColorCycleHandle(RectTransform, fromColor, toColor, cycleInterval, duration, delay);
+        /// <summary>
+        /// Cycles through an array of colors on this component's <see cref="TMP_Text"/>.
+        /// <para>The animation does not start until the handle is played.</para>
+        /// <para>Returns <see cref="FKHandle.Invalid"/> if <see cref="RectTransform"/> is null or no <see cref="TMP_Text"/> is found on this component.</para>
+        /// </summary>
+        /// <param name="colors">Array of colors to cycle through in order.</param>
+        /// <param name="cycleInterval">Time in seconds to complete one full color transition.</param>
+        /// <param name="duration">Total length of the effect in seconds.</param>
+        /// <param name="delay">Delay in seconds before the effect starts.</param>
+        /// <returns>An <see cref="FKHandle"/> bound to the animation, or <see cref="FKHandle.Invalid"/> on failure.</returns>
+        public FKHandle ColorCycleHandle(Color32[] colors, float cycleInterval, float duration, float delay = 0f)
+            => ColorCycleHandle(RectTransform, colors, cycleInterval, duration, delay);
+        /// <summary>
+        /// Returns an <see cref="FKHandle"/> for a typewriter effect on this component's <see cref="TMP_Text"/>, revealing characters at a fixed rate.
+        /// <para>The animation does not start until the handle is played.</para>
+        /// <para>Returns <see cref="FKHandle.Invalid"/> if <see cref="RectTransform"/> is null or no <see cref="TMP_Text"/> is found on this component.</para>
+        /// </summary>
+        /// <param name="cps">Characters revealed per second.</param>
+        /// <param name="delay">Delay in seconds before the effect starts.</param>
+        /// <returns>An <see cref="FKHandle"/> bound to the animation, or <see cref="FKHandle.Invalid"/> on failure.</returns>
+        public FKHandle TypeWriteHandle(int cps = 3, float delay = 0f)
+            => TypeWriteHandle(RectTransform, cps, delay);
+        /// <summary>
+        /// Returns an <see cref="FKHandle"/> for a typewriter effect on this component's <see cref="TMP_Text"/>, revealing all characters over a fixed duration.
+        /// <para>The animation does not start until the handle is played.</para>
+        /// <para>Returns <see cref="FKHandle.Invalid"/> if <see cref="RectTransform"/> is null or no <see cref="TMP_Text"/> is found on this component.</para>
+        /// </summary>
+        /// <param name="duration">Total time in seconds to reveal all characters.</param>
+        /// <param name="delay">Delay in seconds before the effect starts.</param>
+        /// <returns>An <see cref="FKHandle"/> bound to the animation, or <see cref="FKHandle.Invalid"/> on failure.</returns>
+        public FKHandle TypeWriteHandle(float duration = 3f, float delay = 0f)
+            => TypeWriteHandle(RectTransform, duration, delay);
 
         // =============== Monolith via Reference =============== \\
 
@@ -173,9 +360,9 @@ namespace FlowKit
             {
                 var eventData = GenerateEventData(obj, float.PositiveInfinity);
                 return new FKHandle(this,
-                    () => InfiniteWaveImpl(txt, amplitude, frequency, delay, eventData),
+                    () => WaveImpl(txt, amplitude, frequency, float.PositiveInfinity, delay, eventData),
                     eventData,
-                    () => eventData.Target.GetComponent<TMP_Text>().ForceMeshUpdate());
+                    () => txt.ForceMeshUpdate());
             }
         }
         /// <summary>
@@ -214,10 +401,130 @@ namespace FlowKit
             {
                 var eventData = GenerateEventData(obj, float.PositiveInfinity);
                 return new FKHandle(this,
-                    () => InfiniteShakeImpl(txt, amplitude, frequency, delay, eventData),
+                    () => ShakeImpl(txt, amplitude, frequency, float.PositiveInfinity, delay, eventData),
                     eventData,
-                    () => eventData.Target.GetComponent<TMP_Text>().ForceMeshUpdate());
+                    () => txt.ForceMeshUpdate());
             }
+        }
+        /// <summary>
+        /// Cycles through a gradient between two colors on the <see cref="TMP_Text"/> of the specified RectTransform.
+        /// <para>The animation does not start until the handle is played.</para>
+        /// <para>Returns <see cref="FKHandle.Invalid"/> if <paramref name="obj"/> is null or no <see cref="TMP_Text"/> is found on <paramref name="obj"/>.</para>
+        /// </summary>
+        /// <param name="obj">RectTransform whose <see cref="TMP_Text"/> will be animated.</param>
+        /// <param name="fromColor">Starting color of the cycle.</param>
+        /// <param name="toColor">Ending color of the cycle.</param>
+        /// <param name="cycleInterval">Time in seconds to complete one full color transition.</param>
+        /// <param name="duration">Total length of the effect in seconds.</param>
+        /// <param name="delay">Delay in seconds before the effect starts.</param>
+        /// <returns>An <see cref="FKHandle"/> bound to the animation, or <see cref="FKHandle.Invalid"/> on failure.</returns>
+        public FKHandle ColorCycleHandle(RectTransform obj, Color32 fromColor, Color32 toColor, float cycleInterval, float duration, float delay = 0f)
+        {
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKText>(nameof(ColorCycleHandle), gameObject.name);
+                return FKHandle.Invalid;
+            }
+            if (!obj.TryGetComponent<TMP_Text>(out var txt))
+            {
+                FKLogger.MissingComponent<FKText>(typeof(TMP_Text), obj.name);
+                return FKHandle.Invalid;
+            }
+
+            var colors = new Color32[] { fromColor, toColor };
+            var eventData = GenerateEventData(obj, duration);
+
+            return new FKHandle(this,
+                () => ColorCycleImpl(txt, colors, cycleInterval, duration, delay, eventData),
+                eventData);
+        }
+        /// <summary>
+        /// Cycles through an array of colors on the <see cref="TMP_Text"/> of the specified RectTransform.
+        /// <para>The animation does not start until the handle is played.</para>
+        /// <para>Returns <see cref="FKHandle.Invalid"/> if <paramref name="obj"/> is null or no <see cref="TMP_Text"/> is found on <paramref name="obj"/>.</para>
+        /// </summary>
+        /// <param name="obj">RectTransform whose <see cref="TMP_Text"/> will be animated.</param>
+        /// <param name="colors">Array of colors to cycle through in order.</param>
+        /// <param name="cycleInterval">Time in seconds to complete one full color transition.</param>
+        /// <param name="duration">Total length of the effect in seconds.</param>
+        /// <param name="delay">Delay in seconds before the effect starts.</param>
+        /// <returns>An <see cref="FKHandle"/> bound to the animation, or <see cref="FKHandle.Invalid"/> on failure.</returns>
+        public FKHandle ColorCycleHandle(RectTransform obj, Color32[] colors, float cycleInterval, float duration, float delay = 0f)
+        {
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKText>(nameof(ColorCycleHandle), gameObject.name);
+                return FKHandle.Invalid;
+            }
+            if (!obj.TryGetComponent<TMP_Text>(out var txt))
+            {
+                FKLogger.MissingComponent<FKText>(typeof(TMP_Text), obj.name);
+                return FKHandle.Invalid;
+            }
+
+            var eventData = GenerateEventData(obj, duration);
+
+            return new FKHandle(this,
+                () => ColorCycleImpl(txt, colors, cycleInterval, duration, delay, eventData),
+                eventData);
+        }
+        /// <summary>
+        /// Returns an <see cref="FKHandle"/> for a typewriter effect on the <see cref="TMP_Text"/> of the specified RectTransform, revealing characters at a fixed rate.
+        /// <para>The animation does not start until the handle is played.</para>
+        /// <para>Returns <see cref="FKHandle.Invalid"/> if <paramref name="obj"/> is null or no <see cref="TMP_Text"/> is found on <paramref name="obj"/>.</para>
+        /// </summary>
+        /// <param name="obj">RectTransform whose <see cref="TMP_Text"/> will be animated.</param>
+        /// <param name="cps">Characters revealed per second.</param>
+        /// <param name="delay">Delay in seconds before the effect starts.</param>
+        /// <returns>An <see cref="FKHandle"/> bound to the animation, or <see cref="FKHandle.Invalid"/> on failure.</returns>
+        public FKHandle TypeWriteHandle(RectTransform obj, int cps = 3, float delay = 0f)
+        {
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKText>(nameof(TypeWriteHandle), gameObject.name);
+                return FKHandle.Invalid;
+            }
+            if (!obj.TryGetComponent<TMP_Text>(out var txt))
+            {
+                FKLogger.MissingComponent<FKText>(typeof(TMP_Text), obj.name);
+                return FKHandle.Invalid;
+            }
+
+            var duration = Mathf.Round(txt.textInfo.characterCount / (float)cps);
+            var eventData = GenerateEventData(obj, duration);
+
+            return new FKHandle(this,
+                () => TypeWriteImpl(txt, cps, delay, eventData),
+                eventData);
+        }
+        /// <summary>
+        /// Returns an <see cref="FKHandle"/> for a typewriter effect on the <see cref="TMP_Text"/> of the specified RectTransform, revealing all characters over a fixed duration.
+        /// <para>The animation does not start until the handle is played.</para>
+        /// <para>Returns <see cref="FKHandle.Invalid"/> if <paramref name="obj"/> is null or no <see cref="TMP_Text"/> is found on <paramref name="obj"/>.</para>
+        /// </summary>
+        /// <param name="obj">RectTransform whose <see cref="TMP_Text"/> will be animated.</param>
+        /// <param name="duration">Total time in seconds to reveal all characters.</param>
+        /// <param name="delay">Delay in seconds before the effect starts.</param>
+        /// <returns>An <see cref="FKHandle"/> bound to the animation, or <see cref="FKHandle.Invalid"/> on failure.</returns>
+        public FKHandle TypeWriteHandle(RectTransform obj, float duration = 3f, float delay = 0f)
+        {
+            if (obj == null)
+            {
+                FKLogger.NullObject<FKText>(nameof(TypeWriteHandle), gameObject.name);
+                return FKHandle.Invalid;
+            }
+            if (!obj.TryGetComponent<TMP_Text>(out var txt))
+            {
+                FKLogger.MissingComponent<FKText>(typeof(TMP_Text), obj.name);
+                return FKHandle.Invalid;
+            }
+
+            var eventData = GenerateEventData(obj, duration);
+            var cps = Mathf.RoundToInt(txt.textInfo.characterCount / duration);
+
+            return new FKHandle(this,
+                () => TypeWriteImpl(txt, cps, delay, eventData),
+                eventData);
         }
         #endregion
         // ============================== ACTUAL LOGIC ============================== \\
@@ -233,8 +540,9 @@ namespace FlowKit
             tmp.ForceMeshUpdate();
             var textInfo = tmp.textInfo;
 
+            var isInfinite = float.IsPositiveInfinity(duration);
             float elapsedTime = 0f;
-            while (elapsedTime < duration)
+            while (isInfinite || elapsedTime < duration)
             {
                 for (int i = 0; i < textInfo.characterCount; i++)
                 {
@@ -248,31 +556,6 @@ namespace FlowKit
             tmp.ForceMeshUpdate();
 
             FlowKitEvents.InvokeEnd(data);
-        }
-
-        private IEnumerator InfiniteWaveImpl(TMP_Text tmp, float amplitude, float frequency, float delay, FKEventData data)
-        {
-            if (delay > 0f)
-            {
-                yield return new WaitForSecondsRealtime(delay);
-            }
-            FlowKitEvents.InvokeStart(data);
-
-            tmp.ForceMeshUpdate();
-            var textInfo = tmp.textInfo;
-
-            float elapsedTime = 0f;
-            while (true)
-            {
-                for (int i = 0; i < textInfo.characterCount; i++)
-                {
-                    TMPVertexUtils.ApplySineWave(Vertecies.Y, textInfo, elapsedTime, frequency, i, amplitude);
-                }
-                tmp.UpdateVertexData(TMP_VertexDataUpdateFlags.Vertices);
-                elapsedTime += Time.unscaledDeltaTime;
-
-                yield return null;
-            }
         }
 
         private IEnumerator ShakeImpl(TMP_Text tmp, float amplitude, float frequency, float duration, float delay, FKEventData data)
@@ -286,8 +569,9 @@ namespace FlowKit
             tmp.ForceMeshUpdate();
             var textInfo = tmp.textInfo;
 
+            var isInfinite = float.IsPositiveInfinity(duration);
             float elapsedTime = 0f;
-            while (elapsedTime < duration)
+            while (isInfinite || elapsedTime < duration)
             {
                 for (int i = 0; i < textInfo.characterCount; i++)
                 {
@@ -303,7 +587,7 @@ namespace FlowKit
             FlowKitEvents.InvokeEnd(data);
         }
 
-        private IEnumerator InfiniteShakeImpl(TMP_Text tmp, float amplitude, float frequency, float delay, FKEventData data)
+        private IEnumerator ColorCycleImpl(TMP_Text tmp, Color32[] colors, float cycleInterval, float duration, float delay, FKEventData data)
         {
             if (delay > 0f)
             {
@@ -311,21 +595,60 @@ namespace FlowKit
             }
             FlowKitEvents.InvokeStart(data);
 
-            tmp.ForceMeshUpdate();
-            var textInfo = tmp.textInfo;
+            var index = 0;
+            var timeSinceLastCycle = 0f;
+            var originalColor = tmp.color;
+            tmp.color = colors[index];
 
             float elapsedTime = 0f;
-            while (true)
+            while (elapsedTime < duration)
             {
-                for (int i = 0; i < textInfo.characterCount; i++)
+                if (timeSinceLastCycle >= cycleInterval)
                 {
-                    TMPVertexUtils.ApplySineWave(Vertecies.X, textInfo, elapsedTime, frequency, i, amplitude);
+                    timeSinceLastCycle -= cycleInterval;
+                    index = (index + 1) % colors.Length;
                 }
-                tmp.UpdateVertexData(TMP_VertexDataUpdateFlags.Vertices);
-                elapsedTime += Time.unscaledDeltaTime;
+                var t = timeSinceLastCycle / cycleInterval;
+                var next = (index + 1) % colors.Length;
+                tmp.color = Color32.Lerp(colors[index], colors[next], t);
+
+                var d = Time.unscaledDeltaTime;
+                timeSinceLastCycle += d;
+                elapsedTime += d;
 
                 yield return null;
             }
+            tmp.color = originalColor;
+
+            FlowKitEvents.InvokeEnd(data);
+        }
+
+        private IEnumerator TypeWriteImpl(TMP_Text tmp, int cps, float delay, FKEventData data)
+        {
+            if (delay > 0f)
+            {
+                yield return new WaitForSecondsRealtime(delay);
+            }
+            FlowKitEvents.InvokeStart(data);
+
+            tmp.maxVisibleCharacters = 0;
+            var charCount = tmp.textInfo.characterCount;
+
+            float accumulator = 0f;
+            while (tmp.maxVisibleCharacters < charCount)
+            {
+                int toReveal = Mathf.FloorToInt(accumulator);
+                if (toReveal > 0)
+                {
+                    accumulator -= toReveal;
+                    tmp.maxVisibleCharacters = Mathf.Min(tmp.maxVisibleCharacters + toReveal, charCount);
+                }
+                accumulator += cps * Time.unscaledDeltaTime;
+
+                yield return null;
+            }
+
+            FlowKitEvents.InvokeEnd(data);
         }
     }
 }
