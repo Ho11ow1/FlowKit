@@ -1,0 +1,147 @@
+using System;
+using System.Collections;
+
+using UnityEngine;
+
+using FlowKit.Events;
+
+namespace FlowKit
+{
+    public sealed class FKHandle
+    {
+        public static readonly FKHandle Invalid = new FKHandle();
+
+        private readonly MonoBehaviour _owner;
+        private readonly Func<IEnumerator> _funcRef;
+        private readonly FKEventData _eventData;
+        private readonly Action _onStop;
+
+        private Coroutine routine;
+        private Coroutine innerRoutine;
+        private uint repeats = 0;
+        private uint delaySeconds = 0;
+
+        public bool IsAnimating { get; private set; } = false;
+        public bool IsValid { get; private set; } = false;
+
+        private FKHandle() {}
+
+        public FKHandle(MonoBehaviour owner, Func<IEnumerator> funcRef, FKEventData eventData, Action onStop = null)
+        {
+            _owner = owner;
+            _funcRef = funcRef;
+            _eventData = eventData;
+            _onStop = onStop;
+
+            IsValid = true;
+        }
+
+        /// <summary>
+        /// Starts the animation and marks this handle as animating.
+        /// <para>Returns <see cref="Invalid"/> if this handle is not valid.</para>
+        /// </summary>
+        /// <returns>This <see cref="FKHandle"/> instance for method chaining.</returns>
+        public FKHandle Play()
+        {
+            if (!IsValid)
+            {
+                return Invalid;
+            }
+
+            routine = _owner.StartCoroutine(PlayRoutine());
+            IsAnimating = true;
+
+            return this;
+        }
+
+        private IEnumerator PlayRoutine()
+        {
+            uint count = 0;
+            do
+            {
+                if (count != 0 && delaySeconds > 0)
+                {
+                    yield return new WaitForSecondsRealtime(delaySeconds);               
+                }
+                innerRoutine = _owner.StartCoroutine(_funcRef());
+                yield return innerRoutine;
+
+                count += 1;
+            }
+            while (count < repeats);
+
+            IsAnimating = false;
+            _onStop?.Invoke();
+        }
+
+
+        /// <summary>
+        /// Sets the number of times the animation should repeat after its first play.
+        /// <para>Has no effect if the animation is already running.</para>
+        /// </summary>
+        /// <param name="count">Number of additional times to repeat the animation.</param>
+        /// <returns>This <see cref="FKHandle"/> instance for method chaining.</returns>
+        public FKHandle Repeat(uint count)
+        {
+            if (!IsAnimating)
+            {
+                repeats = count;
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets a delay before the next animation starts playing.
+        /// <para>Has no effect if the animation is already running.</para>
+        /// </summary>
+        /// <param name="seconds">Delay in seconds before the animation starts.</param>
+        /// <returns>This <see cref="FKHandle"/> instance for method chaining.</returns>
+        public FKHandle Delay(uint seconds)
+        {
+            if (!IsAnimating)
+            {
+                delaySeconds = seconds;
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Returns a coroutine that yields until the animation has finished allowing yielding until it has finished to continue processing.
+        /// <para>Useful for sequencing animations inside an existing coroutine.</para>
+        /// </summary>
+        /// <returns>A coroutine that completes when <see cref="IsAnimating"/> becomes false.</returns>
+        public IEnumerator AsCoroutine()
+        {
+            while (IsAnimating)
+            {
+                yield return null;
+            }
+        }
+
+        /// <summary>
+        /// Stops the animation immediately, fires the end event.
+        /// <para>Has no effect if this handle is not valid or is not currently running.</para>
+        /// </summary>
+        public void Stop()
+        {
+            if (!IsValid || routine == null)
+            {
+                return;
+            }
+            if (innerRoutine != null)
+            {
+                _owner.StopCoroutine(innerRoutine);
+                innerRoutine = null;
+            }
+
+            _owner.StopCoroutine(routine);
+            routine = null;
+            
+            IsAnimating = false;
+            FlowKitEvents.InvokeEnd(_eventData);
+            _onStop?.Invoke();
+        }
+    }
+}
